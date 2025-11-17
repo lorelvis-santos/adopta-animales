@@ -1,4 +1,4 @@
-package main.java.com.stackmasters.adoptaanimales.dbconnection;
+package com.stackmasters.adoptaanimales.dbconnection;
 
 import java.sql.*;
 

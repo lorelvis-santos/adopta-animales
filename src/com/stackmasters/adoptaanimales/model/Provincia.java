@@ -1,4 +1,4 @@
-package main.java.com.stackmasters.adoptaanimales.model;
+package com.stackmasters.adoptaanimales.model;
 
 /**
  *

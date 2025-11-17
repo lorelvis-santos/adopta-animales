@@ -1,6 +1,6 @@
-package main.java.com.stackmasters.adoptaanimales.repository;
+package com.stackmasters.adoptaanimales.repository;
 
-import main.java.com.stackmasters.adoptaanimales.dbconnection.DatabaseConnection;
+import com.stackmasters.adoptaanimales.dbconnection.DatabaseConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public abstract class BaseRepository <T> {
     
-    protected static String tableName;
+    protected abstract String getTableName();
     
     //Metodo para obtener una conexion a la base de datos
     protected Connection getConnection(){
@@ -26,7 +26,7 @@ public abstract class BaseRepository <T> {
     protected List<T> findAll(){
     List<T> lista = new ArrayList<>();
     
-    String sql = "select * from " + tableName;
+    String sql = "select * from " + getTableName();
     
     try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
     

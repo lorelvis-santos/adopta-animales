@@ -1,4 +1,4 @@
-package main.java.com.stackmasters.adoptaanimales.model;
+package com.stackmasters.adoptaanimales.model;
 
 import java.time.LocalDateTime;
 
@@ -6,38 +6,41 @@ import java.time.LocalDateTime;
  *
  * @author Bianca Parra
  */
-public class Veterinaria {
-    private int idVeterinaria;
+public class Albergue {
+    
+    private int idAlbergue;
     private String nombre;
     private int provinciaId;
     private int municipioId;
     private String direccion;
+    private int capacidadMaxima;
     private String contraseña;
     private String correo;
     private String telefono;
     private LocalDateTime fechaCreacion;
 
-    public Veterinaria() {
+    public Albergue() {
     }
-
-    public Veterinaria(int idVeterinaria, String nombre, int provinciaId, int municipioId, String direccion, String contraseña, String correo, String telefono, LocalDateTime fechaCreacion) {
-        this.idVeterinaria = idVeterinaria;
+    
+    public Albergue(int idAlbergue, String nombre, int provinciaId, int municipioId, String direccion, int capacidadMaxima, String contraseña, String correo, String telefono, LocalDateTime fechaCreacion) {
+        this.idAlbergue = idAlbergue;
         this.nombre = nombre;
         this.provinciaId = provinciaId;
         this.municipioId = municipioId;
         this.direccion = direccion;
+        this.capacidadMaxima = capacidadMaxima;
         this.contraseña = contraseña;
         this.correo = correo;
         this.telefono = telefono;
         this.fechaCreacion = fechaCreacion;
     }
 
-    public int getIdVeterinaria() {
-        return idVeterinaria;
+    public int getIdAlbergue() {
+        return idAlbergue;
     }
 
-    public void setIdVeterinaria(int idVeterinaria) {
-        this.idVeterinaria = idVeterinaria;
+    public void setIdAlbergue(int idAlbergue) {
+        this.idAlbergue = idAlbergue;
     }
 
     public String getNombre() {
@@ -72,6 +75,14 @@ public class Veterinaria {
         this.direccion = direccion;
     }
 
+    public int getCapacidadMaxima() {
+        return capacidadMaxima;
+    }
+
+    public void setCapacidadMaxima(int capacidadMaxima) {
+        this.capacidadMaxima = capacidadMaxima;
+    }
+
     public String getContraseña() {
         return contraseña;
     }
@@ -103,6 +114,5 @@ public class Veterinaria {
     public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
-         
        
 }
