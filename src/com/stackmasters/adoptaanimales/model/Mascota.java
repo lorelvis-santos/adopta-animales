@@ -150,5 +150,4 @@ public class Mascota {
     public void setAlbergueId(int albergueId) {
         this.albergueId = albergueId;
     }
-
 }

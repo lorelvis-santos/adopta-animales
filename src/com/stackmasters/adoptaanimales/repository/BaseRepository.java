@@ -8,14 +8,17 @@ import java.util.List;
  *
  * @author Bianca Parra
  */
-public abstract class BaseRepository <T> {
-    
-    protected abstract String getTableName();
+public abstract class BaseRepository <T>{
     
     //Metodo para obtener una conexion a la base de datos
     protected Connection getConnection(){
         return DatabaseConnection.getConexion();
     }
+    //Metodo para obtener el nombre de la tabla correspondiente a cada modelo
+    protected abstract String getTableName();
+    
+     //Metodo para obtener el nombre del primary key de cada tabla
+    protected abstract String getPk();
     
        // Este método convierte una fila de la tabla (ResultSet)
       // en un objeto T (por ejemplo una Mascota).
@@ -26,7 +29,7 @@ public abstract class BaseRepository <T> {
     protected List<T> findAll(){
     List<T> lista = new ArrayList<>();
     
-    String sql = "select * from " + getTableName();
+    String sql = "SELECT * FROM " + getTableName();
     
     try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
     
@@ -44,7 +47,9 @@ public abstract class BaseRepository <T> {
     }
     
     //Metodo para buscar por id
-    protected T findById(String sql, int id){
+    protected T findById( int id){
+        
+            String sql = "SELECT * FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
     
         try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
             
@@ -53,19 +58,21 @@ public abstract class BaseRepository <T> {
             ResultSet resultadoConsulta= consulta.executeQuery();
             
             //Si existe devuelve la fila como un objeto
-            if(resultadoConsulta.next()){
-            
-                return mapearTabla(resultadoConsulta);
-            }
-        }catch(SQLException e){
-        
-            System.out.println("Error: "+ e.getMessage());
+        if(resultadoConsulta.next()){
+
+            return mapearTabla(resultadoConsulta);
         }
+    }catch(SQLException e){
+
+        System.out.println("Error: "+ e.getMessage());
+    }
         // Si no existe devuelve null
         return null;
     }
     
-    protected boolean existsById(String sql, int id){
+    protected boolean existsById( int id){
+        
+            String sql = "SELECT * FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
     
         try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
         
@@ -83,14 +90,16 @@ public abstract class BaseRepository <T> {
     }
     
     //Metodo para buscar por nombre
-    protected List<T> findByName(String sql, String nombre){
+    protected List<T> findByName( String nombre){
         
     List <T> lista = new ArrayList<>();
+    
+        String sql  = "SELECT * FROM "+ getTableName() + " WHERE nombre LIKE ?";
     
     try(PreparedStatement  consulta = getConnection().prepareStatement(sql)){
     
         //Colocar el nombre en el ? de el parametro sql
-        consulta.setString(1, nombre);
+        consulta.setString(1, "%" + nombre + "%");
         //Ejecutar la consulta
         ResultSet resultadoConsulta = consulta.executeQuery();
         //Si se encuentra el nombre se guarda en la lista
@@ -112,7 +121,7 @@ public abstract class BaseRepository <T> {
         
             for(int i=0 ; i< parametros.length; i++){
                 //Aqui se va colocando cada parametro en cada  "?"
-                //se usa setObject por ser generico, ya que no se conoce el tipo de dato
+                //se usa setObject() para permitir valores de cualquier tipo
                 consulta.setObject(i+1, parametros[i]);
             }
             //Se almacena el numero de filas afectadas
@@ -145,8 +154,10 @@ public abstract class BaseRepository <T> {
     }
     
     //Metodo para eliminar por id
-    protected boolean delete(String sql, int id){
+    protected boolean delete(int id){
      
+        String sql= "DELETE FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
+           
         try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
             
             consulta.setInt(1,id);   
