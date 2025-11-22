@@ -13,25 +13,52 @@ public class Mascota {
     private LocalDate fechaNacimiento;
     private String raza;
     private String tamaño;
-    private String peso;
+    private int peso;
     private String especie;
-    private enum sexo{
-    Macho, Hembra
-    }
     private String descripcion;
     private boolean estaCastrado;
     private boolean estaVacunado;
+    private Sexo sexo;
+    private EstadoMascota estado;
     private String condicionEspecial;
-    private enum estado{
-    EnAlbergue, EnProcesoDeAdopcion, Adoptada
-    }
     private int veterinariaId;
     private int albergueId;
+    //Enums publicos 
+    
+     //Enum  para el sexo de la mascota
+     public enum Sexo{
+    Macho,
+    Hembra
+    }
 
+    //Enum para el estado de la mascota
+     public enum EstadoMascota{
+         
+    //Asignar un valor mas bonito al enum  para mostrar al usuario
+    EnAlbergue("En albergue"),
+    EnProcesoDeAdopcion("En proceso de adopción"),
+    Adoptada("Adoptada");
+    
+    //Campo que contiene el texto "bonito" que se mostrara al usuario
+    private final String descripcionEstado;
+    
+    //Constructor del enum que recibe el texto bonito
+    EstadoMascota(String descripcion){
+        this.descripcionEstado = descripcion;
+    }
+    
+    //Con el metodo toString() se convierte el enum a String
+    @Override
+    public String toString(){
+        return descripcionEstado;
+        }
+    }
+     
+    
     public Mascota() {
     }
 
-    public Mascota(int idMascota, String nombre, LocalDate fechaNacimiento, String raza, String tamaño, String peso, String especie, String descripcion, boolean estaCastrado, boolean estaVacunado, String condicionEspecial, int veterinariaId, int albergueId) {
+    public Mascota(int idMascota, String nombre, LocalDate fechaNacimiento, String raza, String tamaño, int peso, String especie, String descripcion, boolean estaCastrado, boolean estaVacunado, Sexo sexo, EstadoMascota estado, String condicionEspecial, int veterinariaId, int albergueId) {
         this.idMascota = idMascota;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
@@ -42,10 +69,14 @@ public class Mascota {
         this.descripcion = descripcion;
         this.estaCastrado = estaCastrado;
         this.estaVacunado = estaVacunado;
+        this.sexo = sexo;
+        this.estado = estado;
         this.condicionEspecial = condicionEspecial;
         this.veterinariaId = veterinariaId;
         this.albergueId = albergueId;
     }
+
+    
 
     public int getIdMascota() {
         return idMascota;
@@ -87,11 +118,11 @@ public class Mascota {
         this.tamaño = tamaño;
     }
 
-    public String getPeso() {
+    public int getPeso() {
         return peso;
     }
 
-    public void setPeso(String peso) {
+    public void setPeso(int peso) {
         this.peso = peso;
     }
 
@@ -126,7 +157,26 @@ public class Mascota {
     public void setEstaVacunado(boolean estaVacunado) {
         this.estaVacunado = estaVacunado;
     }
+    //Getters y Setters para cada Enum
+    
+    //Enum sexo
+    public Sexo getSexo(){
+        return sexo;
+    }
 
+    public void setSexo(Sexo sexoMascota){
+        this.sexo= sexoMascota;
+    }
+    
+    //Enum estado
+    public EstadoMascota getEstado(){
+        return estado;
+    }
+    
+    public void setEstado(EstadoMascota estadoMascota){
+        this.estado= estadoMascota;
+    }
+    
     public String getCondicionEspecial() {
         return condicionEspecial;
     }
@@ -149,5 +199,5 @@ public class Mascota {
 
     public void setAlbergueId(int albergueId) {
         this.albergueId = albergueId;
-    }
+    }   
 }
