@@ -13,23 +13,25 @@ public class Publicacion {
     private String descripcion;
     private int contadorLikes;
     private LocalDateTime fechaPublicacion;
-    private enum estado{
-    Activa, Pausada, Adoptada
-    }
+    private EstadoPublicacion estado;
     private int mascotaId;
     private int albergueId;
     private int adminId;
+    
+    public enum EstadoPublicacion{
+    Activa, Pausada, Adoptada
+    }
 
     public Publicacion() {
     }
 
-    
-    public Publicacion(int idPublicacion, String titulo, String descripcion, int contadorLikes, LocalDateTime fechaPublicacion, int mascotaId, int albergueId, int adminId) {
+    public Publicacion(int idPublicacion, String titulo, String descripcion, int contadorLikes, LocalDateTime fechaPublicacion, EstadoPublicacion estadoPublicacion, int mascotaId, int albergueId, int adminId) {
         this.idPublicacion = idPublicacion;
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.contadorLikes = contadorLikes;
         this.fechaPublicacion = fechaPublicacion;
+        this.estado = estadoPublicacion;
         this.mascotaId = mascotaId;
         this.albergueId = albergueId;
         this.adminId = adminId;
@@ -73,6 +75,15 @@ public class Publicacion {
 
     public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
+    }
+    
+    //Getters y Setters del Enum EstadoPublicacion
+    public EstadoPublicacion getEstadoPublicacion(){
+        return estado;
+    }
+    
+    public void setEstadoPublicacion(EstadoPublicacion estadoPublicacion){
+        this.estado = estadoPublicacion;
     }
 
     public int getMascotaId() {

@@ -9,20 +9,22 @@ import java.time.LocalDateTime;
 public class SolicitudAdopcion {
     
     private String idSolicitud;
-    private enum estado{
-    Pendiente, Aprobada, Rechazada, Cancelada
-    }
     private LocalDateTime fechaSolicitud;
     private LocalDateTime fechaRespuesta;
     private String motivoRechazo;
     private int adoptanteId;
     private int publicacionId;
     private int adminRespuesta;
+    private EstadoSolicitud estado;
+    
+    public enum EstadoSolicitud{
+    Pendiente, Aprobada, Rechazada, Cancelada
+    }
 
     public SolicitudAdopcion() {
     }
 
-    public SolicitudAdopcion(String idSolicitud, LocalDateTime fechaSolicitud, LocalDateTime fechaRespuesta, String motivoRechazo, int adoptanteId, int publicacionId, int adminRespuesta) {
+    public SolicitudAdopcion(String idSolicitud, LocalDateTime fechaSolicitud, LocalDateTime fechaRespuesta, String motivoRechazo, int adoptanteId, int publicacionId, int adminRespuesta, EstadoSolicitud estadoSolicitud) {
         this.idSolicitud = idSolicitud;
         this.fechaSolicitud = fechaSolicitud;
         this.fechaRespuesta = fechaRespuesta;
@@ -30,6 +32,7 @@ public class SolicitudAdopcion {
         this.adoptanteId = adoptanteId;
         this.publicacionId = publicacionId;
         this.adminRespuesta = adminRespuesta;
+        this.estado = estadoSolicitud;
     }
 
     public String getIdSolicitud() {
@@ -87,6 +90,13 @@ public class SolicitudAdopcion {
     public void setAdminRespuesta(int adminRespuesta) {
         this.adminRespuesta = adminRespuesta;
     }
-    
-      
+
+    //Getters y Setters para el Enum EstadoSolicitud
+    public EstadoSolicitud getEstadoSolicitud() {
+        return estado;
+    }
+
+    public void setEstadoSolicitud(EstadoSolicitud estadoSolicitud) {
+        this.estado = estadoSolicitud;
+    }
 }

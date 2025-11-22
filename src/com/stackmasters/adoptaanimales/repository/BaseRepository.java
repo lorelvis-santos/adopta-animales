@@ -1,9 +1,13 @@
 package com.stackmasters.adoptaanimales.repository;
 
 import com.stackmasters.adoptaanimales.dbconnection.DatabaseConnection;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  *
  * @author Bianca Parra
@@ -26,85 +30,87 @@ public abstract class BaseRepository <T>{
     protected abstract T mapearTabla(ResultSet datos ) throws SQLException;
     
     //Metodo para obtener todos los registros de una tabla
-    protected List<T> findAll(){
+    public List<T> findAll(){
     List<T> lista = new ArrayList<>();
     
     String sql = "SELECT * FROM " + getTableName();
     
-    try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
-    
-        ResultSet resultadoConsulta = consulta.executeQuery();
+       try(Connection conexion = getConnection();
+            PreparedStatement consulta = conexion.prepareStatement(sql);
+            ResultSet resultadoConsulta = consulta.executeQuery()){
         
         while(resultadoConsulta.next()){
             lista.add(mapearTabla(resultadoConsulta)); //Aqui cada fila se convierte en un objeto.
         }
         
-    }catch(SQLException e){
-    
-        System.out.println("Error: "+ e.getMessage());
-    }
-    return lista;
+        }catch(SQLException e){
+            System.out.println("Error: "+ e.getMessage());
+        }
+        return lista;
     }
     
     //Metodo para buscar por id
-    protected T findById( int id){
+    public T findById( int id){
         
-            String sql = "SELECT * FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
+        String sql = "SELECT * FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
     
-        try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
+        try(Connection conexion = getConnection();
+             PreparedStatement consulta = conexion.prepareStatement(sql)){
             
             //Colocar el id en el ? del parametro sql
-            consulta.setInt(1,id); 
-            ResultSet resultadoConsulta= consulta.executeQuery();
-            
-            //Si existe devuelve la fila como un objeto
-        if(resultadoConsulta.next()){
+            consulta.setInt(1,id);
+            try( ResultSet resultadoConsulta= consulta.executeQuery()){
+                   if(resultadoConsulta.next()){
+                         return mapearTabla(resultadoConsulta); //Si existe devuelve la fila como un objeto
+                    }
+            }
+        }catch(SQLException e){
 
-            return mapearTabla(resultadoConsulta);
+            System.out.println("Error: "+ e.getMessage());
         }
-    }catch(SQLException e){
-
-        System.out.println("Error: "+ e.getMessage());
-    }
         // Si no existe devuelve null
         return null;
     }
     
-    protected boolean existsById( int id){
+    public boolean existsById( int id){
         
             String sql = "SELECT * FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
     
-        try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
+        try(Connection conexion = getConnection();
+              PreparedStatement consulta = conexion.prepareStatement(sql)){
         
              //Colocar el id en el ? del parametro sql
             consulta.setInt(1, id);
             
-            ResultSet resultadoConsulta = consulta.executeQuery();
-           return resultadoConsulta.next(); //Si el id existe devuelve true
+            try(ResultSet resultadoConsulta = consulta.executeQuery()){
+                  return resultadoConsulta.next(); //Si el id existe devuelve true
+            }
         }catch(SQLException e){
             
             System.out.println("Error: "+ e.getMessage());
-                }
+        }
         //si el id no existe devuelve falso
         return false;
     }
     
     //Metodo para buscar por nombre
-    protected List<T> findByName( String nombre){
+    public List<T> findByName( String nombre){
         
-    List <T> lista = new ArrayList<>();
+        List <T> lista = new ArrayList<>();
     
         String sql  = "SELECT * FROM "+ getTableName() + " WHERE nombre LIKE ?";
     
-    try(PreparedStatement  consulta = getConnection().prepareStatement(sql)){
+        try(Connection conexion = getConnection();
+            PreparedStatement  consulta = conexion.prepareStatement(sql)){
     
         //Colocar el nombre en el ? de el parametro sql
         consulta.setString(1, "%" + nombre + "%");
+        
         //Ejecutar la consulta
-        ResultSet resultadoConsulta = consulta.executeQuery();
-        //Si se encuentra el nombre se guarda en la lista
-        while(resultadoConsulta.next()){
-            lista.add(mapearTabla(resultadoConsulta));
+        try(ResultSet resultadoConsulta = consulta.executeQuery()){
+            while(resultadoConsulta.next()){
+                lista.add(mapearTabla(resultadoConsulta)); //Si se encuentra el nombre se guarda en la lista
+            }
         }
     }catch(SQLException e){
         System.out.println("Error: "+ e.getMessage());
@@ -115,9 +121,10 @@ public abstract class BaseRepository <T>{
     
     //Metodo para insertar datos
                                                     //Object... parametros indica los valores que van a reemplazar los ? del sql
-    protected boolean insert(String sql, Object... parametros){
+    public boolean insert(String sql, Object... parametros){
     
-        try(PreparedStatement consulta = getConnection().prepareStatement(sql )){
+        try(Connection conexion = getConnection();
+              PreparedStatement consulta = conexion.prepareStatement(sql )){
         
             for(int i=0 ; i< parametros.length; i++){
                 //Aqui se va colocando cada parametro en cada  "?"
@@ -129,7 +136,6 @@ public abstract class BaseRepository <T>{
                                            //Este metodo modifica la base de datos, obteniendo como resultado el numero de filas afectadas
             return consulta.executeUpdate()>0;
              
-             
         }catch(SQLException e){
         
             System.out.println("Error: "+ e.getMessage());
@@ -138,15 +144,16 @@ public abstract class BaseRepository <T>{
     }
     
     //Metodo para actualizar
-    protected boolean update(String sql, Object... parametros){
+    public boolean update(String sql, Object... parametros){
      
-        try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
+        try(Connection conexion = getConnection();
+              PreparedStatement consulta = conexion.prepareStatement(sql)){
             
             for(int i =0; i <parametros.length; i++){
-                
                 consulta.setObject(i+1, parametros[i]);
             }
             return consulta.executeUpdate()>0;
+            
         }catch(SQLException e){
             System.out.println("Error: "+ e.getMessage());
         }
@@ -154,11 +161,12 @@ public abstract class BaseRepository <T>{
     }
     
     //Metodo para eliminar por id
-    protected boolean delete(int id){
+    public boolean delete(int id){
      
         String sql= "DELETE FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
            
-        try(PreparedStatement consulta = getConnection().prepareStatement(sql)){
+        try(Connection conexion  = getConnection();
+             PreparedStatement consulta = conexion.prepareStatement(sql)){
             
             consulta.setInt(1,id);   
             return consulta.executeUpdate()>0;
@@ -168,5 +176,4 @@ public abstract class BaseRepository <T>{
         }
         return false;
     }
-    
 }
