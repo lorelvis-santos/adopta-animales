@@ -1,6 +1,6 @@
 package com.stackmasters.adoptaanimales.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 /**
  *
@@ -17,12 +17,12 @@ public class Albergue {
     private String contraseña;
     private String correo;
     private String telefono;
-    private LocalDateTime fechaCreacion;
+    private LocalDate fechaCreacion;
 
     public Albergue() {
     }
     
-    public Albergue(int idAlbergue, String nombre, int provinciaId, int municipioId, String direccion, int capacidadMaxima, String contraseña, String correo, String telefono, LocalDateTime fechaCreacion) {
+    public Albergue(int idAlbergue, String nombre, int provinciaId, int municipioId, String direccion, int capacidadMaxima, String contraseña, String correo, String telefono, LocalDate fechaCreacion) {
         this.idAlbergue = idAlbergue;
         this.nombre = nombre;
         this.provinciaId = provinciaId;
@@ -107,12 +107,11 @@ public class Albergue {
         this.telefono = telefono;
     }
 
-    public LocalDateTime getFechaCreacion() {
+    public LocalDate getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
-    }
-       
+    }   
 }

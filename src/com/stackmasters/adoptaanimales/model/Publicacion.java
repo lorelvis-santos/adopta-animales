@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 /**
  *
@@ -12,7 +13,7 @@ public class Publicacion {
     private String titulo;
     private String descripcion;
     private int contadorLikes;
-    private LocalDateTime fechaPublicacion;
+    private LocalDate fechaPublicacion;
     private EstadoPublicacion estado;
     private int mascotaId;
     private int albergueId;
@@ -25,7 +26,7 @@ public class Publicacion {
     public Publicacion() {
     }
 
-    public Publicacion(int idPublicacion, String titulo, String descripcion, int contadorLikes, LocalDateTime fechaPublicacion, EstadoPublicacion estadoPublicacion, int mascotaId, int albergueId, int adminId) {
+    public Publicacion(int idPublicacion, String titulo, String descripcion, int contadorLikes, LocalDate fechaPublicacion, EstadoPublicacion estadoPublicacion, int mascotaId, int albergueId, int adminId) {
         this.idPublicacion = idPublicacion;
         this.titulo = titulo;
         this.descripcion = descripcion;
@@ -69,11 +70,11 @@ public class Publicacion {
         this.contadorLikes = contadorLikes;
     }
 
-    public LocalDateTime getFechaPublicacion() {
+    public LocalDate getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
+    public void setFechaPublicacion(LocalDate fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
     

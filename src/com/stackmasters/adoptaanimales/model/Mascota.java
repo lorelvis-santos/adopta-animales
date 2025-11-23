@@ -12,9 +12,9 @@ public class Mascota {
     private String nombre;
     private LocalDate fechaNacimiento;
     private String raza;
-    private String tamaño;
-    private int peso;
-    private String especie;
+    private Tamaño tamañoMascota;
+    private double peso;
+    private Especie especieMascota;
     private String descripcion;
     private boolean estaCastrado;
     private boolean estaVacunado;
@@ -23,13 +23,25 @@ public class Mascota {
     private String condicionEspecial;
     private int veterinariaId;
     private int albergueId;
+    
     //Enums publicos 
     
+    //Enum para el tamaño de la mascota
+    public enum Tamaño {
+    Pequeño,
+    Mediano,
+    Grande
+}
      //Enum  para el sexo de la mascota
      public enum Sexo{
     Macho,
     Hembra
     }
+     //Enum para la especie
+     public enum Especie {
+    Perro,
+    Gato
+}
 
     //Enum para el estado de la mascota
      public enum EstadoMascota{
@@ -58,14 +70,14 @@ public class Mascota {
     public Mascota() {
     }
 
-    public Mascota(int idMascota, String nombre, LocalDate fechaNacimiento, String raza, String tamaño, int peso, String especie, String descripcion, boolean estaCastrado, boolean estaVacunado, Sexo sexo, EstadoMascota estado, String condicionEspecial, int veterinariaId, int albergueId) {
+    public Mascota(int idMascota, String nombre, LocalDate fechaNacimiento, String raza, Tamaño tamañoMascota, double peso, Especie especieMascota, String descripcion, boolean estaCastrado, boolean estaVacunado, Sexo sexo, EstadoMascota estado, String condicionEspecial, int veterinariaId, int albergueId) {
         this.idMascota = idMascota;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
         this.raza = raza;
-        this.tamaño = tamaño;
+        this.tamañoMascota = tamañoMascota;
         this.peso = peso;
-        this.especie = especie;
+        this.especieMascota = especieMascota;
         this.descripcion = descripcion;
         this.estaCastrado = estaCastrado;
         this.estaVacunado = estaVacunado;
@@ -110,28 +122,28 @@ public class Mascota {
         this.raza = raza;
     }
 
-    public String getTamaño() {
-        return tamaño;
+    public Tamaño getTamaño() {
+        return tamañoMascota;
     }
 
-    public void setTamaño(String tamaño) {
-        this.tamaño = tamaño;
+    public void setTamaño(Tamaño tamaño) {
+        this.tamañoMascota = tamaño;
     }
 
-    public int getPeso() {
+    public double getPeso() {
         return peso;
     }
 
-    public void setPeso(int peso) {
+    public void setPeso(double peso) {
         this.peso = peso;
     }
 
-    public String getEspecie() {
-        return especie;
+    public Especie getEspecie() {
+        return especieMascota;
     }
 
-    public void setEspecie(String especie) {
-        this.especie = especie;
+    public void setEspecie(Especie especie) {
+        this.especieMascota = especie;
     }
 
     public String getDescripcion() {

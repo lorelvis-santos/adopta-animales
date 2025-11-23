@@ -176,4 +176,39 @@ public abstract class BaseRepository <T>{
         }
         return false;
     }
+    
+    
+    protected List<T> executeSelect(String sql, Object... parametros) throws SQLException{
+    
+            List<T> lista = new ArrayList<>();
+            
+            try(Connection conexion = getConnection(); 
+                  PreparedStatement consulta= conexion.prepareStatement(sql)){
+                    
+                for(int i = 0; i< parametros.length; i++){
+                    
+                    consulta.setObject(i+1, parametros[i]);
+                }
+                
+                try(ResultSet resultadoConsulta = consulta.executeQuery()){
+                    
+                    while(resultadoConsulta.next()){
+                        lista.add(mapearTabla(resultadoConsulta));
+                    }
+                }
+                
+            }
+            return lista;
+    }
+    
+    //Modificar la base de datos
+    protected int executeUpdate(String sql, Object... parametros) throws SQLException {
+    try (Connection conexion = getConnection();
+         PreparedStatement ps = conexion.prepareStatement(sql)) {
+        for (int i = 0; i < parametros.length; i++) {
+            ps.setObject(i + 1, parametros[i]);
+        }
+        return ps.executeUpdate();
+    }
+} 
 }
