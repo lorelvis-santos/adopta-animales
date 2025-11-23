@@ -110,4 +110,5 @@ public class MascotaRepository extends BaseRepository<Mascota>{
         String sql = "SELECT * FROM " + getTableName() + " WHERE estado = ?";
         return executeSelect(sql, estado.toString());
     }   
+    
 }

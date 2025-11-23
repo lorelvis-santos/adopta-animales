@@ -36,11 +36,22 @@ public class AdminAlbergueRepository extends BaseRepository<AdminAlbergue> {
     }
     
     //Buscar admins por albergue
-    
     public List<AdminAlbergue> buscarPorAlbergue(int idAlbergue) throws SQLException{
     
             String sql = "SELECT * FROM "+ getTableName() + " WHERE albergue_id = ? ";
             return executeSelect(sql, idAlbergue);
+    }
+    
+    //Buscar admin por correo
+    public AdminAlbergue buscarPorCorreo(String correo) throws SQLException {
+   String sql = "SELECT * FROM " + getTableName() + " WHERE correo = ?";
+   List<AdminAlbergue> lista = executeSelect(sql, correo);
+
+        if(lista.isEmpty()){
+        return null;
+        }else{
+        return lista.get(0);
+        }
     }
 }
 

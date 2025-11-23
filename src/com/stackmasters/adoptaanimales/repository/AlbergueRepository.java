@@ -55,5 +55,23 @@ public class AlbergueRepository extends BaseRepository<Albergue> {
            String sql=  "SELECT * FROM "+ getTableName() + " Where municipio_id = ?";
             return executeSelect(sql, municipioId);
     }
+    
+    // Ver publicaciones por albergue
+    public List<Albergue> publicacionPorAlbergue(int idAlbergue ) throws SQLException{
+        String sql = "SELECT * FROM " +getTableName() + " WHERE albergue_id = ? ";
+        return executeSelect(sql, idAlbergue);
+    }
+    
+    //Buscar albergue por correo
+       public Albergue buscarPorCorreo(String correo) throws SQLException {
+   String sql = "SELECT * FROM " + getTableName() + " WHERE correo = ?";
+   List<Albergue> lista = executeSelect(sql, correo);
 
+        if(lista.isEmpty()){
+        return null;
+        }else{
+        return lista.get(0);
+        }
+    }
+    
 }
