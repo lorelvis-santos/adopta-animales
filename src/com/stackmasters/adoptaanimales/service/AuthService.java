@@ -2,8 +2,7 @@ package com.stackmasters.adoptaanimales.service;
 
 import com.stackmasters.adoptaanimales.model.auth.Sesion;
 import com.stackmasters.adoptaanimales.dto.LoginDTO;
-import com.stackmasters.adoptaanimales.exception.CredencialesInvalidasException;
-import com.stackmasters.adoptaanimales.exception.SeleccioneRolException;
+import com.stackmasters.adoptaanimales.exception.*;
 
 /**
  *
@@ -21,7 +20,8 @@ public interface AuthService {
      * @throws SeleccioneRolException Cuando el mismo correo existe en más de un rol
      *                                y el usuario no especifica cuál desea usar.
      */
-    Sesion iniciarSesion(LoginDTO dto) throws CredencialesInvalidasException, SeleccioneRolException;
+    Sesion iniciarSesion(LoginDTO dto) throws 
+        CredencialesInvalidasException, SeleccioneRolException, DatosInvalidosException;
     
     /**
      * Cierra la sesión actualmente activa, si existe.
