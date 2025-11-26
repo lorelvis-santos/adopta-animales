@@ -7,6 +7,7 @@ import com.stackmasters.adoptaanimales.service.impl.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
+import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class App extends JFrame {
         add(contenedor, BorderLayout.CENTER);
         
         // Registro de vistas
-        var autenticacion = new AuthViewTest();
+        var autenticacion =  new AuthViewImpl();
         var inicio = new InicioViewTest();
         
         router.registrar(Ruta.AUTENTICACION, autenticacion);

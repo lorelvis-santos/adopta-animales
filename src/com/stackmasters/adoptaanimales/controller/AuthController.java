@@ -28,15 +28,14 @@ public class AuthController {
                 }
                 
                 @Override protected void done() {
-                    vista.setCargando(false);
-                    vista.limpiarContraseña();
+                    vista.setCargando(false);                   
                     
                     if (error != null) {
-                        vista.mostrarMensaje(error.getMessage());
+                        vista.mostrarMensaje(error.getMessage(),true);
                         return; 
                     }
-                    
-                    router.navegar(Ruta.PRINCIPAL, "Bienvenido, esto es una prueba");
+                      vista.mostrarMensaje("Autenticacion exitosa",false);
+                   router.navegar(Ruta.PRINCIPAL, "Bienvenido, esto es una prueba");
                 }
             }.execute();
         });
