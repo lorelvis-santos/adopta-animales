@@ -13,6 +13,5 @@ public interface AuthView {
     
     void onLogin(Runnable accion);
     void setCargando(boolean valor);
-    void limpiarContraseña();
-    void mostrarMensaje(String mensaje);
+    void mostrarMensaje(String mensaje, boolean error);
 }
