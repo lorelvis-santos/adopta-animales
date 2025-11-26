@@ -36,15 +36,17 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView, VistaN
     private final double loginSize=60;
     private final  DecimalFormat df = new DecimalFormat("##0.###"); //Para redondear decimales.
     private Runnable onLogin;
-    private javax.swing.Timer hideTimer;
     private Message toast;
-   
+    private Animator toastAnimator;
+    private javax.swing.Timer hideTimer;
     
+    private enum ToastPhase { ENTERING, EXITING }
+    private ToastPhase toastPhase;
+   
     public AuthViewImpl() {
         initComponents();
         init();
         logAndReg.getBtnLogin().addActionListener(e -> { if (onLogin != null) onLogin.run(); });
-        
     }
     
     //Implementacion de Auth view.
@@ -88,21 +90,8 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView, VistaN
         layout = new MigLayout("fill, insets 0,");
         cover = new PanelCover(); //Instanciamiento de PanelCover   
         carga = new PanelLoading();//Instanciamiento de Pantalla de carga. 
-        ActionListener eventRegister=new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae){
-               register(); 
-            }
-        };
-        
-        ActionListener eventLogin=new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent ae){
-              login(); 
-            }
-        };
                 
-        logAndReg= new PanelLoginAndRegistrer(eventRegister,eventLogin);
+        logAndReg= new PanelLoginAndRegistrer();
         TimingTarget target=new TimingTargetAdapter(){
         
             @Override
@@ -180,71 +169,74 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView, VistaN
         }
         });
     }
-
     
-    private void register(){
-        //carga.setVisible(true);
-        ShowMessage(Message.MessageType.SUCCESS,"Test_Message");
-    }
-    
-    private void login(){
-        //carga.setVisible(true);
-        ShowMessage(Message.MessageType.SUCCESS,"Test_Message");
-    }
-    
- 
-
+    // ===== Método =====
     private void ShowMessage(Message.MessageType type, String text) {
-    // limpiar anteriores
-    for (Component c : bg.getComponents()) {
-        if (c instanceof Message) bg.remove(c);
-    }
-    bg.revalidate();
-    bg.repaint();
+        // 1) Frenar y limpiar lo anterior
+        if (toastAnimator != null && toastAnimator.isRunning()) toastAnimator.stop();
+        if (hideTimer != null) hideTimer.stop();
+        if (toast != null && toast.getParent() == bg) bg.remove(toast);
 
-    Message ms = new Message();
-    ms.showMessage(type, text);
+        // 2) Crear y agregar el único toast
+        toast = new Message();
+        toast.showMessage(type, text);              // setea icono + texto (Message arranca invisible) 
+        bg.add(toast, "pos 0.5al -30", 0);          // 'bg' usa MigLayout posicional 
+        toast.setVisible(true);
+        bg.revalidate();
+        bg.repaint();
 
-    // añadir y mostrar arriba
-    bg.add(ms, "pos 0.5al -30", 0);
-    ms.setVisible(true);
-    bg.revalidate();
-    bg.repaint();
+        // 3) Animación: sin 'isShow'; controlamos con 'toastPhase'
+        toastPhase = ToastPhase.ENTERING;
 
-    // animator de entrada/salida
-    TimingTarget target = new TimingTargetAdapter() {
-        @Override public void timingEvent(float fraction) {
-            float y = ms.isShow() ? 40 * (1f - fraction) : 40 * fraction;
-            layout.setComponentConstraints(ms, "pos 0.5al " + (int)(y - 30));
+        TimingTarget target = new TimingTargetAdapter() {
+            @Override public void timingEvent(float fraction) {
+            if (toast == null || toast.getParent() != bg) return;
+
+            // ENTRADA:    y = 40 * fraction      (de -30 a +10)
+            // SALIDA:     y = 40 * (1 - fraction) (de +10 a -30)
+            float y = (toastPhase == ToastPhase.ENTERING)
+                    ? 40 * fraction
+                    : 40 * (1f - fraction);
+
+            ((MigLayout) bg.getLayout())
+                .setComponentConstraints(toast, "pos 0.5al " + (int)(y - 30));
+
             bg.revalidate();
             bg.repaint();
         }
-        @Override public void end() {
-            if (ms.isShow()) {
-                bg.remove(ms);
-                bg.revalidate();
-                bg.repaint();
-            } else {
-                ms.setShow(true);
+
+            @Override public void end() {
+                if (toast == null) return;
+
+                if (toastPhase == ToastPhase.ENTERING) {
+                    // Terminó la ENTRADA: esperar 2s y luego correr SALIDA
+                    hideTimer = new javax.swing.Timer(2000, e -> {
+                        if (toast != null && !toastAnimator.isRunning()) {
+                            toastPhase = ToastPhase.EXITING;
+                            toastAnimator.start();     // corre la salida
+                        }
+                    });
+                    hideTimer.setRepeats(false);
+                    hideTimer.start();
+
+                } else { // EXITING
+                    // Terminó la SALIDA: retirar y limpiar
+                    if (toast.getParent() == bg) bg.remove(toast);
+                    toast = null;
+                    bg.revalidate();
+                    bg.repaint();
+                }
             }
-        }
-    };
+        };
 
-    final Animator animator = new Animator(300, target);
-    animator.setResolution(0);
-    animator.setAcceleration(0.5f);
-    animator.setDeceleration(0.5f);
+        toastAnimator = new org.jdesktop.animation.timing.Animator(300, target);
+        toastAnimator.setResolution(0);
+        toastAnimator.setAcceleration(0.5f);
+        toastAnimator.setDeceleration(0.5f);
 
-    // entrada
-    animator.start();
-
-    // salida tras 2s (reemplaza Thread.sleep)
-    javax.swing.Timer delay = new javax.swing.Timer(2000, e -> {
-        if (!animator.isRunning()) animator.start();
-    });
-    delay.setRepeats(false);
-    delay.start();
-}
+        // 4) Lanzar ENTRADA una sola vez
+        toastAnimator.start();
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

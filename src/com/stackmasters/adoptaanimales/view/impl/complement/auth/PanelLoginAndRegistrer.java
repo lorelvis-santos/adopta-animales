@@ -39,16 +39,16 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
     private Button cmd;
     
     // Panel que contiene el formulario de inicio de sesión
-    public PanelLoginAndRegistrer(ActionListener eventRegister,ActionListener eventLogin) {
+    public PanelLoginAndRegistrer() {
         initComponents();// inicializa los paneles Login y Register y el layout principal.
-        initRegistrer(eventRegister);
-        initLogin(eventLogin);
+        initRegister();
+        initLogin();
         Login.setVisible(false);
         Register.setVisible(true);
     }
     
     // Panel que contiene el formulario de registro
-    private void initRegistrer(ActionListener eventRegister){
+    private void initRegister(){
     
         Register.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]15[]push")); //Distancia de los componentes.
         // Título del formulario
@@ -72,7 +72,6 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         cmd= new Button();
         cmd.setBackground(new Color (255, 255, 191));
         cmd.setForeground(new Color (89, 140, 163));
-        cmd.addActionListener(eventRegister);
         cmd.setText("Crear");
         Register.add(cmd,"w 40%, h 40");
         
@@ -81,10 +80,10 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
     }
     
     // Panel que contiene el formulario de inicio de sesión
-    private void initLogin(ActionListener eventLogin){
+    private void initLogin(){
         Login.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]10[]push"));
         // Título del formulario
-        JLabel label=new JLabel("Iniciar  Sesión");
+        JLabel label=new JLabel("Iniciar Sesión");
         label.setFont(new Font("sansserif",1,30));
         label.setForeground(new Color(128, 128, 128));
         Login.add(label);
@@ -106,11 +105,8 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         cmd= new Button();
         cmd.setBackground(new Color (255, 255, 191));
         cmd.setForeground(new Color (89, 140, 163));
-        cmd.addActionListener(eventLogin);
         cmd.setText("Entrar");
         Login.add(cmd,"w 40%, h 40");
-        
-            
     }
     
     public void showRegister(boolean show){ //Controla cual formulario se ve.
