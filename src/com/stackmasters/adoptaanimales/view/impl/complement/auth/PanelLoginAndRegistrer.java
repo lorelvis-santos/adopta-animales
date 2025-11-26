@@ -74,6 +74,7 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         cmd.setForeground(new Color (89, 140, 163));
         cmd.addActionListener(eventRegister);
         cmd.setText("Crear");
+        cmd.setFocusPainted(false);
         Register.add(cmd,"w 40%, h 40");
         
         
@@ -96,18 +97,13 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         txtPass = new MyPasswordField();
         txtPass.setPrefixIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/patas.png")));
         txtPass.setHint("Contraseña");
-        Login.add(txtPass, "w 60%");
-        JButton cmdForget=new JButton("Olvidaste tu contraseña?");
-        cmdForget.setForeground(new Color(100,100,100));
-        cmdForget.setFont(new Font("sansserif",1,12));
-        cmdForget.setContentAreaFilled(false);
-        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        Login.add(cmdForget);
+        Login.add(txtPass, "w 60%");     
         cmd= new Button();
         cmd.setBackground(new Color (255, 255, 191));
         cmd.setForeground(new Color (89, 140, 163));
         cmd.addActionListener(eventLogin);
         cmd.setText("Entrar");
+        cmd.setFocusPainted(false);
         Login.add(cmd,"w 40%, h 40");
         
             

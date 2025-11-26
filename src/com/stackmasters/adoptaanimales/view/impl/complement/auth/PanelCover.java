@@ -56,6 +56,7 @@ public class PanelCover extends javax.swing.JPanel {
            button.setBackground(new Color (255, 255, 191));
            button.setForeground(new Color (89, 140, 163));
            button.setText("Iniciar sesión");
+           button.setFocusPainted(false);
            button.setFont(new Font("sansserif",1,20));
            button.addActionListener(new ActionListener(){
     
@@ -64,7 +65,7 @@ public class PanelCover extends javax.swing.JPanel {
                event.actionPerformed(ae);
             }
          });
-        add(button,"w 60%, h 40");
+        add(button,"w 60%, h 50");
     }
           
            
@@ -173,7 +174,7 @@ public class PanelCover extends javax.swing.JPanel {
             if (login){
                 title.setText("Bienvenido a Adoptar");
                 descripction.setText("Entra con tus datos personales");
-                descripction1.setText("Has algo bonito con nosotros");
+                descripction1.setText("Has algo bonito con nosotros");                
                 button.setText("Registrate");
             }else{
                 
