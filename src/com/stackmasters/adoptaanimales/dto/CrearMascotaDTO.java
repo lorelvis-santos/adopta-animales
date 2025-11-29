@@ -22,6 +22,8 @@ public class CrearMascotaDTO {
     private final String descripcion;
     private final boolean estaVacunado;
     private final boolean estaCastrado;
+    private final Integer albergueId;  // Nueva variable agregada
+
     
     public CrearMascotaDTO(
         String nombre,
@@ -33,7 +35,8 @@ public class CrearMascotaDTO {
         LocalDate fechaNacimiento,
         String descripcion,
         boolean estaVacunado,
-        boolean estaCastrado
+        boolean estaCastrado,
+        Integer albergueId  // Nuevo parámetro
     ) {
         this.nombre = nombre;
         this.especie = especie;
@@ -45,6 +48,7 @@ public class CrearMascotaDTO {
         this.descripcion = descripcion;
         this.estaVacunado = estaVacunado;
         this.estaCastrado = estaCastrado;
+        this.albergueId = albergueId;  // Inicialización
     }
 
     public String getNombre() {
@@ -85,5 +89,9 @@ public class CrearMascotaDTO {
 
     public boolean getEstaCastrado() {
         return estaCastrado;
+    }
+    
+    public Integer getAlbergueId() {  // Nuevo getter
+        return albergueId;
     }
 }
