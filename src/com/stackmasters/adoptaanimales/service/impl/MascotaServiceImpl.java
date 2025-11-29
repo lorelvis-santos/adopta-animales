@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.stackmasters.adoptaanimales.service.impl;
 
 import com.stackmasters.adoptaanimales.service.MascotaService;
@@ -13,27 +9,19 @@ import com.stackmasters.adoptaanimales.dto.FiltroMascotaDTO;
 import com.stackmasters.adoptaanimales.exception.DatosInvalidosException;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
-
-
-
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
-
 /**
+ *
+ * @author Sky L.
+ * 
  * Clase que implementa la lógica de negocio para las mascotas del sistema.
  * Se encarga de:
  *  - Validar datos de entrada (DTOs)
  *  - Aplicar reglas de negocio básicas
  *  - Llamar al repositorio para acceder a la base de datos
- */
-
-
-/**
- *
- * @author LENOVO
  */
 
 public class MascotaServiceImpl implements MascotaService {
@@ -43,8 +31,8 @@ public class MascotaServiceImpl implements MascotaService {
     /**
      * Constructor donde inicializamos el repositorio.
      */
-    public MascotaServiceImpl() {
-        this.repo = new MascotaRepository();
+    public MascotaServiceImpl(MascotaRepository mascotaRepo) {
+        this.repo = mascotaRepo;
     }
 
     /**
@@ -111,7 +99,6 @@ public class MascotaServiceImpl implements MascotaService {
         m.setDescripcion(dto.getDescripcion());
         m.setEstaVacunado(dto.getEstaVacunado());
         m.setEstaCastrado(dto.getEstaCastrado());
-       // AGREGAR ALBERGUE_ID AL MODELO (asegúrate que exista setAlbergueId en Mascota.java)
         m.setAlbergueId(dto.getAlbergueId());
 
         // Estado inicial: la mascota está en el albergue
@@ -119,6 +106,8 @@ public class MascotaServiceImpl implements MascotaService {
 
         // 10. Guardar en BD usando el repositorio.
         // BaseRepository.insert(String sql, Object... params) devuelve boolean
+        
+        // To do: DBA debe proporcionar un método para reducir la complejidad de este insert.
         boolean insertado = repo.insert(
             "INSERT INTO mascota " +
             "(nombre, raza, especie, sexo, tamaño, peso, fecha_nacimiento, descripcion, esta_vacunado, esta_castrado, estado, albergue_id) " +
@@ -143,7 +132,7 @@ public class MascotaServiceImpl implements MascotaService {
         }
 
         // Nota: aquí no estamos trayendo el ID generado desde la BD.
-        // Si en el futuro necesitan el ID, se podría buscar por algún criterio único.
+        // Si en el futuro necesitan el ID, se podría diseñar una clase para respuestas de la base de datos.
         // Por ahora, devolvemos el objeto m, que representa la mascota creada.
         return m;
     }
@@ -220,10 +209,7 @@ public class MascotaServiceImpl implements MascotaService {
     @Override
     public List<Mascota> buscar(FiltroMascotaDTO filtro) {
 
-        // Si no hay filtro, puedes decidir:
-        //  - devolver todas
-        //  - o devolver lista vacía.
-        // Aquí devolveremos todas si filtro es null.
+        // Si no hay filtro, se devolverán todas.
         if (filtro == null) {
             return repo.findAll();
         }
@@ -236,9 +222,8 @@ public class MascotaServiceImpl implements MascotaService {
         for (Mascota m : todas) {
 
             // Filtro por nombre (contiene)
-            if (filtro.getNombre() != null &&
-                (m.getNombre() == null || !m.getNombre().contains(filtro.getNombre()))) {
-                continue;
+            if (filtro.getNombre() != null && (m.getNombre() == null || !m.getNombre().toLowerCase().contains(filtro.getNombre().toLowerCase()))) {
+                    continue;
             }
 
             // Filtro por especie
