@@ -156,6 +156,10 @@ public class AuthServiceImpl implements AuthService {
         return sesion;
     }
     
+    public void forzarCambioContraseña(String correo, String nuevaContraseña) throws DatosInvalidosException {
+        // To do: implementar...
+    }
+    
     private Adoptante buscarAdoptanteSeguro(String correo) {
         try {
             return adoptanteRepo.buscarPorCorreo(correo);

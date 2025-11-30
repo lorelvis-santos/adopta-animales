@@ -28,4 +28,19 @@ public interface AuthService {
      * Este método limpia cualquier referencia a la sesión registrada.
      */
     void cerrarSesion();
+    
+    /**
+     * Obliga al usuario a cambiar su contraseña en el primer inicio de sesión.
+     * Este método se utiliza cuando el usuario accede por primera vez con una
+     * contraseña temporal o por defecto, y debe establecer una nueva antes de
+     * continuar usando el sistema.
+     *
+     * @param correo Correo electrónico del usuario que debe actualizar su contraseña.
+     * @param nuevaContraseña Nueva contraseña que reemplazará la temporal.
+     * @throws DatosInvalidosException Si la nueva contraseña es nula, vacía o no cumple
+     *                                 con los criterios de seguridad mínimos.
+     */
+    void forzarCambioContraseña(String correo, String nuevaContraseña)
+        throws DatosInvalidosException;
+
 }
