@@ -10,20 +10,20 @@ public class Cita {
     
     private int idCita;
     private LocalDateTime fechaHora;
-    private CitaAdopcion cita;
+    private EstadoCita cita;
     private String notas;
     private int solicitudId;
     private int albergueId;
     
     //Enum para la cita
-    public enum CitaAdopcion{
-    Programada, Completada, Cancelada
+    public enum EstadoCita{
+    Programada, Completada, Cancelada, Pendiente
     }
     
     public Cita() {
     }
 
-    public Cita(int idCita, LocalDateTime fechaHora, CitaAdopcion cita, String notas, int solicitudId, int albergueId) {
+    public Cita(int idCita, LocalDateTime fechaHora, EstadoCita cita, String notas, int solicitudId, int albergueId) {
         this.idCita = idCita;
         this.fechaHora = fechaHora;
         this.cita = cita;
@@ -57,11 +57,11 @@ public class Cita {
     }
    
     //Getters y Setters para el Enum CitaAdopcion
-    public CitaAdopcion getCitaAdopcion(){
+    public EstadoCita getEstadoCita(){
         return cita;
     }
     
-    public void setCitaAdopcion(CitaAdopcion cita){
+    public void setEstadoCita(EstadoCita cita){
         this.cita = cita;
     }
     

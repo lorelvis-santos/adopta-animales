@@ -7,7 +7,7 @@ package com.stackmasters.adoptaanimales.model;
 public class FotoMascota {
     
     private int idFotoMascota;
-    private int publicacionId;
+    private int mascotaId;
     private String urlFoto;
     private boolean esPrincipal;
 
@@ -16,7 +16,7 @@ public class FotoMascota {
 
     public FotoMascota(int idFotoMascota, int publicacionId, String urlFoto, boolean esPrincipal) {
         this.idFotoMascota = idFotoMascota;
-        this.publicacionId = publicacionId;
+        this.mascotaId = publicacionId;
         this.urlFoto = urlFoto;
         this.esPrincipal = esPrincipal;
     }
@@ -30,11 +30,11 @@ public class FotoMascota {
     }
 
     public int getPublicacionId() {
-        return publicacionId;
+        return mascotaId;
     }
 
     public void setPublicacionId(int publicacionId) {
-        this.publicacionId = publicacionId;
+        this.mascotaId = publicacionId;
     }
 
     public String getUrlFoto() {
@@ -51,8 +51,5 @@ public class FotoMascota {
 
     public void setEsPrincipal(boolean esPrincipal) {
         this.esPrincipal = esPrincipal;
-    }
-    
-    
-    
+    } 
 }

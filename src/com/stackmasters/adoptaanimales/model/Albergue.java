@@ -1,6 +1,5 @@
 package com.stackmasters.adoptaanimales.model;
 
-import java.time.LocalDate;
 
 /**
  *
@@ -13,26 +12,20 @@ public class Albergue {
     private int provinciaId;
     private int municipioId;
     private String direccion;
-    private int capacidadMaxima;
-    private String contraseña;
     private String correo;
     private String telefono;
-    private LocalDate fechaCreacion;
 
     public Albergue() {
     }
     
-    public Albergue(int idAlbergue, String nombre, int provinciaId, int municipioId, String direccion, int capacidadMaxima, String contraseña, String correo, String telefono, LocalDate fechaCreacion) {
+    public Albergue(int idAlbergue, String nombre, int provinciaId, int municipioId, String direccion,  String correo, String telefono) {
         this.idAlbergue = idAlbergue;
         this.nombre = nombre;
         this.provinciaId = provinciaId;
         this.municipioId = municipioId;
         this.direccion = direccion;
-        this.capacidadMaxima = capacidadMaxima;
-        this.contraseña = contraseña;
         this.correo = correo;
         this.telefono = telefono;
-        this.fechaCreacion = fechaCreacion;
     }
 
     public int getIdAlbergue() {
@@ -75,22 +68,6 @@ public class Albergue {
         this.direccion = direccion;
     }
 
-    public int getCapacidadMaxima() {
-        return capacidadMaxima;
-    }
-
-    public void setCapacidadMaxima(int capacidadMaxima) {
-        this.capacidadMaxima = capacidadMaxima;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-    }
-
     public String getCorreo() {
         return correo;
     }
@@ -106,12 +83,4 @@ public class Albergue {
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
-
-    public LocalDate getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDate fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }   
 }

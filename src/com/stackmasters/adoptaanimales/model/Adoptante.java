@@ -11,10 +11,8 @@ public class Adoptante {
     private int idAdoptante;
     private String nombre;
     private String apellido;
-    private LocalDate fechanacimiento;
+    private LocalDate fechaNacimiento;
     private String telefono;
-    private String correo;
-    private String contraseña;
     private String direccion;
     private int provinciaId;
     private int municipioId;
@@ -22,14 +20,12 @@ public class Adoptante {
     public Adoptante() {
     }
 
-    public Adoptante(int idAdoptante, String nombre, String apellido, LocalDate fechanacimiento, String telefono, String correo, String contraseña, String direccion, int provinciaId, int municipioId) {
+    public Adoptante(int idAdoptante, String nombre, String apellido, LocalDate fechanacimiento, String telefono,  String direccion, int provinciaId, int municipioId) {
         this.idAdoptante = idAdoptante;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.fechanacimiento = fechanacimiento;
+        this.fechaNacimiento = fechanacimiento;
         this.telefono = telefono;
-        this.correo = correo;
-        this.contraseña = contraseña;
         this.direccion = direccion;
         this.provinciaId = provinciaId;
         this.municipioId = municipioId;
@@ -60,11 +56,11 @@ public class Adoptante {
     }
 
     public LocalDate getFechanacimiento() {
-        return fechanacimiento;
+        return fechaNacimiento;
     }
 
     public void setFechanacimiento(LocalDate fechanacimiento) {
-        this.fechanacimiento = fechanacimiento;
+        this.fechaNacimiento = fechanacimiento;
     }
 
     public String getTelefono() {
@@ -73,22 +69,6 @@ public class Adoptante {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getContraseña() {
-        return contraseña;
-    }
-
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
     }
 
     public String getDireccion() {
