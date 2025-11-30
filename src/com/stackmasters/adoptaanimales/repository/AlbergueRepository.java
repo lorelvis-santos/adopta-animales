@@ -27,27 +27,12 @@ public class AlbergueRepository extends BaseRepository<Albergue> {
         
         albergue.setIdAlbergue(datos.getInt("id_albergue"));
         albergue.setNombre(datos.getString("nombre"));
-        albergue.setProvinciaId(datos.getInt("provincia_id"));
-        albergue.setMunicipioId(datos.getInt("municipio_id"));
         albergue.setDireccion(datos.getString("direccion"));
         albergue.setCorreo(datos.getString("correo"));
         albergue.setTelefono(datos.getString("telefono"));
         
         return albergue;  
         }
-    
-    //Busca albergue por provincia
-    public List<Albergue> buscarPorProvincia(int provinciaId) throws SQLException{
-        String sql=  "SELECT * FROM "+ getTableName() + " Where provincia_id = ?";
-         return executeSelect(sql, provinciaId);
-    }
-    
-    
-    //Busca albergue por municipio
-    public List<Albergue> buscarPorMunicipio(int municipioId) throws SQLException{    
-        String sql=  "SELECT * FROM "+ getTableName() + " Where municipio_id = ?";
-         return executeSelect(sql, municipioId);
-    }
     
     // Ver publicaciones por albergue
     public List<Albergue> publicacionPorAlbergue(int idAlbergue ) throws SQLException{

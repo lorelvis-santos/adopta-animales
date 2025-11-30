@@ -27,11 +27,9 @@ public class AdoptanteRepository extends BaseRepository<Adoptante> {
             adoptante.setIdAdoptante(datos.getInt("id_adoptante"));
             adoptante.setNombre(datos.getString("nombre"));
             adoptante.setApellido(datos.getString("apellido"));
-            adoptante.setFechanacimiento(datos.getDate("fecha_nacimiento").toLocalDate());
+            adoptante.setFechaNacimiento(datos.getDate("fecha_nacimiento").toLocalDate());
             adoptante.setTelefono(datos.getString("telefono"));
             adoptante.setDireccion(datos.getString("direccion"));
-            adoptante.setProvinciaId(datos.getInt("provincia_id"));
-            adoptante.setMunicipioId(datos.getInt("municipio_id"));
             
             return adoptante;
             
@@ -43,11 +41,9 @@ public class AdoptanteRepository extends BaseRepository<Adoptante> {
               + " VALUES (?,?,?,?,?,?,?)";
             return insert(sql, adoptante.getNombre(),
                                 adoptante.getApellido(),
-                                adoptante.getFechanacimiento(),
+                                adoptante.getFechaNacimiento(),
                                 adoptante.getTelefono(),
-                                adoptante.getDireccion(),
-                                adoptante.getProvinciaId(),
-                                adoptante.getMunicipioId());         
+                                adoptante.getDireccion());     
       }
       
       //Actualizar adoptante
@@ -57,11 +53,9 @@ public class AdoptanteRepository extends BaseRepository<Adoptante> {
                     + " WHERE " + getPk()+ " = ?";
             return update(sql, adoptante.getNombre(),
                                   adoptante.getApellido(),
-                                  adoptante.getFechanacimiento(),
+                                  adoptante.getFechaNacimiento(),
                                   adoptante.getTelefono(),
                                   adoptante.getDireccion(),
-                                  adoptante.getProvinciaId(),
-                                  adoptante.getMunicipioId(),
                                   idAdoptante);         
             }
 }

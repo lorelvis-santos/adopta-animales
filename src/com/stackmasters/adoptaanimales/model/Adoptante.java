@@ -14,21 +14,17 @@ public class Adoptante {
     private LocalDate fechaNacimiento;
     private String telefono;
     private String direccion;
-    private int provinciaId;
-    private int municipioId;
 
     public Adoptante() {
     }
 
-    public Adoptante(int idAdoptante, String nombre, String apellido, LocalDate fechanacimiento, String telefono,  String direccion, int provinciaId, int municipioId) {
+    public Adoptante(int idAdoptante, String nombre, String apellido, LocalDate fechaNacimiento, String telefono, String direccion) {
         this.idAdoptante = idAdoptante;
         this.nombre = nombre;
         this.apellido = apellido;
-        this.fechaNacimiento = fechanacimiento;
+        this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
         this.direccion = direccion;
-        this.provinciaId = provinciaId;
-        this.municipioId = municipioId;
     }
 
     public int getIdAdoptante() {
@@ -55,12 +51,12 @@ public class Adoptante {
         this.apellido = apellido;
     }
 
-    public LocalDate getFechanacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechanacimiento(LocalDate fechanacimiento) {
-        this.fechaNacimiento = fechanacimiento;
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getTelefono() {
@@ -78,23 +74,4 @@ public class Adoptante {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-
-    public int getProvinciaId() {
-        return provinciaId;
-    }
-
-    public void setProvinciaId(int provinciaId) {
-        this.provinciaId = provinciaId;
-    }
-
-    public int getMunicipioId() {
-        return municipioId;
-    }
-
-    public void setMunicipioId(int municipioId) {
-        this.municipioId = municipioId;
-    }
-    
-    
-    
 }
