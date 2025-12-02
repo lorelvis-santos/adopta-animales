@@ -95,11 +95,9 @@ public abstract class BaseRepository <T>{
     
     //Metodo para buscar por nombre
     public List<T> findByName( String nombre){
-        
         List <T> lista = new ArrayList<>();
     
         String sql  = "SELECT * FROM "+ getTableName() + " WHERE nombre LIKE ?";
-    
         try(Connection conexion = getConnection();
             PreparedStatement  consulta = conexion.prepareStatement(sql)){
     
@@ -122,7 +120,6 @@ public abstract class BaseRepository <T>{
     //Metodo para insertar datos
                                                     //Object... parametros indica los valores que van a reemplazar los ? del sql
     public boolean insert(String sql, Object... parametros){
-    
         try(Connection conexion = getConnection();
               PreparedStatement consulta = conexion.prepareStatement(sql )){
         
@@ -145,14 +142,13 @@ public abstract class BaseRepository <T>{
     
     //Metodo para actualizar
     public boolean update(String sql, Object... parametros){
-     
         try(Connection conexion = getConnection();
-              PreparedStatement consulta = conexion.prepareStatement(sql)){
-            
-            for(int i =0; i <parametros.length; i++){
-                consulta.setObject(i+1, parametros[i]);
-            }
-            return consulta.executeUpdate()>0;
+         PreparedStatement consulta = conexion.prepareStatement(sql)){
+
+       for(int i =0; i <parametros.length; i++){
+           consulta.setObject(i+1, parametros[i]);
+       }
+        return consulta.executeUpdate()>0;
             
         }catch(SQLException e){
             System.out.println("Error: "+ e.getMessage());
@@ -162,7 +158,6 @@ public abstract class BaseRepository <T>{
     
     //Metodo para eliminar por id
     public boolean delete(int id){
-     
         String sql= "DELETE FROM " + getTableName() + " WHERE "+ getPk() +" = ?";
            
         try(Connection conexion  = getConnection();
@@ -179,36 +174,35 @@ public abstract class BaseRepository <T>{
     
     
     protected List<T> executeSelect(String sql, Object... parametros) throws SQLException{
-    
-            List<T> lista = new ArrayList<>();
-            
-            try(Connection conexion = getConnection(); 
-                  PreparedStatement consulta= conexion.prepareStatement(sql)){
-                    
-                for(int i = 0; i< parametros.length; i++){
-                    
-                    consulta.setObject(i+1, parametros[i]);
-                }
-                
-                try(ResultSet resultadoConsulta = consulta.executeQuery()){
-                    
-                    while(resultadoConsulta.next()){
-                        lista.add(mapearTabla(resultadoConsulta));
-                    }
-                }
-                
+        List<T> lista = new ArrayList<>();
+
+        try(Connection conexion = getConnection(); 
+              PreparedStatement consulta= conexion.prepareStatement(sql)){
+
+            for(int i = 0; i< parametros.length; i++){
+
+                consulta.setObject(i+1, parametros[i]);
             }
-            return lista;
+
+            try(ResultSet resultadoConsulta = consulta.executeQuery()){
+
+                while(resultadoConsulta.next()){
+                    lista.add(mapearTabla(resultadoConsulta));
+                }
+            }
+
+        }
+        return lista;
     }
     
     //Modificar la base de datos
     protected int executeUpdate(String sql, Object... parametros) throws SQLException {
-    try (Connection conexion = getConnection();
-         PreparedStatement ps = conexion.prepareStatement(sql)) {
-        for (int i = 0; i < parametros.length; i++) {
-            ps.setObject(i + 1, parametros[i]);
+        try (Connection conexion = getConnection();
+             PreparedStatement ps = conexion.prepareStatement(sql)) {
+            for (int i = 0; i < parametros.length; i++) {
+                ps.setObject(i + 1, parametros[i]);
+            }
+            return ps.executeUpdate();
         }
-        return ps.executeUpdate();
-    }
-} 
+    } 
 }

@@ -16,19 +16,17 @@ public class MascotaRepository extends BaseRepository<Mascota>{
         
     @Override
     protected String getTableName(){
-    
         return "mascota";
     }
     @Override
     protected String getPk(){
-        
         return  "id_mascota";
     }
     
     @Override
     protected Mascota mapearTabla(ResultSet datos) throws SQLException{
-        
         Mascota mascota = new Mascota();
+        
         mascota.setIdMascota(datos.getInt("id_mascota"));
         mascota.setNombre(datos.getString("nombre"));
         mascota.setFechaNacimiento(datos.getDate("fecha_nacimiento").toLocalDate());
@@ -42,7 +40,7 @@ public class MascotaRepository extends BaseRepository<Mascota>{
         mascota.setEstaVacunado(datos.getBoolean("esta_vacunado"));
         mascota.setCondicionEspecial(datos.getString("condicion_especial"));
         
-        //
+        
         String estadoBd = datos.getString("estado");
         Mascota.EstadoMascota estadoEnum = null;
         switch(estadoBd){
@@ -54,7 +52,6 @@ public class MascotaRepository extends BaseRepository<Mascota>{
         }
         
         mascota.setEstado(estadoEnum);
-        mascota.setVeterinariaId(datos.getInt(("veterinaria_id")));
         mascota.setAlbergueId(datos.getInt("albergue_id"));
         
         return mascota;
@@ -64,51 +61,85 @@ public class MascotaRepository extends BaseRepository<Mascota>{
     
     //Buscar mascota por albergue   
     public List<Mascota> buscarPorAlbergue(int albergueId) throws SQLException{
-    
-            String sql = "SELECT * FROM "+ getTableName() + " WHERE albergue_id = ?";
-            return executeSelect(sql, albergueId);
+        String sql = "SELECT * FROM "+ getTableName() + " WHERE albergue_id = ?";
+        return executeSelect(sql, albergueId);
     }
     
     //Buscar por mascota por raza
     public List<Mascota> buscarPorRaza(String raza) throws SQLException{
-            
-            String sql = "SELECT * FROM " + getTableName() + " WHERE raza = ?";
-            return executeSelect(sql, raza);
+        String sql = "SELECT * FROM " + getTableName() + " WHERE raza = ?";
+        return executeSelect(sql, raza);
     }
     
     //Buscar mascota por especie
     public List<Mascota> buscarPorEspecie(String especie) throws SQLException{
-        
         String sql = "SELECT * FROM "+ getTableName() + " WHERE especie = ?";
         return executeSelect(sql, especie);
     }
     
     //Buscar mascota por tamaño
     public List<Mascota> buscarPorTamaño(String tamaño) throws SQLException{
-        
         String sql = "SELECT * FROM " +getTableName() +" WHERE tamaño = ?";
         return executeSelect(sql, tamaño);
     }
     
     //Buscar mascota por sexo
     public List<Mascota> buscarPorSexo(String sexo) throws SQLException{
-        
         String sql = "SELECT * FROM "+getTableName()+" WHERE sexo = ?";
         return executeSelect(sql, sexo);
     }
     
     //Buscar mascotas que llegaron al albergue a traves de una veterinaria
     public List<Mascota> buscarPorVeterinaria() throws SQLException{
-        
         String sql = "SELECT * FROM " + getTableName() + " WHERE veterinaria_id IS NOT NULL";
         return executeSelect(sql);
     }
     
     //Buscar mascota por estado (En albergue, En proceso de adopcion o Adoptada )
     public List<Mascota> buscarPorEstado(Mascota.EstadoMascota estado)throws SQLException{
-        
         String sql = "SELECT * FROM " + getTableName() + " WHERE estado = ?";
         return executeSelect(sql, estado.toString());
     }   
     
+    
+   //insertar mascota 
+    public boolean insertMascota(Mascota mascota){
+        String sql = "INSERT INTO " + getTableName() + 
+        " (nombre, fecha_nacimiento, raza, tamaño, peso, especie, sexo, descripcion, esta_castrado, esta_vacunado, condicion_especial, estado, albergue_id) " +
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        return insert(sql, mascota.getNombre(),
+                    mascota.getFechaNacimiento(),
+                    mascota.getRaza(),
+                    mascota.getTamaño(),
+                    mascota.getPeso(),
+                    mascota.getEspecie(),
+                    mascota.getSexo(),
+                    mascota.getDescripcion(),
+                    mascota.isEstaCastrado(),
+                    mascota.isEstaVacunado(),
+                    mascota.getCondicionEspecial(),
+                    mascota.getEstado(),
+                    mascota.getAlbergueId());
+        }
+    
+    //Actualizar mascota
+    public boolean updateMascota(Mascota mascota, int idMascota){
+        String sql = "UPDATE  " +getTableName()+ "  SET nombre = ?, fecha_nacimiento=?, raza=?, tamaño=?, Peso= ?,"
+                + "especie=?, sexo=?, descripcion=?, esta_castrado=?, esta_vacunado= ?, condicion_especial=?, estado=?, albergue_id=? "
+                + " WHERE " +getPk()+" =?";
+        return update(sql, mascota.getNombre(),
+                    mascota.getFechaNacimiento(),
+                    mascota.getRaza(),
+                    mascota.getTamaño(),
+                    mascota.getPeso(),
+                    mascota.getEspecie(),
+                    mascota.getSexo(),
+                    mascota.getDescripcion(),
+                    mascota.isEstaCastrado(),
+                    mascota.isEstaVacunado(),
+                    mascota.getCondicionEspecial(),
+                    mascota.getEstado(),
+                    mascota.getAlbergueId(),
+                    idMascota);
+        }
 }

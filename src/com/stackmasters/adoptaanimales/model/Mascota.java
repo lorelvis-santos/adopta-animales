@@ -21,7 +21,6 @@ public class Mascota {
     private Sexo sexo;
     private EstadoMascota estado;
     private String condicionEspecial;
-    private int veterinariaId;
     private int albergueId;
     
     //Enums publicos 
@@ -70,7 +69,7 @@ public class Mascota {
     public Mascota() {
     }
 
-    public Mascota(int idMascota, String nombre, LocalDate fechaNacimiento, String raza, Tamaño tamañoMascota, double peso, Especie especieMascota, String descripcion, boolean estaCastrado, boolean estaVacunado, Sexo sexo, EstadoMascota estado, String condicionEspecial, int veterinariaId, int albergueId) {
+    public Mascota(int idMascota, String nombre, LocalDate fechaNacimiento, String raza, Tamaño tamañoMascota, double peso, Especie especieMascota, String descripcion, boolean estaCastrado, boolean estaVacunado, Sexo sexo, EstadoMascota estado, String condicionEspecial, int albergueId) {
         this.idMascota = idMascota;
         this.nombre = nombre;
         this.fechaNacimiento = fechaNacimiento;
@@ -84,7 +83,6 @@ public class Mascota {
         this.sexo = sexo;
         this.estado = estado;
         this.condicionEspecial = condicionEspecial;
-        this.veterinariaId = veterinariaId;
         this.albergueId = albergueId;
     }
 
@@ -195,14 +193,6 @@ public class Mascota {
 
     public void setCondicionEspecial(String condicionEspecial) {
         this.condicionEspecial = condicionEspecial;
-    }
-
-    public int getVeterinariaId() {
-        return veterinariaId;
-    }
-
-    public void setVeterinariaId(int veterinariaId) {
-        this.veterinariaId = veterinariaId;
     }
 
     public int getAlbergueId() {

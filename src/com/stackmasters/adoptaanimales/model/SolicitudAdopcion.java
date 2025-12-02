@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+
 
 /**
  *
@@ -8,14 +9,13 @@ import java.time.LocalDateTime;
  */
 public class SolicitudAdopcion {
     
-    private String idSolicitud;
-    private LocalDateTime fechaSolicitud;
-    private LocalDateTime fechaRespuesta;
+    private int idSolicitud;
+    private LocalDate fechaSolicitud;
+    private LocalDate fechaRespuesta;
     private String motivoRechazo;
     private int adoptanteId;
-    private int publicacionId;
-    private int adminRespuesta;
     private EstadoSolicitud estado;
+    private int mascotaId;
     
     public enum EstadoSolicitud{
     Pendiente, Aprobada, Rechazada, Cancelada
@@ -24,38 +24,39 @@ public class SolicitudAdopcion {
     public SolicitudAdopcion() {
     }
 
-    public SolicitudAdopcion(String idSolicitud, LocalDateTime fechaSolicitud, LocalDateTime fechaRespuesta, String motivoRechazo, int adoptanteId, int publicacionId, int adminRespuesta, EstadoSolicitud estadoSolicitud) {
+    public SolicitudAdopcion(int idSolicitud, LocalDate fechaSolicitud, LocalDate fechaRespuesta, String motivoRechazo, int adoptanteId, EstadoSolicitud estado, int mascotaId) {
         this.idSolicitud = idSolicitud;
         this.fechaSolicitud = fechaSolicitud;
         this.fechaRespuesta = fechaRespuesta;
         this.motivoRechazo = motivoRechazo;
         this.adoptanteId = adoptanteId;
-        this.publicacionId = publicacionId;
-        this.adminRespuesta = adminRespuesta;
-        this.estado = estadoSolicitud;
+        this.estado = estado;
+        this.mascotaId = mascotaId;
     }
 
-    public String getIdSolicitud() {
+   
+
+    public int getIdSolicitud() {
         return idSolicitud;
     }
 
-    public void setIdSolicitud(String idSolicitud) {
+    public void setIdSolicitud(int idSolicitud) {
         this.idSolicitud = idSolicitud;
     }
 
-    public LocalDateTime getFechaSolicitud() {
+    public LocalDate getFechaSolicitud() {
         return fechaSolicitud;
     }
 
-    public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
+    public void setFechaSolicitud(LocalDate fechaSolicitud) {
         this.fechaSolicitud = fechaSolicitud;
     }
 
-    public LocalDateTime getFechaRespuesta() {
+    public LocalDate getFechaRespuesta() {
         return fechaRespuesta;
     }
 
-    public void setFechaRespuesta(LocalDateTime fechaRespuesta) {
+    public void setFechaRespuesta(LocalDate fechaRespuesta) {
         this.fechaRespuesta = fechaRespuesta;
     }
 
@@ -75,28 +76,20 @@ public class SolicitudAdopcion {
         this.adoptanteId = adoptanteId;
     }
 
-    public int getPublicacionId() {
-        return publicacionId;
-    }
-
-    public void setPublicacionId(int publicacionId) {
-        this.publicacionId = publicacionId;
-    }
-
-    public int getAdminRespuesta() {
-        return adminRespuesta;
-    }
-
-    public void setAdminRespuesta(int adminRespuesta) {
-        this.adminRespuesta = adminRespuesta;
-    }
-
-    //Getters y Setters para el Enum EstadoSolicitud
-    public EstadoSolicitud getEstadoSolicitud() {
+    public EstadoSolicitud getEstado() {
         return estado;
     }
 
-    public void setEstadoSolicitud(EstadoSolicitud estadoSolicitud) {
-        this.estado = estadoSolicitud;
+    public void setEstado(EstadoSolicitud estado) {
+        this.estado = estado;
     }
+
+    public int getMascotaId() {
+        return mascotaId;
+    }
+
+    public void setMascotaId(int mascotaId) {
+        this.mascotaId = mascotaId;
+    }
+    
 }
