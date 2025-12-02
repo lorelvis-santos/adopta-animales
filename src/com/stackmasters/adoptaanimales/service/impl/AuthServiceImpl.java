@@ -8,7 +8,6 @@ import com.stackmasters.adoptaanimales.exception.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
 import com.stackmasters.adoptaanimales.security.PasswordHasher;
-import com.stackmasters.adoptaanimales.model.Adoptante;
 import com.stackmasters.adoptaanimales.model.AdminAlbergue;
 
 /**
@@ -69,7 +68,6 @@ public class AuthServiceImpl implements AuthService {
         // Si hay un rol seleccionado, llamamos el login correspondiente
         if (rol != null) {
             return switch (rol) {
-                case ADOPTANTE -> loginAdoptante(correo, contraseña);
                 case ADMIN_ALBERGUE -> loginAdmin(correo, contraseña);
                 default -> throw new CredencialesInvalidasException("Rol no soportado para autenticación");
             };
@@ -77,21 +75,12 @@ public class AuthServiceImpl implements AuthService {
         
         // Si no tiene rol seleccionado, hacemos la detección automáticamente
         AdminAlbergue admin = buscarAdminSeguro(correo);
-        Adoptante adoptante = buscarAdoptanteSeguro(correo);
         
-        if (admin == null && adoptante == null) {
+        if (admin == null) {
             throw new CredencialesInvalidasException("Cuenta inexistente");
         }
         
-        if (admin != null && adoptante != null) {
-            throw new SeleccioneRolException("El correo existe en más de un rol. Seleccione con cuál desea iniciar sesión.");
-        }
-        
-        if (admin != null) {
-            return loginAdmin(correo, contraseña);
-        }
-        
-        return loginAdoptante(correo, contraseña);
+        return loginAdmin(correo, contraseña);
     }
     
     /**
@@ -104,33 +93,7 @@ public class AuthServiceImpl implements AuthService {
         GestorSesion.limpiar();
     }
     
-    // Métodos privados...
-    
-    private Sesion loginAdoptante(String correo, String contraseña) throws CredencialesInvalidasException {
-        Adoptante adoptante = buscarAdoptanteSeguro(correo);
-        
-        // Verificamos que exista el adoptante
-        if (adoptante == null) {
-            throw new CredencialesInvalidasException("Cuenta inexistente");
-        }
-        
-        // Comprobamos contraseñas
-        if (!hasher.verificar(contraseña, adoptante.getContraseña())) {
-            throw new CredencialesInvalidasException("Contraseña incorrecta");
-        }
-        
-        // Creamos la nueva sesión
-        Sesion sesion = new Sesion(
-                Rol.ADOPTANTE,
-                adoptante.getIdAdoptante(),
-                adoptante.getNombre() + " " + adoptante.getApellido()
-        );
-        
-        GestorSesion.establecer(sesion);
-        
-        return sesion;
-    }
-    
+    // Métodos privados...    
     private Sesion loginAdmin(String correo, String contraseña) throws CredencialesInvalidasException {
         AdminAlbergue admin = buscarAdminSeguro(correo);
         
@@ -160,20 +123,10 @@ public class AuthServiceImpl implements AuthService {
         // To do: implementar...
     }
     
-    private Adoptante buscarAdoptanteSeguro(String correo) {
-        try {
-            return adoptanteRepo.buscarPorCorreo(correo);
-        } catch (Exception e) {
-            System.err.println("Error buscando adoptante por correo: " + e.getMessage());
-            return null;
-        }
-    }
-    
     private AdminAlbergue buscarAdminSeguro(String correo) {
         try {
             return adminAlbergueRepo.buscarPorCorreo(correo);
         } catch (Exception e) {
-            System.err.println("Error buscando admin de albergue por correo: " + e.getMessage());
             return null;
         }
     }
