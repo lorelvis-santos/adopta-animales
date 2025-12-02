@@ -1,7 +1,7 @@
 package com.stackmasters.adoptaanimales.dto;
 
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
-import com.stackmasters.adoptaanimales.model.Cita.CitaAdopcion;
+import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import java.time.LocalDate;
 
 /**
@@ -16,12 +16,12 @@ import java.time.LocalDate;
 public class FiltroSolicitudDTO {
     private final String texto; // buscar por nombre de mascota o adoptante
     private final EstadoSolicitud estadoSolicitud;
-    private final CitaAdopcion estadoCita;
+    private final EstadoCita estadoCita;
     private final int mascotaId;
     private final LocalDate fechaDesde;
     private final LocalDate fechaHasta;
 
-    public FiltroSolicitudDTO(String texto, EstadoSolicitud estadoSolicitud, CitaAdopcion estadoCita, int mascotaId, LocalDate fechaDesde, LocalDate fechaHasta) {
+    public FiltroSolicitudDTO(String texto, EstadoSolicitud estadoSolicitud, EstadoCita estadoCita, int mascotaId, LocalDate fechaDesde, LocalDate fechaHasta) {
         this.texto = texto;
         this.estadoSolicitud = estadoSolicitud;
         this.estadoCita = estadoCita;
@@ -38,7 +38,7 @@ public class FiltroSolicitudDTO {
         return estadoSolicitud;
     }
 
-    public CitaAdopcion getEstadoCita() {
+    public EstadoCita getEstadoCita() {
         return estadoCita;
     }
 

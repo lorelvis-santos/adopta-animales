@@ -6,7 +6,7 @@ import com.stackmasters.adoptaanimales.dto.CrearAdoptanteDTO;
 import com.stackmasters.adoptaanimales.dto.CitaDTO;
 import com.stackmasters.adoptaanimales.exception.*;
 import com.stackmasters.adoptaanimales.model.Cita;
-import com.stackmasters.adoptaanimales.model.Cita.CitaAdopcion;
+import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import com.stackmasters.adoptaanimales.dto.FiltroSolicitudDTO;
 import java.util.List;
 
@@ -107,7 +107,7 @@ public interface SolicitudService {
      * @return true si el estado fue actualizado; false si no hubo cambios.
      * @throws DatosInvalidosException Si la transición de estado es inválida.
      */
-    boolean actualizarEstadoCita(int solicitudId, CitaAdopcion nuevoEstado)
+    boolean actualizarEstadoCita(int solicitudId, EstadoCita nuevoEstado)
         throws DatosInvalidosException;
     
     /**

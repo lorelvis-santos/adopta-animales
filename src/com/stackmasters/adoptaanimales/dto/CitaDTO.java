@@ -1,8 +1,7 @@
 package com.stackmasters.adoptaanimales.dto;
 
 import java.time.LocalDateTime;
-import com.stackmasters.adoptaanimales.model.Cita.CitaAdopcion;
-import com.stackmasters.adoptaanimales.model.Cita;
+import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 
 /**
  *
@@ -10,12 +9,12 @@ import com.stackmasters.adoptaanimales.model.Cita;
  */
 public class CitaDTO {
     private final LocalDateTime fechaHora;
-    private final CitaAdopcion estado;
+    private final EstadoCita estado;
     private final String notas;
     private final int solicitudId;
     private final int albergueId;
 
-    public CitaDTO(LocalDateTime fechaHora, CitaAdopcion estado, String notas, int solicitudId, int albergueId) {
+    public CitaDTO(LocalDateTime fechaHora, EstadoCita estado, String notas, int solicitudId, int albergueId) {
         this.fechaHora = fechaHora;
         this.estado = estado;
         this.notas = notas;
@@ -27,7 +26,7 @@ public class CitaDTO {
         return fechaHora;
     }
 
-    public CitaAdopcion getEstado() {
+    public EstadoCita getEstado() {
         return estado;
     }
 
