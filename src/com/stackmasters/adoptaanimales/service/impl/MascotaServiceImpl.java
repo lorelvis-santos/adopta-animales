@@ -8,7 +8,6 @@ import com.stackmasters.adoptaanimales.dto.ActualizarMascotaDTO;
 import com.stackmasters.adoptaanimales.dto.FiltroMascotaDTO;
 import com.stackmasters.adoptaanimales.exception.DatosInvalidosException;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
-import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
@@ -108,24 +107,8 @@ public class MascotaServiceImpl implements MascotaService {
         // BaseRepository.insert(String sql, Object... params) devuelve boolean
         
         // To do: DBA debe proporcionar un método para reducir la complejidad de este insert.
-        boolean insertado = repo.insert(
-            "INSERT INTO mascota " +
-            "(nombre, raza, especie, sexo, tamaño, peso, fecha_nacimiento, descripcion, esta_vacunado, esta_castrado, estado, albergue_id) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            m.getNombre(),
-            m.getRaza(),
-            m.getEspecie().toString(),
-            m.getSexo().toString(),
-            m.getTamaño().toString(),
-            m.getPeso(),
-            m.getFechaNacimiento() != null ? java.sql.Date.valueOf(m.getFechaNacimiento()) : null,
-            m.getDescripcion(),
-            m.isEstaVacunado(),
-            m.isEstaCastrado(),
-            m.getEstado().toString(),
-            m.getAlbergueId()  // <- PARÁMETRO AGREGADO AQUÍ
-        );
-
+        boolean insertado = repo.insertMascota(m);
+           
         if (!insertado) {
             // Si insert devuelve false, algo falló al guardar
             throw new DatosInvalidosException("No se pudo guardar la mascota en la base de datos.");
@@ -155,18 +138,25 @@ public class MascotaServiceImpl implements MascotaService {
 
         // 3. Ejecutar la actualización usando el repositorio.
         // BaseRepository.update(...) devuelve boolean y maneja SQLException internamente.
-        boolean actualizado = repo.update(
-            "UPDATE mascota SET nombre = ?, descripcion = ?, esta_vacunado = ?, esta_castrado = ?, estado = ? WHERE id_mascota = ?",
-            dto.getNombre(),
-            dto.getDescripcion(),
-            dto.getEstaVacunado(),
-            dto.getEstaCastrado(),
-            dto.getEstado() != null ? dto.getEstado().toString() : null,
-            mascotaId
-        );
+        
+          //  Obtener la mascota desde la BD por ID 
+          Mascota m = repo.findById(mascotaId);
+          
+          // Verificar que la mascota exista, sino, lanzar excepción.
+          if (m == null) {
+              throw new DatosInvalidosException("La mascota no existe.");
+          } 
 
-        return actualizado;
-    }
+        // Modificar los campos de la mascota actual con los del dto.
+            m.setNombre(dto.getNombre());
+            m.setDescripcion(dto.getDescripcion());
+            m.setEstaVacunado(dto.getEstaVacunado());
+            m.setEstaCastrado(dto.getEstaCastrado());
+            m.setEstado(dto.getEstado());          
+            
+        // Actualizar con el método updateMascota.
+           return repo.updateMascota(m, mascotaId);   
+         }
 
     /**
      * Marcar una mascota como adoptada.
