@@ -41,7 +41,7 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
         String sql = "INSERT INTO "+getTableName() +" (estado, fecha_solicitud, fecha_respuesta, motivo_rechazo,"
                 + "adoptante_id, mascota_id, admin_id) VALUES (?,?,?,?,?,?,?)";
     
-        return insert(sql, solicitud.getEstado(),
+        return insert(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),
                                solicitud.getFechaRespuesta(),
                                solicitud.getMotivoRechazo(),
@@ -49,12 +49,12 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
                                solicitud.getMascotaId());
     }
     
-    //iActualizar solicitud
+    //Actualizar solicitud
     public boolean updateSolicitud(SolicitudAdopcion solicitud, int idSolicitud){
         String sql = "UPDATE "+getTableName() +" SET estado = ? , fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
                 + "adoptante_id = ?, mascota_id = ?, admin_id = ? WHERE " + getPk()+ " = ?";
     
-        return update(sql, solicitud.getEstado(),
+        return update(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),
                                solicitud.getFechaRespuesta(),
                                solicitud.getMotivoRechazo(),

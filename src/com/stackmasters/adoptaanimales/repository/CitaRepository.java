@@ -49,7 +49,7 @@ public class CitaRepository extends BaseRepository<Cita> {
     public boolean insertCita(Cita cita){
         String sql = "INSERT INTO "+getTableName()+ " (fecha_hora, estado, notas, solicitud_id, albergue_id) VALUES (?,?,?,?,?)";
         return insert(sql, cita.getFechaHora(),
-                             cita.getEstadoCita(),
+                             cita.getEstadoCita().db(),
                              cita.getNotas(),
                              cita.getSolicitudId(),
                              cita.getAlbergueId());
@@ -60,7 +60,7 @@ public class CitaRepository extends BaseRepository<Cita> {
         String sql = "UPDATE "+getTableName()+ " SET fecha_hora = ?, estado = ?, notas = ?, solicitud_id = ?, albergue_id = ? WHERE "+getPk()+
                 " = ?";
         return update(sql, cita.getFechaHora(),
-                             cita.getEstadoCita(),
+                             cita.getEstadoCita().db(),
                              cita.getNotas(),
                              cita.getSolicitudId(),
                              cita.getAlbergueId(),

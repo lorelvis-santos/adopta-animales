@@ -110,35 +110,35 @@ public class MascotaRepository extends BaseRepository<Mascota>{
         return insert(sql, mascota.getNombre(),
                     mascota.getFechaNacimiento(),
                     mascota.getRaza(),
-                    mascota.getTamaño(),
+                    mascota.getTamaño().db(),
                     mascota.getPeso(),
-                    mascota.getEspecie(),
-                    mascota.getSexo(),
+                    mascota.getEspecie().db(),
+                    mascota.getSexo().db(),
                     mascota.getDescripcion(),
                     mascota.isEstaCastrado(),
                     mascota.isEstaVacunado(),
                     mascota.getCondicionEspecial(),
-                    mascota.getEstado(),
+                    mascota.getEstado().db(),
                     mascota.getAlbergueId());
         }
     
     //Actualizar mascota
     public boolean updateMascota(Mascota mascota, int idMascota){
-        String sql = "UPDATE  " +getTableName()+ "  SET nombre = ?, fecha_nacimiento=?, raza=?, tamaño=?, Peso= ?,"
-                + "especie=?, sexo=?, descripcion=?, esta_castrado=?, esta_vacunado= ?, condicion_especial=?, estado=?, albergue_id=? "
-                + " WHERE " +getPk()+" =?";
+        String sql = "UPDATE  " +getTableName()+ "  SET nombre = ?, fecha_nacimiento = ?, raza = ?, tamaño = ?, peso = ?,"
+                + "especie = ?, sexo = ?, descripcion = ?, esta_castrado = ?, esta_vacunado= ?, condicion_especial = ?, estado = ?, albergue_id = ? "
+                + " WHERE " +getPk()+" = ?";
         return update(sql, mascota.getNombre(),
                     mascota.getFechaNacimiento(),
                     mascota.getRaza(),
-                    mascota.getTamaño(),
+                    mascota.getTamaño().db(),
                     mascota.getPeso(),
-                    mascota.getEspecie(),
-                    mascota.getSexo(),
+                    mascota.getEspecie().db(),
+                    mascota.getSexo().db(),
                     mascota.getDescripcion(),
                     mascota.isEstaCastrado(),
                     mascota.isEstaVacunado(),
                     mascota.getCondicionEspecial(),
-                    mascota.getEstado(),
+                    mascota.getEstado().db(),
                     mascota.getAlbergueId(),
                     idMascota);
         }
