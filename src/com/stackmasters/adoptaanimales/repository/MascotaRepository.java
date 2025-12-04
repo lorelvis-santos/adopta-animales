@@ -16,7 +16,7 @@ public class MascotaRepository extends BaseRepository<Mascota>{
         
     @Override
     protected String getTableName(){
-        return "mascota";
+        return "Mascota";
     }
     @Override
     protected String getPk(){
