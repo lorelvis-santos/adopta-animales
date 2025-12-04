@@ -22,50 +22,74 @@ public class Mascota {
     private EstadoMascota estado;
     private String condicionEspecial;
     private int albergueId;
-    
-    //Enums publicos 
+     
     
     //Enum para el tamaño de la mascota
     public enum Tamaño {
-    Pequeño,
-    Mediano,
-    Grande
+    Pequeño("Pequeño"),
+    Mediano("Mediano"),
+    Grande("Grande");
+  
+    private final String db;
+  
+    Tamaño(String db) {
+        this.db = db; 
+    }
+
+    public String db() {
+        return db; 
+    }
 }
      //Enum  para el sexo de la mascota
      public enum Sexo{
-    Macho,
-    Hembra
-    }
-     //Enum para la especie
-     public enum Especie {
-    Perro,
-    Gato
-}
-
-    //Enum para el estado de la mascota
-     public enum EstadoMascota{
-         
-    //Asignar un valor mas bonito al enum  para mostrar al usuario
-    EnAlbergue("En albergue"),
-    EnProcesoDeAdopcion("En proceso de adopción"),
-    Adoptada("Adoptada");
+        Macho("Macho"),
+        Hembra("Hembra");
     
-    //Campo que contiene el texto "bonito" que se mostrara al usuario
-    private final String descripcionEstado;
+        private final String db;
+        
+        Sexo(String db){
+        this.db = db;
+        }
     
-    //Constructor del enum que recibe el texto bonito
-    EstadoMascota(String descripcion){
-        this.descripcionEstado = descripcion;
-    }
-    
-    //Con el metodo toString() se convierte el enum a String
-    @Override
-    public String toString(){
-        return descripcionEstado;
+        public String db(){
+        return db;
         }
     }
      
+     //Enum para la especie
+     public enum Especie {
+        Perro("Perro"),
+        Gato("Gato");
+
+        private final String db;
+
+        Especie(String db){
+        this.db = db;
+        }
+
+        public String db(){
+        return db;
+        }
+    }
+
+    //Enum para el estado de la mascota
+     public enum EstadoMascota{
+        EnAlbergue("En albergue"),
+        EnProcesoDeAdopcion("En proceso de adopción"),
+        Adoptada("Adoptada");
     
+        private final String db;
+    
+        EstadoMascota(String db){
+            this.db = db;
+        }
+   
+        public String db(){
+            return db;
+            }
+    }
+     
+    //Constructor vacio
     public Mascota() {
     }
 

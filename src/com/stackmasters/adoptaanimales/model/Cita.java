@@ -17,9 +17,23 @@ public class Cita {
     
     //Enum para la cita
     public enum EstadoCita{
-    Programada, Completada, Cancelada, Pendiente
+        Programada("Programada"),
+        Completada("Completada"),
+        Cancelada("Cancelada"),
+        Pendiente("Pendiente");
+
+        private final String db;
+
+        EstadoCita(String db){
+        this.db = db;
+        }
+
+        public String db(){
+        return db;
+        }
     }
-    
+   
+    //Constructor vacio
     public Cita() {
     }
 

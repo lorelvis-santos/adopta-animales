@@ -49,7 +49,7 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
                                solicitud.getMascotaId());
     }
     
-    //iActualizar solicitud
+    //Actualizar solicitud
     public boolean updateSolicitud(SolicitudAdopcion solicitud, int idSolicitud){
         String sql = "UPDATE "+getTableName() +" SET estado = ? , fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
                 + "adoptante_id = ?, mascota_id = ?, admin_id = ? WHERE " + getPk()+ " = ?";

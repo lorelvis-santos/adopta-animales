@@ -124,9 +124,9 @@ public class MascotaRepository extends BaseRepository<Mascota>{
     
     //Actualizar mascota
     public boolean updateMascota(Mascota mascota, int idMascota){
-        String sql = "UPDATE  " +getTableName()+ "  SET nombre = ?, fecha_nacimiento=?, raza=?, tamaño=?, Peso= ?,"
-                + "especie=?, sexo=?, descripcion=?, esta_castrado=?, esta_vacunado= ?, condicion_especial=?, estado=?, albergue_id=? "
-                + " WHERE " +getPk()+" =?";
+        String sql = "UPDATE  " +getTableName()+ "  SET nombre = ?, fecha_nacimiento = ?, raza = ?, tamaño = ?, peso = ?,"
+                + "especie = ?, sexo = ?, descripcion = ?, esta_castrado = ?, esta_vacunado= ?, condicion_especial = ?, estado = ?, albergue_id = ? "
+                + " WHERE " +getPk()+" = ?";
         return update(sql, mascota.getNombre(),
                     mascota.getFechaNacimiento(),
                     mascota.getRaza(),

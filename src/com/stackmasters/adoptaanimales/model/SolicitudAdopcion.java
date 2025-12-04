@@ -17,8 +17,22 @@ public class SolicitudAdopcion {
     private EstadoSolicitud estado;
     private int mascotaId;
     
+    //Enum para el estado de la solicitud
     public enum EstadoSolicitud{
-    Pendiente, Aprobada, Rechazada, Cancelada
+        Pendiente("Estado"),
+        Aprobada("Aprobada"),
+        Rechazada("Rechazada"),
+        Cancelada("Cancelada");
+
+        private final String db;
+
+        EstadoSolicitud(String db){
+        this.db = db;
+        }
+
+        public String db(){
+        return db;
+        }
     }
 
     public SolicitudAdopcion() {

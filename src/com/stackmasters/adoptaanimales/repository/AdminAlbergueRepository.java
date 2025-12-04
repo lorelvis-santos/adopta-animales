@@ -54,7 +54,7 @@ public class AdminAlbergueRepository extends BaseRepository<AdminAlbergue> {
     }
     
     //Insertar admin
-    public boolean inserAdmin(AdminAlbergue admin){
+    public boolean insertAdmin(AdminAlbergue admin){
         String sql = "INSERT INTO "+getTableName()+" (nombre, apellido, correo, contraseña, albergue_id) VALUES (?,?,?,?,?)";
         return insert(sql, admin.getNombre(),
                             admin.getApellido(),
