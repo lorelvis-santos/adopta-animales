@@ -11,7 +11,7 @@ public class CitaRepository extends BaseRepository<Cita> {
     
     @Override
     protected String getTableName(){
-    return "cita";
+    return "Cita";
     }
     
     @Override

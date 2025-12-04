@@ -13,7 +13,7 @@ public class AlbergueRepository extends BaseRepository<Albergue> {
         
     @Override
     protected String getTableName(){
-        return "albergue";    
+        return "Albergue";    
     }
     
     @Override
