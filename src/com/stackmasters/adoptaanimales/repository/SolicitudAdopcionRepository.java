@@ -39,7 +39,7 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     //Insertar solicitud
     public boolean insertSolicitud(SolicitudAdopcion solicitud){
         String sql = "INSERT INTO "+getTableName() +" (estado, fecha_solicitud, fecha_respuesta, motivo_rechazo,"
-                + "adoptante_id, mascota_id, admin_id) VALUES (?,?,?,?,?,?,?)";
+                + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?,?)";
     
         return insert(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),
@@ -52,14 +52,16 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     //Actualizar solicitud
     public boolean updateSolicitud(SolicitudAdopcion solicitud, int idSolicitud){
         String sql = "UPDATE "+getTableName() +" SET estado = ? , fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
-                + "adoptante_id = ?, mascota_id = ?, admin_id = ? WHERE " + getPk()+ " = ?";
+                + "adoptante_id = ?, mascota_id = ? WHERE " + getPk()+ " = ?";
     
-        return update(sql, solicitud.getEstado().db(),
-                               solicitud.getFechaSolicitud(),
-                               solicitud.getFechaRespuesta(),
-                               solicitud.getMotivoRechazo(),
-                               solicitud.getAdoptanteId(),
-                               solicitud.getMascotaId(),
-                               idSolicitud);
+        return update(sql, 
+                solicitud.getEstado().db(),
+                solicitud.getFechaSolicitud(),
+                solicitud.getFechaRespuesta(),
+                solicitud.getMotivoRechazo(),
+                solicitud.getAdoptanteId(),
+                solicitud.getMascotaId(),
+                idSolicitud
+        );
     }
 }
