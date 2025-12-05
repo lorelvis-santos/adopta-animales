@@ -9,7 +9,7 @@ import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
 import com.stackmasters.adoptaanimales.security.PasswordHasher;
 import com.stackmasters.adoptaanimales.model.AdminAlbergue;
-
+import java.sql.SQLException;
 /**
  *
  * @author Lorelvis Santos
@@ -119,14 +119,41 @@ public class AuthServiceImpl implements AuthService {
         return sesion;
     }
     
+   @Override
     public void forzarCambioContraseña(String correo, String nuevaContraseña) throws DatosInvalidosException {
-        // To do: implementar...
+        // 1. Validar parámetros
+    if (correo == null || correo.isBlank()) {
+        throw new DatosInvalidosException("El correo es obligatorio");
+    }
+    
+    if (nuevaContraseña == null || nuevaContraseña.isBlank()) {
+        throw new DatosInvalidosException("La nueva contraseña es obligatoria");
+    }
+    
+    if (nuevaContraseña.length() < 8) {
+        throw new DatosInvalidosException("La contraseña debe tener mínimo 8 caracteres");
+    }
+    
+    // Buscar admin por correo
+    AdminAlbergue admin = buscarAdminSeguro(correo);
+    if (admin == null) {
+        throw new DatosInvalidosException("No existe un usuario admin con ese correo");
+    }
+    
+    // Hashear nueva contraseña
+    String nuevaHasheada = hasher.hash(nuevaContraseña);
+    
+     // Actualizar en repositorio
+        boolean actualizado = adminAlbergueRepo.actualizarContraseña(correo, nuevaHasheada);
+        if (!actualizado) {
+            throw new DatosInvalidosException("No se pudo actualizar la contraseña");
+        }
     }
     
     private AdminAlbergue buscarAdminSeguro(String correo) {
         try {
             return adminAlbergueRepo.buscarPorCorreo(correo);
-        } catch (Exception e) {
+        } catch (SQLException e) {
             return null;
         }
     }
