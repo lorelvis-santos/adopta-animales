@@ -17,10 +17,10 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Component id="profile1" alignment="0" pref="230" max="32767" attributes="0"/>
-          <Component id="menuButton2" alignment="0" max="32767" attributes="0"/>
-          <Component id="menuButton4" alignment="0" max="32767" attributes="0"/>
-          <Component id="menuButton5" alignment="0" max="32767" attributes="0"/>
-          <Component id="menuButton3" alignment="0" max="32767" attributes="0"/>
+          <Component id="menuBtnInicio" alignment="0" max="32767" attributes="0"/>
+          <Component id="menuBtnMascotas" alignment="0" max="32767" attributes="0"/>
+          <Component id="menuBtnSolicitudes" alignment="0" max="32767" attributes="0"/>
+          <Component id="menuBtnCerrarSesion" alignment="0" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -28,13 +28,13 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="profile1" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="menuButton2" min="-2" pref="41" max="-2" attributes="0"/>
+              <Component id="menuBtnInicio" min="-2" pref="41" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="menuButton4" min="-2" pref="41" max="-2" attributes="0"/>
+              <Component id="menuBtnMascotas" min="-2" pref="41" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="menuButton5" min="-2" pref="41" max="-2" attributes="0"/>
+              <Component id="menuBtnSolicitudes" min="-2" pref="41" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="menuButton3" min="-2" pref="41" max="-2" attributes="0"/>
+              <Component id="menuBtnCerrarSesion" min="-2" pref="41" max="-2" attributes="0"/>
               <EmptySpace pref="341" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -48,7 +48,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuButton2">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuBtnInicio">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -64,11 +64,8 @@
         </Property>
         <Property name="iconTextGap" type="int" value="20"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuButton2ActionPerformed"/>
-      </Events>
     </Component>
-    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuButton3">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuBtnCerrarSesion">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -83,11 +80,8 @@
         </Property>
         <Property name="iconTextGap" type="int" value="20"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuButton3ActionPerformed"/>
-      </Events>
     </Component>
-    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuButton4">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuBtnMascotas">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -102,11 +96,8 @@
         </Property>
         <Property name="iconTextGap" type="int" value="20"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuButton4ActionPerformed"/>
-      </Events>
     </Component>
-    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuButton5">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.MenuButton" name="menuBtnSolicitudes">
       <Properties>
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -121,9 +112,6 @@
         </Property>
         <Property name="iconTextGap" type="int" value="20"/>
       </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="menuButton5ActionPerformed"/>
-      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -8,7 +8,7 @@ import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
-import com.stackmasters.adoptaanimales.view.impl.DashboardContainer;
+import com.stackmasters.adoptaanimales.view.impl.DashboardViewImpl;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.*;
@@ -31,7 +31,7 @@ public class App extends JFrame {
         
         // Registro de vistas
         var autenticacion =  new AuthViewImpl();
-        var dashboard = new DashboardContainer();
+        var dashboard = new DashboardViewImpl();
         
         router.registrar(Ruta.AUTENTICACION, autenticacion);
         router.registrar(Ruta.PRINCIPAL, dashboard);
@@ -44,6 +44,11 @@ public class App extends JFrame {
                 new AdminAlbergueRepository(),
                 new BCryptPasswordHasher()
             ),  // servicio
+            router
+        );
+        
+        new DashboardController(
+            dashboard,
             router
         );
         

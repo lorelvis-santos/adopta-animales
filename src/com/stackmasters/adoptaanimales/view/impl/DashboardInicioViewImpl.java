@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
-import com.stackmasters.adoptaanimales.router.VistaNavegable;
+import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.view.DashboardInicioView;
 import com.stackmasters.adoptaanimales.view.impl.dialog.Message;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelMascota;
@@ -9,19 +10,108 @@ import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
 import com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.ModelNoticeBoard;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import java.awt.Color;
+import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-public class DashboardInicioViewImpl extends javax.swing.JPanel implements VistaNavegable {
-
+public class DashboardInicioViewImpl extends javax.swing.JPanel implements DashboardInicioView {
     public DashboardInicioViewImpl() {
         initComponents();
         table1.fixTable(jScrollPane1);
         setOpaque(false);
-        initData();
+        //initData();
     }
+    
+    // Implementación de DashboardInicioView
+    
+    /**
+     * Muestra las estadísticas generales de la aplicación.
+     * (total de mascotas, solicitudes pendientes, mascotas adoptadas)
+     */
+    @Override
+    public void mostrarEstadisticas(int totalMascotas, int solicitudesPendientes, int mascotasAdoptadas) {
+        Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PETS, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        card1.setData(new ModelCard("Total de mascotas", totalMascotas, 50, icon1));
+        Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BOOK, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        card2.setData(new ModelCard("Solicitudes pendientes", solicitudesPendientes, 30, icon2));
+        Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.NATURE_PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
+        card3.setData(new ModelCard("Mascotas adoptadas", mascotasAdoptadas, 10, icon3));
+    }
+    
+    /**
+     * Carga la tabla de animales en el dashboard.
+     * Cada fila debe permitir editar y eliminar.
+     * 
+     * @param mascotas Lista de mascotas a mostrar en la tabla
+     */
+    @Override
+    public void cargarTablaMascotas(List<Mascota> mascotas) {
+        // Hay que reemplazar esto
+        EventAction eventAction = new EventAction() {
+            @Override
+            public void delete(ModelMascota student) {
+                if (showMessage("Delete Student : " + student.getName())) {
+                    System.out.println("User click OK");
+                } else {
+                    System.out.println("User click Cancel");
+                }
+            }
+
+            @Override
+            public void update(ModelMascota student) {
+                if (showMessage("Update Student : " + student.getName())) {
+                    System.out.println("User click OK");
+                } else {
+                    System.out.println("User click Cancel");
+                }
+            }
+        };
+        
+        for (Mascota mascota : mascotas) {
+            new ModelMascota(
+                new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), // Pendiente, mostrar imagenes dinamicas
+                mascota.getNombre(),
+                mascota.getSexo().db(), 
+                mascota.getRaza(),  
+                mascota.isEstaCastrado(),
+                3, // Pendiente, calcular edad de forma dinámica
+                mascota.getPeso()
+            ).toRowTable(eventAction);
+        }
+    }
+    
+    /**
+     * Muestra las últimas actividades realizadas en la aplicación.
+     * 
+     * @param actividades Lista de actividades recientes
+     * 
+     * to do: preparar una tabla en la bd que guarde el tipo de evento y fecha.
+     */
+    public void mostrarActividadesRecientes(List<String> actividades) {
+        // To do: implementar...
+        noticeBoard.addDate("04/10/2021");
+        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(94, 49, 238), "Hidemode", "Now", "Sets the hide mode for the component. If the hide mode has been specified in the This hide mode can be overridden by the component constraint."));
+        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(218, 49, 238), "Tag", "2h ago", "Tags the component with metadata name that can be used by the layout engine. The tag can be used to explain for the layout manager what the components is showing, such as an OK or Cancel button."));
+        noticeBoard.addDate("03/10/2021");
+        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(32, 171, 43), "Further Reading", "12:30 PM", "There are more information to digest regarding MigLayout. The resources are all available at www.migcomponents.com"));
+        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(50, 93, 215), "Span", "10:30 AM", "Spans the current cell (merges) over a number of cells. Practically this means that this cell and the count number of cells will be treated as one cell and the component can use the space that all these cells have."));
+        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(27, 188, 204), "Skip ", "9:00 AM", "Skips a number of cells in the flow. This is used to jump over a number of cells before the next free cell is looked for. The skipping is done before this component is put in a cell and thus this cells is affected by it. \"count\" defaults to 1 if not specified."));
+        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(238, 46, 57), "Push", "7:15 AM", "Makes the row and/or column that the component is residing in grow with \"weight\". This can be used instead of having a \"grow\" keyword in the column/row constraints."));
+        noticeBoard.scrollToTop();
+    }
+    
+    /**
+     * Método para mostrar un spinner de carga en el UI.
+     * 
+     * @param cargando True si está cargando, false si no
+     */
+    public void setCargando(boolean cargando) {
+        // To do: implementar
+    }
+    
+    // ----------------------------------------------------------------------
 
     private void initData() {
         initCardData();
@@ -51,9 +141,9 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Vista
         };
         
         // Trabajar inserción de mascotas de forma dinámica.
-        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", " Male", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
-        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", " Male", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
-        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", " Male", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
+        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", "Macho", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
+        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", "Macho", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
+        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", "Macho", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
     }
 
     private void initCardData() {

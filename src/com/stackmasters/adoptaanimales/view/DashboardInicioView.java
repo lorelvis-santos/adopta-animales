@@ -41,5 +41,4 @@ public interface DashboardInicioView extends VistaNavegable {
      * @param cargando True si está cargando, false si no
      */
     void setCargando(boolean cargando);
-    
 }

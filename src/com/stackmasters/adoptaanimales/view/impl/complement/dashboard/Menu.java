@@ -27,6 +27,22 @@ public class Menu extends javax.swing.JPanel {
     public void setShowMenu(boolean showMenu) {
         this.showMenu = showMenu;
     }
+    
+    public MenuButton getBtnInicio() {
+        return menuBtnInicio;
+    }
+    
+    public MenuButton getBtnMascotas() {
+        return menuBtnMascotas;
+    }
+    
+    public MenuButton getBtnSolicitudes() {
+        return menuBtnSolicitudes;
+    }
+    
+    public MenuButton getBtnCerrarSesion() {
+        return menuBtnCerrarSesion;
+    }
 
     public Menu() {
         initComponents();
@@ -39,103 +55,67 @@ public class Menu extends javax.swing.JPanel {
     private void initComponents() {
 
         profile1 = new com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Profile();
-        menuButton2 = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
-        menuButton3 = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
-        menuButton4 = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
-        menuButton5 = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
+        menuBtnInicio = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
+        menuBtnCerrarSesion = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
+        menuBtnMascotas = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
+        menuBtnSolicitudes = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
 
         profile1.setForeground(new java.awt.Color(255, 255, 255));
 
-        menuButton2.setForeground(new java.awt.Color(255, 255, 255));
-        menuButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/home.png"))); // NOI18N
-        menuButton2.setText("Inicio");
-        menuButton2.setToolTipText("");
-        menuButton2.setFocusable(false);
-        menuButton2.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        menuButton2.setIconTextGap(20);
-        menuButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuButton2ActionPerformed(evt);
-            }
-        });
+        menuBtnInicio.setForeground(new java.awt.Color(255, 255, 255));
+        menuBtnInicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/home.png"))); // NOI18N
+        menuBtnInicio.setText("Inicio");
+        menuBtnInicio.setToolTipText("");
+        menuBtnInicio.setFocusable(false);
+        menuBtnInicio.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        menuBtnInicio.setIconTextGap(20);
 
-        menuButton3.setForeground(new java.awt.Color(255, 255, 255));
-        menuButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/logout.png"))); // NOI18N
-        menuButton3.setText("Cerrar sesión");
-        menuButton3.setFocusable(false);
-        menuButton3.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        menuButton3.setIconTextGap(20);
-        menuButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuButton3ActionPerformed(evt);
-            }
-        });
+        menuBtnCerrarSesion.setForeground(new java.awt.Color(255, 255, 255));
+        menuBtnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/logout.png"))); // NOI18N
+        menuBtnCerrarSesion.setText("Cerrar sesión");
+        menuBtnCerrarSesion.setFocusable(false);
+        menuBtnCerrarSesion.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        menuBtnCerrarSesion.setIconTextGap(20);
 
-        menuButton4.setForeground(new java.awt.Color(255, 255, 255));
-        menuButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/cat.png"))); // NOI18N
-        menuButton4.setText("Mascotas");
-        menuButton4.setFocusable(false);
-        menuButton4.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        menuButton4.setIconTextGap(20);
-        menuButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuButton4ActionPerformed(evt);
-            }
-        });
+        menuBtnMascotas.setForeground(new java.awt.Color(255, 255, 255));
+        menuBtnMascotas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/cat.png"))); // NOI18N
+        menuBtnMascotas.setText("Mascotas");
+        menuBtnMascotas.setFocusable(false);
+        menuBtnMascotas.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        menuBtnMascotas.setIconTextGap(20);
 
-        menuButton5.setForeground(new java.awt.Color(255, 255, 255));
-        menuButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/note.png"))); // NOI18N
-        menuButton5.setText("Solicitudes");
-        menuButton5.setFocusable(false);
-        menuButton5.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
-        menuButton5.setIconTextGap(20);
-        menuButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuButton5ActionPerformed(evt);
-            }
-        });
+        menuBtnSolicitudes.setForeground(new java.awt.Color(255, 255, 255));
+        menuBtnSolicitudes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/note.png"))); // NOI18N
+        menuBtnSolicitudes.setText("Solicitudes");
+        menuBtnSolicitudes.setFocusable(false);
+        menuBtnSolicitudes.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        menuBtnSolicitudes.setIconTextGap(20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(profile1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, Short.MAX_VALUE)
-            .addComponent(menuButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(menuButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(menuButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(menuButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuBtnInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuBtnMascotas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuBtnSolicitudes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuBtnCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(profile1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(menuButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menuBtnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(menuButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menuBtnMascotas, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(menuButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menuBtnSolicitudes, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(menuButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(menuBtnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(341, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void menuButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuButton2ActionPerformed
-
-    private void menuButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuButton3ActionPerformed
-
-    private void menuButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButton4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuButton4ActionPerformed
-
-    private void menuButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButton5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_menuButton5ActionPerformed
 
     @Override
     protected void paintComponent(Graphics grphcs) {
@@ -148,10 +128,10 @@ public class Menu extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuButton2;
-    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuButton3;
-    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuButton4;
-    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuButton5;
+    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnCerrarSesion;
+    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnInicio;
+    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnMascotas;
+    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnSolicitudes;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Profile profile1;
     // End of variables declaration//GEN-END:variables
 }
