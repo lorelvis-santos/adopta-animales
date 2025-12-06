@@ -58,6 +58,7 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Inicio"/>
         <Property name="toolTipText" type="java.lang.String" value=""/>
+        <Property name="focusable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="16" style="1"/>
         </Property>
@@ -76,6 +77,7 @@
           <Image iconType="3" name="/com/stackmasters/adoptaanimales/view/impl/icon/logout.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Cerrar sesi&#xf3;n"/>
+        <Property name="focusable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="16" style="1"/>
         </Property>
@@ -94,6 +96,7 @@
           <Image iconType="3" name="/com/stackmasters/adoptaanimales/view/impl/icon/cat.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Mascotas"/>
+        <Property name="focusable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="16" style="1"/>
         </Property>
@@ -112,6 +115,7 @@
           <Image iconType="3" name="/com/stackmasters/adoptaanimales/view/impl/icon/note.png"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Solicitudes"/>
+        <Property name="focusable" type="boolean" value="false"/>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Liberation Sans" size="16" style="1"/>
         </Property>

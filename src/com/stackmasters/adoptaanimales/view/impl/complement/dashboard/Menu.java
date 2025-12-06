@@ -50,6 +50,7 @@ public class Menu extends javax.swing.JPanel {
         menuButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/home.png"))); // NOI18N
         menuButton2.setText("Inicio");
         menuButton2.setToolTipText("");
+        menuButton2.setFocusable(false);
         menuButton2.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         menuButton2.setIconTextGap(20);
         menuButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -61,6 +62,7 @@ public class Menu extends javax.swing.JPanel {
         menuButton3.setForeground(new java.awt.Color(255, 255, 255));
         menuButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/logout.png"))); // NOI18N
         menuButton3.setText("Cerrar sesión");
+        menuButton3.setFocusable(false);
         menuButton3.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         menuButton3.setIconTextGap(20);
         menuButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -72,6 +74,7 @@ public class Menu extends javax.swing.JPanel {
         menuButton4.setForeground(new java.awt.Color(255, 255, 255));
         menuButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/cat.png"))); // NOI18N
         menuButton4.setText("Mascotas");
+        menuButton4.setFocusable(false);
         menuButton4.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         menuButton4.setIconTextGap(20);
         menuButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +86,7 @@ public class Menu extends javax.swing.JPanel {
         menuButton5.setForeground(new java.awt.Color(255, 255, 255));
         menuButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/note.png"))); // NOI18N
         menuButton5.setText("Solicitudes");
+        menuButton5.setFocusable(false);
         menuButton5.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         menuButton5.setIconTextGap(20);
         menuButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -95,7 +99,7 @@ public class Menu extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(profile1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
+            .addComponent(profile1, javax.swing.GroupLayout.PREFERRED_SIZE, 230, Short.MAX_VALUE)
             .addComponent(menuButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(menuButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(menuButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
