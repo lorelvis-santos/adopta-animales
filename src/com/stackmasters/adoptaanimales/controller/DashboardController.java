@@ -1,6 +1,8 @@
 package com.stackmasters.adoptaanimales.controller;
 
 import com.stackmasters.adoptaanimales.router.Router;
+import com.stackmasters.adoptaanimales.router.Ruta;
+import com.stackmasters.adoptaanimales.service.AuthService;
 import com.stackmasters.adoptaanimales.view.DashboardView;
 
 /**
@@ -8,7 +10,15 @@ import com.stackmasters.adoptaanimales.view.DashboardView;
  * @author Lorelvis Santos
  */
 public class DashboardController {
-    public DashboardController(DashboardView vista, Router router) {
+    private DashboardView vista;
+    private AuthService authService;
+    private Router router;
+    
+    public DashboardController(DashboardView vista, AuthService authService, Router router) {
+        this.vista = vista;
+        this.authService = authService;
+        this.router = router;
+        
         vista.onIrInicio(this::mostrarInicio);
         vista.onIrMascotas(this::mostrarMascotas);
         vista.onIrSolicitudes(this::mostrarSolicitudes);
@@ -28,6 +38,7 @@ public class DashboardController {
     }
     
     private void cerrarSesion() {
-        System.out.println("Cerrando sesion");
+        authService.cerrarSesion();
+        router.navegar(Ruta.AUTENTICACION, null);
     }
 }

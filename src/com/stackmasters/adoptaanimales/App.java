@@ -36,7 +36,7 @@ public class App extends JFrame {
         router.registrar(Ruta.AUTENTICACION, autenticacion);
         router.registrar(Ruta.PRINCIPAL, dashboard);
         
-        // Aquí creas el controlador
+        // Aquí se crean los controladores
         new AuthController(
             autenticacion,
             new AuthServiceImpl(
@@ -49,6 +49,11 @@ public class App extends JFrame {
         
         new DashboardController(
             dashboard,
+            new AuthServiceImpl(
+                new AdoptanteRepository(),
+                new AdminAlbergueRepository(),
+                new BCryptPasswordHasher()
+            ),  // servicio auth
             router
         );
         

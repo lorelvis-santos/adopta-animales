@@ -15,4 +15,5 @@ public interface AuthView extends VistaNavegable {
     void onLogin(Runnable accion);
     void setCargando(boolean valor);
     void mostrarMensaje(String mensaje, boolean error);
+    void limpiarCampos();
 }

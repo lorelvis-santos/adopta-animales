@@ -35,6 +35,8 @@ public class AuthController {
                         return; 
                     }
                     
+                    vista.limpiarCampos();
+                    
                     router.navegar(Ruta.PRINCIPAL, null);
                 }
             }.execute();

@@ -50,6 +50,13 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
     }
     
     //Implementacion de Auth view.
+    
+    @Override
+    public void limpiarCampos() {
+        logAndReg.getTxtGmail().setText("");
+        logAndReg.getTxtPass().setText("");
+    }
+    
     @Override
     public String getCorreo(){       
        return logAndReg.getTxtGmail().getText();         
@@ -68,8 +75,6 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
     
     @Override
     public void onLogin(Runnable accion){
-        
-       
         this.onLogin=accion;      
     }
     
