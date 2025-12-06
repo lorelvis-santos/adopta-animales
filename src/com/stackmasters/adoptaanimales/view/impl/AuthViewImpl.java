@@ -23,7 +23,7 @@ import org.jdesktop.animation.timing.TimingTargetAdapter;
  *
  * @author Vicma
  */
-public class AuthViewImpl extends javax.swing.JPanel implements AuthView, VistaNavegable {
+public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AuthViewImpl.class.getName());
     private MigLayout layout;

@@ -1,12 +1,13 @@
 package com.stackmasters.adoptaanimales.view;
 
 import com.stackmasters.adoptaanimales.model.auth.Rol;
+import com.stackmasters.adoptaanimales.router.VistaNavegable;
 
 /**
  *
  * @author Lorelvis Santos
  */
-public interface AuthView {
+public interface AuthView extends VistaNavegable {
     String getCorreo();
     String getContraseña();
     Rol getRolSeleccionado(); // Puede ser null

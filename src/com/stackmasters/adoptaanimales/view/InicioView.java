@@ -1,13 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.stackmasters.adoptaanimales.view;
+
+import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.router.VistaNavegable;
+import java.util.List;
 
 /**
  *
- * @author santo
+ * @author Lorelvis Santos
  */
-public interface InicioView {
+public interface InicioView extends VistaNavegable {
+    // Mantenido por compatibilidad y testing...
     void setMensaje(String mensaje);
 }

@@ -34,8 +34,10 @@ public class AuthController {
                         vista.mostrarMensaje(error.getMessage(),true);
                         return; 
                     }
+                    
                     vista.mostrarMensaje("Autenticacion exitosa",false);
-                router.navegar(Ruta.PRINCIPAL, "Bienvenido, esto es una prueba");
+                    
+                    router.navegar(Ruta.PRINCIPAL, "Bienvenido, esto es una prueba");
                 }
             }.execute();
         });
