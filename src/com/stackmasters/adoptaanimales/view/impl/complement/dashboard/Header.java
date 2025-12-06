@@ -2,8 +2,24 @@ package com.stackmasters.adoptaanimales.view.impl.complement.dashboard;
 
 import java.awt.event.ActionListener;
 import net.miginfocom.swing.MigLayout;
+import com.stackmasters.adoptaanimales.view.impl.swing.Button;
+import com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import java.awt.Color;
+import java.awt.Font;
 
-public class Header extends javax.swing.JPanel {
+public class Header extends JPanel {
+
+    // Componentes declarados limpiamente
+    private Button cmdMenu;
+    private ImageAvatar pic;
+    private JLabel lbUserName;
+    private JLabel lbRole;
+    private JSeparator jSeparator1;
 
     public Header() {
         initComponents();
@@ -14,60 +30,48 @@ public class Header extends javax.swing.JPanel {
     }
 
     private void initComponents() {
-        // Inicializamos los componentes
-        cmdMenu = new com.stackmasters.adoptaanimales.view.impl.swing.Button();
-        pic = new com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar();
-        lbUserName = new javax.swing.JLabel();
-        lbRole = new javax.swing.JLabel();
-        jSeparator1 = new javax.swing.JSeparator();
-
-        // Configuración visual básica
-        setBackground(new java.awt.Color(255, 255, 255));
+        // Configuración visual básica del Panel
+        setBackground(new Color(255, 255, 255));
         
-        cmdMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/menu.png")));
+        // --- Inicialización de componentes ---
+        
+        // Botón Menú
+        cmdMenu = new Button();
+        cmdMenu.setIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/menu.png")));
         cmdMenu.setOpaque(true);
+        cmdMenu.setFocusable(false);
         
-        pic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile1.jpg")));
+        // Avatar
+        pic = new ImageAvatar();
+        pic.setIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile1.jpg")));
         
-        lbUserName.setFont(new java.awt.Font("sansserif", 1, 12));
-        lbUserName.setForeground(new java.awt.Color(127, 127, 127)); 
-        lbUserName.setText("Albergue");
+        // Labels
+        lbUserName = new JLabel("Albergue");
+        lbUserName.setFont(new Font("sansserif", Font.BOLD, 12));
+        lbUserName.setForeground(new Color(127, 127, 127)); 
 
-        lbRole.setFont(new java.awt.Font("sansserif", 0, 12));
-        lbRole.setForeground(new java.awt.Color(127, 127, 127));
-        lbRole.setText("Admin");
+        lbRole = new JLabel("Admin");
+        lbRole.setFont(new Font("sansserif", Font.PLAIN, 12));
+        lbRole.setForeground(new Color(127, 127, 127));
 
-        jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+        // Separador
+        jSeparator1 = new JSeparator();
+        jSeparator1.setOrientation(SwingConstants.VERTICAL);
 
-        // Usamos MigLayout para el Header.
-        // "fillx" = ocupa todo el ancho.
-        // "aligny center" = centrar verticalmente todo el contenido automáticamente.
-        // "insets 5 15 5 15" = Márgenes externos (Arriba, Izquierda, Abajo, Derecha).
+        // --- Layout (MigLayout) ---
+        // fillx: llena a lo ancho
+        // aligny center: centra todo verticalmente
         setLayout(new MigLayout("fillx, aligny center, insets 5 15 5 10", "[]push[]20[right]5[]", "fill"));
 
-        // Agregamos componentes:
-        
-        // 1. Botón menú a la izquierda
+        // Agregamos componentes
         add(cmdMenu, "w 38!, h 38!"); 
-        
-        // 2. El "push" empuja todo lo siguiente hacia la derecha (crea el espacio vacío)
-        add(new javax.swing.JLabel(), "push");
-        // 3. Separador
+        add(new JLabel(), "push"); // El "push" empuja todo lo demás a la derecha
         add(jSeparator1, "w 8!, h 25!"); 
         
-        // 4. Textos (Nombre y Rol) en un panel o celda vertical
-        // 'al right' alinea el texto a la derecha.
+        // Nombre y Rol apilados
         add(lbUserName, "split 2, flowy, al right");
         add(lbRole, "al right");
 
-        // 5. Foto de perfil
         add(pic, "w 38!, h 38!");
     }
-
-    // Variables declaration
-    private com.stackmasters.adoptaanimales.view.impl.swing.Button cmdMenu;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JLabel lbRole;
-    private javax.swing.JLabel lbUserName;
-    private com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar pic;
 }
