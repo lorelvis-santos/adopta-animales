@@ -27,6 +27,13 @@ public class Card extends javax.swing.JPanel {
         colorGradient = new Color(255, 255, 255);
         pro.setBackground(new Color(255, 255, 255, 100));
         pro.setForeground(Color.WHITE);
+        
+        // Esto elimina el borde "hundido" que pone Nimbus
+        pro.setBorderPainted(false); 
+        // Esto asegura que no tenga ningún borde extra
+        pro.setBorder(null);         
+        // Esto ayuda si tu custom bar maneja transparencias
+        pro.setOpaque(true);
     }
 
     public void setData(ModelCard data) {

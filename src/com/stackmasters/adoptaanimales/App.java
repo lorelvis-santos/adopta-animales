@@ -8,6 +8,7 @@ import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardContainer;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.*;
@@ -23,17 +24,17 @@ public class App extends JFrame {
     public App() {
         setTitle("Adopta Animales");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1000, 700);
+        setSize(1440, 820);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         add(contenedor, BorderLayout.CENTER);
         
         // Registro de vistas
         var autenticacion =  new AuthViewImpl();
-        var inicio = new InicioViewTest();
+        var dashboard = new DashboardContainer();
         
         router.registrar(Ruta.AUTENTICACION, autenticacion);
-        router.registrar(Ruta.PRINCIPAL, inicio);
+        router.registrar(Ruta.PRINCIPAL, dashboard);
         
         // Aquí creas el controlador
         new AuthController(

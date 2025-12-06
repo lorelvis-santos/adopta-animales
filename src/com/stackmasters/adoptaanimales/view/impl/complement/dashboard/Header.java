@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.view.impl.complement.dashboard;
 
 import java.awt.event.ActionListener;
+import net.miginfocom.swing.MigLayout;
 
 public class Header extends javax.swing.JPanel {
 
@@ -12,72 +13,61 @@ public class Header extends javax.swing.JPanel {
         cmdMenu.addActionListener(event);
     }
 
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
+        // Inicializamos los componentes
         cmdMenu = new com.stackmasters.adoptaanimales.view.impl.swing.Button();
         pic = new com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar();
         lbUserName = new javax.swing.JLabel();
         lbRole = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
 
+        // Configuración visual básica
         setBackground(new java.awt.Color(255, 255, 255));
-
-        cmdMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/menu.png"))); // NOI18N
+        
+        cmdMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/menu.png")));
         cmdMenu.setOpaque(true);
-
-        pic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile1.jpg"))); // NOI18N
-
-        lbUserName.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        lbUserName.setForeground(new java.awt.Color(0, 0, 0));
+        
+        pic.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile1.jpg")));
+        
+        lbUserName.setFont(new java.awt.Font("sansserif", 1, 12));
+        lbUserName.setForeground(new java.awt.Color(127, 127, 127)); 
         lbUserName.setText("Albergue");
 
-        lbRole.setFont(new java.awt.Font("Liberation Sans", 0, 13)); // NOI18N
-        lbRole.setForeground(new java.awt.Color(0, 0, 0));
+        lbRole.setFont(new java.awt.Font("sansserif", 0, 12));
+        lbRole.setForeground(new java.awt.Color(127, 127, 127));
         lbRole.setText("Admin");
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cmdMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 464, Short.MAX_VALUE)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbUserName, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbRole, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pic, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(lbUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbRole))
-                    .addComponent(cmdMenu, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                    .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSeparator1))
-                .addContainerGap())
-        );
-    }// </editor-fold>//GEN-END:initComponents
+        // Usamos MigLayout para el Header.
+        // "fillx" = ocupa todo el ancho.
+        // "aligny center" = centrar verticalmente todo el contenido automáticamente.
+        // "insets 5 15 5 15" = Márgenes externos (Arriba, Izquierda, Abajo, Derecha).
+        setLayout(new MigLayout("fillx, aligny center, insets 5 15 5 10", "[]push[]20[right]5[]", "fill"));
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+        // Agregamos componentes:
+        
+        // 1. Botón menú a la izquierda
+        add(cmdMenu, "w 38!, h 38!"); 
+        
+        // 2. El "push" empuja todo lo siguiente hacia la derecha (crea el espacio vacío)
+        add(new javax.swing.JLabel(), "push");
+        // 3. Separador
+        add(jSeparator1, "w 8!, h 25!"); 
+        
+        // 4. Textos (Nombre y Rol) en un panel o celda vertical
+        // 'al right' alinea el texto a la derecha.
+        add(lbUserName, "split 2, flowy, al right");
+        add(lbRole, "al right");
+
+        // 5. Foto de perfil
+        add(pic, "w 38!, h 38!");
+    }
+
+    // Variables declaration
     private com.stackmasters.adoptaanimales.view.impl.swing.Button cmdMenu;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbRole;
     private javax.swing.JLabel lbUserName;
     private com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar pic;
-    // End of variables declaration//GEN-END:variables
 }

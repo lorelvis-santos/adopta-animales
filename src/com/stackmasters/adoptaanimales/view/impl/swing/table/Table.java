@@ -15,9 +15,10 @@ import javax.swing.table.TableCellEditor;
 public class Table extends JTable {
 
     public Table() {
+        setShowVerticalLines(false);
         setShowHorizontalLines(true);
         setGridColor(new Color(230, 230, 230));
-        setRowHeight(40);
+        setRowHeight(45);
         getTableHeader().setReorderingAllowed(false);
         getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
@@ -65,8 +66,6 @@ public class Table extends JTable {
             }
         });
     }
-    
-    
     
     @Override
     public boolean isCellEditable(int row, int column) {

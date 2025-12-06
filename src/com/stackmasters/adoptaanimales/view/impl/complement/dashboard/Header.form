@@ -58,18 +58,18 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="com.dashboard.swing.Button" name="cmdMenu">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.swing.Button" name="cmdMenu">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/com/dashboard/icon/menu.png"/>
+          <Image iconType="3" name="/com/stackmasters/adoptaanimales/view/impl/icon/menu.png"/>
         </Property>
         <Property name="opaque" type="boolean" value="true"/>
       </Properties>
     </Component>
-    <Container class="com.dashboard.swing.ImageAvatar" name="pic">
+    <Container class="com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar" name="pic">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/com/dashboard/icon/profile1.jpg"/>
+          <Image iconType="3" name="/com/stackmasters/adoptaanimales/view/impl/icon/profile1.jpg"/>
         </Property>
       </Properties>
 

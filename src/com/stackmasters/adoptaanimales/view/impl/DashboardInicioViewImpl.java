@@ -1,7 +1,7 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
+import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import com.stackmasters.adoptaanimales.view.impl.dialog.Message;
-import com.stackmasters.adoptaanimales.view.impl.Main;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelMascota;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
@@ -11,8 +11,10 @@ import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import java.awt.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
-public class DashboardInicioViewImpl extends javax.swing.JPanel {
+public class DashboardInicioViewImpl extends javax.swing.JPanel implements VistaNavegable {
 
     public DashboardInicioViewImpl() {
         initComponents();
@@ -50,7 +52,8 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel {
         
         // Trabajar inserción de mascotas de forma dinámica.
         table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", " Male", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
-        
+        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", " Male", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
+        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", " Male", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
     }
 
     private void initCardData() {
@@ -79,8 +82,15 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel {
     
 
     private boolean showMessage(String message) {
-        Message obj = new Message(Main.getFrames()[0], true);
+        // 1. Buscamos dinámicamente quién es la ventana padre de este panel
+        JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        // 2. Pasamos ese frame al constructor del Mensaje
+        Message obj = new Message(framePrincipal, true);
+
+        // 3. Mostramos el mensaje (el resto sigue igual)
         obj.showMessage(message);
+
         return obj.isOk();
     }
 
@@ -169,6 +179,10 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel {
         jLabel5.setText("Mascotas");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
+        jScrollPane1.setOpaque(false);
+
+        table1.setBackground(new java.awt.Color(255, 255, 255));
         table1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 

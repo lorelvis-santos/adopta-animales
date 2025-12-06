@@ -83,7 +83,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="com.dashboard.component.Card" name="card1">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card" name="card1">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="fe" green="ac" red="4f" type="rgb"/>
@@ -107,7 +107,7 @@
         <Property name="text" type="java.lang.String" value="Inicio"/>
       </Properties>
     </Component>
-    <Component class="com.dashboard.component.Card" name="card2">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card" name="card2">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="9e" green="9a" red="ff" type="rgb"/>
@@ -120,7 +120,7 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="com.dashboard.component.Card" name="card3">
+    <Component class="com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card" name="card3">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="65" green="d3" red="f6" type="rgb"/>
@@ -174,7 +174,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="com.dashboard.swing.noticeboard.NoticeBoard" name="noticeBoard">
+        <Component class="com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.NoticeBoard" name="noticeBoard">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
@@ -268,14 +268,23 @@
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+            </Property>
+            <Property name="opaque" type="boolean" value="false"/>
+          </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="com.dashboard.swing.table.Table" name="table1">
+            <Component class="com.stackmasters.adoptaanimales.view.impl.swing.table.Table" name="table1">
               <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
+                </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="7" rowCount="0">
                     <Column editable="false" title="Nombre" type="java.lang.Object"/>

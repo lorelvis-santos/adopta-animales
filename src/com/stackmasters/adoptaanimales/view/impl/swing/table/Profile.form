@@ -39,7 +39,7 @@
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Container class="com.dashboard.swing.ImageAvatar" name="pic">
+    <Container class="com.stackmasters.adoptaanimales.view.impl.swing.ImageAvatar" name="pic">
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout">
         <Property name="useNullLayout" type="boolean" value="true"/>
