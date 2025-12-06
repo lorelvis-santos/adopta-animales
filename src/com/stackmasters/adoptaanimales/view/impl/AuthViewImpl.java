@@ -68,7 +68,8 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
     
     @Override
     public void onLogin(Runnable accion){
-    
+        
+       
         this.onLogin=accion;      
     }
     
@@ -92,82 +93,16 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
         carga = new PanelLoading();//Instanciamiento de Pantalla de carga. 
                 
         logAndReg= new PanelLoginAndRegistrer();
-        TimingTarget target=new TimingTargetAdapter(){
         
-            @Override
-            public void timingEvent(float fraction){
-                
-                double fractionCover;
-                double fractionLogin;
-                double size=coverSize;
-                if(fraction<=0.5f){
-                    size += fraction * addSize;
-                }else{
-                    size +=  addSize - fraction * addSize;
-                }
-                
-            
-                if(isLogin){
-                    fractionCover= 1f - fraction;
-                    fractionLogin= fraction;
-                    if(fraction>=0.5f){
-                        cover.registerRight(fractionCover * 100);
-                    }else{
-                        cover.loginRight(fractionLogin * 100);
-                    }
-                } else{
-                
-                    fractionCover= fraction;
-                    fractionLogin= 1f - fraction;
-                      if(fraction <=0.5f){
-                          cover.registerLeft(fraction * 100);
-                    }else{
-                        cover.loginLeft((1f-fraction)*100);
-                    }
-                    
-                }
-                
-                if(fraction>=0.5f){
-                logAndReg.showRegister(isLogin);
-                }
-                
-                fractionCover=Double.valueOf(df.format(fractionCover));
-                fractionLogin=Double.valueOf(df.format(fractionLogin));
-                layout.setComponentConstraints(cover, "width "+size+"%, pos"+fractionCover+"al 0 n 100%");
-                layout.setComponentConstraints(logAndReg, "width "+loginSize+"%, pos"+fractionLogin+"al 0 n 100%");
-                bg.revalidate();
-            }
-            
-             @Override
-            public void end(){
-            
-            
-                isLogin = !isLogin;
-            }
         
-        };
         
-        Animator animator=new Animator(800,target);
-        animator.setAcceleration(0.5f);
-        animator.setDeceleration(0.5f);
-        animator.setResolution(0); //Para una aniamcion mas suave
         bg.setLayout(layout);
         bg.setLayer(carga, JLayeredPane.POPUP_LAYER);    //Agregando complementos.
         bg.add(carga, "pos 0 0 100% 100%");
         bg.add(cover,"width "+coverSize+ "%, pos 0al 0 n 100%"); //Padding
         bg.add(logAndReg,"width "+loginSize+ "%, pos 1al 0 n 100%");//Padding
         
-        cover.addEvent(new ActionListener(){   
-            
-            @Override   
-            public void actionPerformed(ActionEvent ae){
-            
-            if(!animator.isRunning()){
-            
-                animator.start();
-            }
-        }
-        });
+        
     }
     
     // ===== Método =====

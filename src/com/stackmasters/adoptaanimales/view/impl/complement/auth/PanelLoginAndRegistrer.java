@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 import com.stackmasters.adoptaanimales.view.impl.swing.MyPasswordField;
+import com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton;
 
 /**
  * PanelLoginAndRegistrer
@@ -36,49 +37,18 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
     private MyTextField txtUser;
     private MyTextField txtGmail;
     private MyPasswordField txtPass;
-    private Button cmd;
+    private SquaredButton cmd;
     
     // Panel que contiene el formulario de inicio de sesión
     public PanelLoginAndRegistrer() {
-        initComponents();// inicializa los paneles Login y Register y el layout principal.
-        initRegister();
+        initComponents();// inicializa los paneles Login y Register y el layout principal.      
         initLogin();
-        Login.setVisible(false);
-        Register.setVisible(true);
+        Login.setVisible(true);
+        
     }
     
     // Panel que contiene el formulario de registro
-    private void initRegister(){
-    
-        Register.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]15[]push")); //Distancia de los componentes.
-        // Título del formulario
-        JLabel label=new JLabel("Crear una cuenta");
-        label.setFont(new Font("sansserif",1,30));
-        label.setForeground(new Color(128, 128, 128));
-        Register.add(label);
-        // Campo de texto para el nombre de usuario
-        txtUser = new MyTextField();
-        txtUser.setPrefixIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/patas.png")));
-        txtUser.setHint("Nombre");
-        Register.add(txtUser, "w 60%");
-        txtGmail = new MyTextField();
-        txtGmail.setPrefixIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/patas.png")));
-        txtGmail.setHint("Gmail");
-        Register.add(txtGmail, "w 60%");
-        txtPass = new MyPasswordField();
-        txtPass.setPrefixIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/patas.png")));
-        txtPass.setHint("Contraseña");
-        Register.add(txtPass, "w 60%");
-        cmd= new Button();
-        cmd.setBackground(new Color (255, 255, 191));
-        cmd.setForeground(new Color (89, 140, 163));
-        cmd.setText("Crear");
-        cmd.setFocusPainted(false);
-        Register.add(cmd,"w 40%, h 40");
-        
-        
-        
-    }
+   
     
     // Panel que contiene el formulario de inicio de sesión
     private void initLogin(){
@@ -86,7 +56,7 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         // Título del formulario
         JLabel label=new JLabel("Iniciar Sesión");
         label.setFont(new Font("sansserif",1,30));
-        label.setForeground(new Color(128, 128, 128));
+        label.setForeground(new Color(0, 0, 0));
         Login.add(label);
         // Campo de texto para el nombre de usuario
         txtGmail = new MyTextField();
@@ -96,25 +66,23 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         txtPass = new MyPasswordField();
         txtPass.setPrefixIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/patas.png")));
         txtPass.setHint("Contraseña");
-        Login.add(txtPass, "w 60%");     
-        cmd= new Button();
-        cmd.setBackground(new Color (255, 255, 191));
-        cmd.setForeground(new Color (89, 140, 163));
+        Login.add(txtPass, "w 60%");  
+        
+        cmd= new SquaredButton();
+        cmd.setBackground(new Color (79,172,254));
+        cmd.setForeground(new Color (255,255,255,255));
         cmd.setText("Entrar");
         cmd.setFocusPainted(false);
-        Login.add(cmd,"w 40%, h 40");
+        cmd.setAlignmentX(500);
+        Login.add(cmd,"w 150!,grow 0, align left, h 40");
     }
     
     public void showRegister(boolean show){ //Controla cual formulario se ve.
         
         if(show){
-            Register.setVisible(true);
-            Login.setVisible(false);    
             
-        }else{
-            Register.setVisible(false);
             Login.setVisible(true);    
-        }    
+        }
     }
     
 
@@ -131,7 +99,7 @@ public class PanelLoginAndRegistrer extends javax.swing.JLayeredPane {
         return txtPass;
     }
     
-    public Button getBtnLogin(){
+    public SquaredButton getBtnLogin(){
         return cmd;
     }
 

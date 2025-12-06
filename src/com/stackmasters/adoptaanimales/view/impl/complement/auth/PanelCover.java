@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.Set;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import net.miginfocom.swing.MigLayout;
 
@@ -28,6 +29,8 @@ public class PanelCover extends javax.swing.JPanel {
    private JLabel title;
    private JLabel descripction;
    private JLabel descripction1;
+   private JLabel descripction2;
+   private JLabel icon;
    private ButtonOutLine button;
    private boolean isLogin;
     
@@ -42,30 +45,29 @@ public class PanelCover extends javax.swing.JPanel {
     
     private void init(){
         
-           title=new JLabel("Bienvenido");
+           icon=new JLabel();
+           java.net.URL imageUrl = getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/petlog.png");
+           ImageIcon iconImage = new ImageIcon(imageUrl);
+           icon.setIcon(iconImage);
+           add(icon);
+        
+           title=new JLabel("Bienvenido a Adoptar");
            title.setFont(new Font("sansserif",1,30));
-           title.setForeground(new Color(128, 128, 128));
+           title.setForeground(new Color(255,255,255,255));
            add(title);
-           descripction=new JLabel("Para mantenerte en contacto con nosotros");
-           descripction.setForeground(new Color(128, 128, 128));
-           add(descripction);
-           descripction1=new JLabel("Registrate con tus datos personales");
-           descripction1.setForeground(new Color(128, 128, 128));
+           
+           descripction=new JLabel("Entra con tu cuenta");
+           descripction.setForeground(new Color(255,255,255,255));
+           descripction.setFont(new Font("sansserif",5,20));
+           add(descripction); 
+        
+           descripction1=new JLabel("Administra tus mascotas");
+           descripction1.setForeground(new Color(255,255,255,255));
+           descripction1.setFont(new Font("sansserif",5,20));
            add(descripction1);
-           button=new ButtonOutLine();
-           button.setBackground(new Color (255, 255, 191));
-           button.setForeground(new Color (89, 140, 163));
-           button.setText("Iniciar sesión");
-           button.setFocusPainted(false);
-           button.setFont(new Font("sansserif",1,20));
-           button.addActionListener(new ActionListener(){
+           
     
-            @Override
-            public void actionPerformed(ActionEvent ae){
-               event.actionPerformed(ae);
-            }
-         });
-        add(button,"w 60%, h 50");
+            
     }
           
            
@@ -104,9 +106,9 @@ public class PanelCover extends javax.swing.JPanel {
         
         
         GradientPaint gra=new GradientPaint
-        (0,0, new Color(255, 255, 191), // Color en la parte superior del panel
+        (0,0, new Color(102, 187, 106), // Color en la parte superior del panel
                 
-        0 , getHeight(),new Color(174, 198, 207) // Color en la parte inferior del panel
+        0 , getHeight(),new Color(129, 199, 132) // Color en la parte inferior del panel
         
         );
         // Creamos un degradado vertical usando GradientPaint.
@@ -134,22 +136,7 @@ public class PanelCover extends javax.swing.JPanel {
         this.event=event;  
     }
     
-        public void registerLeft(double v) {
-          v = Double.valueOf(df.format(v));
-          login(false);
-          layout.setComponentConstraints(title, "pad 0 -" + v + "% 0 0");
-          layout.setComponentConstraints(descripction, "pad 0 -" + v + "% 0 0");
-          layout.setComponentConstraints(descripction1, "pad 0 -" + v + "% 0 0");
-      }
-
-      public void registerRight(double v) {
-                   
-          v = Double.valueOf(df.format(v));
-          login(false);
-          layout.setComponentConstraints(title, "pad 0 -" + v + "% 0 0");
-          layout.setComponentConstraints(descripction, "pad 0 -" + v + "% 0 0");
-          layout.setComponentConstraints(descripction1, "pad 0 -" + v + "% 0 0");
-      }
+        
 
       public void loginLeft(double v) {
           
