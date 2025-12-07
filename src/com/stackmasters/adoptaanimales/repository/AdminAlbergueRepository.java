@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.repository;
 
 import com.stackmasters.adoptaanimales.model.AdminAlbergue;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -54,7 +55,7 @@ public class AdminAlbergueRepository extends BaseRepository<AdminAlbergue> {
     }
     
     //Insertar admin
-    public boolean insertAdmin(AdminAlbergue admin){
+    public RespuestaBD insertAdmin(AdminAlbergue admin){
         String sql = "INSERT INTO "+getTableName()+" (nombre, apellido, correo, contraseña, albergue_id) VALUES (?,?,?,?,?)";
         return insert(sql, admin.getNombre(),
                             admin.getApellido(),

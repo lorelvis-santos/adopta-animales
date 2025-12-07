@@ -4,6 +4,7 @@ import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.Mascota.Especie;
 import com.stackmasters.adoptaanimales.model.Mascota.Sexo;
 import com.stackmasters.adoptaanimales.model.Mascota.Tamaño;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -103,7 +104,7 @@ public class MascotaRepository extends BaseRepository<Mascota>{
     
     
    //insertar mascota 
-    public boolean insertMascota(Mascota mascota){
+    public RespuestaBD insertMascota(Mascota mascota){
         String sql = "INSERT INTO " + getTableName() + 
         " (nombre, fecha_nacimiento, raza, tamaño, peso, especie, sexo, descripcion, esta_castrado, esta_vacunado, condicion_especial, estado, albergue_id) " +
         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";

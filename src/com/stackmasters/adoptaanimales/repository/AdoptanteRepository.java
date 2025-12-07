@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.repository;
 
 import com.stackmasters.adoptaanimales.model.Adoptante;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -36,9 +37,9 @@ public class AdoptanteRepository extends BaseRepository<Adoptante> {
         }
         
        //Insertar adoptante
-      public boolean insertAdoptante(Adoptante adoptante){
-            String sql = "INSERT INTO "+getTableName() + " (nombre, apellido, fecha_nacimiento, telefono, direccion, provincia_id, municipio_id)"
-              + " VALUES (?,?,?,?,?,?,?)";
+      public RespuestaBD insertAdoptante(Adoptante adoptante){
+            String sql = "INSERT INTO "+getTableName() + " (nombre, apellido, fecha_nacimiento, telefono, direccion)"
+              + " VALUES (?,?,?,?,?)";
             return insert(sql, adoptante.getNombre(),
                                 adoptante.getApellido(),
                                 adoptante.getFechaNacimiento(),
@@ -48,8 +49,7 @@ public class AdoptanteRepository extends BaseRepository<Adoptante> {
       
       //Actualizar adoptante
       public boolean updateAdoptante(Adoptante adoptante, int idAdoptante){
-            String sql = "UPDATE "+getTableName() + " SET nombre = ?, apellido = ?, fecha_nacimiento = ?, telefono = ?, direccion = ?, "
-                    + "provincia_id = ?, municipio_id = ? "
+            String sql = "UPDATE "+getTableName() + " SET nombre = ?, apellido = ?, fecha_nacimiento = ?, telefono = ?, direccion = ?  "
                     + " WHERE " + getPk()+ " = ?";
             return update(sql, adoptante.getNombre(),
                                   adoptante.getApellido(),
