@@ -104,6 +104,7 @@ public class MascotaServiceImpl implements MascotaService {
         m.setEstado(EstadoMascota.EnAlbergue);
 
         // 10. Guardar en BD usando el repositorio.
+        // BaseRepository.insert(String sql, Object... params) devuelve boolean
         
         boolean insertado = repo.insertMascota(m);
            
@@ -112,6 +113,9 @@ public class MascotaServiceImpl implements MascotaService {
             throw new DatosInvalidosException("No se pudo guardar la mascota en la base de datos.");
         }
 
+        // Nota: aquí no estamos trayendo el ID generado desde la BD.
+        // Si en el futuro necesitan el ID, se podría diseñar una clase para respuestas de la base de datos.
+        // Por ahora, devolvemos el objeto m, que representa la mascota creada.
         return m;
     }
 
@@ -132,6 +136,7 @@ public class MascotaServiceImpl implements MascotaService {
         }
 
         // 3. Ejecutar la actualización usando el repositorio.
+        // BaseRepository.update(...) devuelve boolean y maneja SQLException internamente.
         
           //  Obtener la mascota desde la BD por ID 
           Mascota m = repo.findById(mascotaId);
