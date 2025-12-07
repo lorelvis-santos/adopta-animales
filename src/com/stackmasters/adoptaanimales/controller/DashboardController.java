@@ -39,6 +39,6 @@ public class DashboardController {
     
     private void cerrarSesion() {
         authService.cerrarSesion();
-        router.navegar(Ruta.AUTENTICACION, null);
+        router.navegar(Ruta.AUTENTICACION, new Object[0]);
     }
 }

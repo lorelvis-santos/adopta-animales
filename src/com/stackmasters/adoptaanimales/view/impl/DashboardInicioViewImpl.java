@@ -1,6 +1,11 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.repository.MascotaRepository;
+import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
+import com.stackmasters.adoptaanimales.service.MascotaService;
+import com.stackmasters.adoptaanimales.service.SolicitudService;
+import com.stackmasters.adoptaanimales.service.impl.MascotaServiceImpl;
 import com.stackmasters.adoptaanimales.view.DashboardInicioView;
 import com.stackmasters.adoptaanimales.view.impl.dialog.Message;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
@@ -10,18 +15,25 @@ import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
 import com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.ModelNoticeBoard;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 
 public class DashboardInicioViewImpl extends javax.swing.JPanel implements DashboardInicioView {
+    private MascotaService mascotaService;
+    private SolicitudService solicitudService;
+    
     public DashboardInicioViewImpl() {
         initComponents();
         table1.fixTable(jScrollPane1);
         setOpaque(false);
-        //initData();
+        
+        mascotaService = new MascotaServiceImpl(new MascotaRepository());
+        //solicitudService = new SolicitudServiceImpl(new SolicitudAdopcionRepository());
     }
     
     // Implementación de DashboardInicioView
@@ -70,7 +82,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         };
         
         for (Mascota mascota : mascotas) {
-            new ModelMascota(
+            table1.addRow(new ModelMascota(
                 new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), // Pendiente, mostrar imagenes dinamicas
                 mascota.getNombre(),
                 mascota.getSexo().db(), 
@@ -78,7 +90,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
                 mascota.isEstaCastrado(),
                 3, // Pendiente, calcular edad de forma dinámica
                 mascota.getPeso()
-            ).toRowTable(eventAction);
+            ).toRowTable(eventAction));
         }
     }
     
@@ -89,6 +101,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
      * 
      * to do: preparar una tabla en la bd que guarde el tipo de evento y fecha.
      */
+    @Override
     public void mostrarActividadesRecientes(List<String> actividades) {
         // To do: implementar...
         noticeBoard.addDate("04/10/2021");
@@ -107,8 +120,53 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
      * 
      * @param cargando True si está cargando, false si no
      */
+    @Override
     public void setCargando(boolean cargando) {
         // To do: implementar
+    }
+    
+    @Override
+    public void alMostrar(Object... parametros) {
+        setCargando(true);
+        
+        new SwingWorker<Void, Void>() {
+            private Exception error;
+            private int totalMascotas, solicitudesPendientes, mascotasAdoptadas;
+            private List<Mascota> mascotas;
+            private List<String> actividades;
+
+            @Override protected Void doInBackground() {
+                try { 
+                    // Obtener datos para las tarjetas
+                    totalMascotas = 65; // mascotaService.contarTotal();
+                    solicitudesPendientes = 21; // solicitudService.contarPendientes();
+                    mascotasAdoptadas = 27; // mascotaService.contarAdoptadas();
+                    
+                    // Obtener lista de mascotas
+                    mascotas = mascotaService.buscar(null);
+                    
+                    // Obtener lista de actividades, por implementar
+                    actividades = new ArrayList<>();
+                } catch (Exception e) {
+                    error = e; 
+                }
+
+                return null;
+            }
+
+            @Override protected void done() {
+                setCargando(false);                         
+                    
+                if (error != null) {
+                    System.out.println(error.getMessage());
+                    return; 
+                } 
+                
+                mostrarEstadisticas(totalMascotas, solicitudesPendientes, mascotasAdoptadas);
+                cargarTablaMascotas(mascotas);
+                mostrarActividadesRecientes(actividades);
+            }
+        }.execute();
     }
     
     // ----------------------------------------------------------------------
@@ -166,8 +224,6 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(27, 188, 204), "Skip ", "9:00 AM", "Skips a number of cells in the flow. This is used to jump over a number of cells before the next free cell is looked for. The skipping is done before this component is put in a cell and thus this cells is affected by it. \"count\" defaults to 1 if not specified."));
         noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(238, 46, 57), "Push", "7:15 AM", "Makes the row and/or column that the component is residing in grow with \"weight\". This can be used instead of having a \"grow\" keyword in the column/row constraints."));
         noticeBoard.scrollToTop();
-        
-        
     }
     
 

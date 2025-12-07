@@ -1,5 +1,7 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
+import com.stackmasters.adoptaanimales.router.DashboardRuta;
+import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Header;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Menu;
 import com.stackmasters.adoptaanimales.view.impl.DashboardInicioViewImpl;
@@ -15,6 +17,7 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import com.stackmasters.adoptaanimales.view.DashboardView;
+import java.util.Arrays;
 
 /**
  *
@@ -116,13 +119,66 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     }
     
     @Override
-    public void alMostrar(Object parametros) {
-        if (parametros != null && parametros instanceof Component) {
-            main.showForm((Component) parametros);
-        } else {
-            main.showForm(new DashboardInicioViewImpl());
+    public void alMostrar(Object... parametros) {
+        // Validamos la entrada. Si no hay parametros, vamos a Inicio por defecto.
+        if (parametros == null || parametros.length == 0) {
+            navegarSubRuta(DashboardRuta.INICIO, new Object[0]);
+            return;
         }
+        
+        // El primer parámetro siempre es la subruta en forma de DashboardRuta.
+        
+        // Declaramos valores iniciales para evitar fallos posteriores
+        DashboardRuta subRuta = DashboardRuta.INICIO;
+        Object[] datosSubVista = new Object[0];
+        
+        // Verificamos que el primer parametro sea una sub-ruta.
+        if (parametros[0] instanceof DashboardRuta) {
+            subRuta = (DashboardRuta) parametros[0];
+            
+            // Si hay mas datos, los separamos para pasarlos a la nueva vista.
+            if (parametros.length > 1) {
+                datosSubVista = Arrays.copyOfRange(parametros, 1, parametros.length);
+            }
+        } else {
+            // Si no, vamos a asumir que son datos para la subruta Inicio.
+            datosSubVista = parametros;
+        }
+        
+        // Llamamos a la nueva subruta.
+        navegarSubRuta(subRuta, datosSubVista);
     }
     
     // -------------------------------------------------------------
+    
+    private void navegarSubRuta(DashboardRuta subRuta, Object[] datos) {
+        VistaNavegable vistaDestino = null;
+        
+        // Determinamos la vista destino mediante switch.
+        switch (subRuta) {
+            case subRuta.INICIO: 
+                vistaDestino = new DashboardInicioViewImpl();
+                break;
+            case subRuta.MASCOTAS:
+                //vistaDestino = new DashboardMascotasViewImpl();
+                break;
+            case subRuta.SOLICITUDES:
+                //vistaDestino = new DashboardSolicitudesViewImpl();
+                break;
+            default:
+                System.out.println("Subruta desconocida: " + subRuta);
+                vistaDestino = new DashboardInicioViewImpl(); // fallback.
+                break;
+        }
+        
+        if (vistaDestino != null) {
+            // Pasamos los datos a la sub-vista.
+            vistaDestino.alMostrar(datos);
+            
+            // Mostramos la vista.
+            if (vistaDestino instanceof Component) {
+                main.showForm((Component) vistaDestino);
+            }
+        }
+    }
 }

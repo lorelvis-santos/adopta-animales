@@ -57,7 +57,7 @@ public class App extends JFrame {
             router
         );
         
-        router.navegar(Ruta.AUTENTICACION, null);
+        router.navegar(Ruta.AUTENTICACION, new Object[0]);
     }
     
     public Router getRouter() { return router; }

@@ -25,7 +25,7 @@ public class Router {
         vistas.put(ruta, vista);
     }
     
-    public void navegar(Ruta ruta, Object parametros) {
+    public void navegar(Ruta ruta, Object... parametros) {
         VistaNavegable vista = vistas.get(ruta);
         
         if (vista != null) {
