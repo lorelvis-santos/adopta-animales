@@ -1,11 +1,16 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
+import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
+import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
 import com.stackmasters.adoptaanimales.service.MascotaService;
 import com.stackmasters.adoptaanimales.service.SolicitudService;
 import com.stackmasters.adoptaanimales.service.impl.MascotaServiceImpl;
+import com.stackmasters.adoptaanimales.service.impl.SolicitudServiceImpl;
 import com.stackmasters.adoptaanimales.view.DashboardInicioView;
 import com.stackmasters.adoptaanimales.view.impl.complement.Dialog;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
@@ -38,7 +43,12 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         setOpaque(false);
         
         mascotaService = new MascotaServiceImpl(new MascotaRepository());
-        //solicitudService = new SolicitudServiceImpl(new SolicitudAdopcionRepository());
+        solicitudService = new SolicitudServiceImpl(
+            new MascotaRepository(),
+            new AdoptanteRepository(),
+            new SolicitudAdopcionRepository(),
+            new CitaRepository()
+        );
     }
     
     // Implementación de VistaConAlertas
@@ -171,9 +181,9 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
             @Override protected Void doInBackground() {
                 try { 
                     // Obtener datos para las tarjetas
-                    totalMascotas = 65; // mascotaService.contarTotal();
-                    solicitudesPendientes = 21; // solicitudService.contarPendientes();
-                    mascotasAdoptadas = 27; // mascotaService.contarAdoptadas();
+                    totalMascotas = mascotaService.totalMascotas();
+                    solicitudesPendientes = solicitudService.totalSolicitudesPorEstado(EstadoSolicitud.Pendiente);
+                    mascotasAdoptadas = mascotaService.totalMascotasPorEstado(EstadoMascota.Adoptada);
                     
                     // Obtener lista de mascotas
                     mascotas = mascotaService.buscar(null);
