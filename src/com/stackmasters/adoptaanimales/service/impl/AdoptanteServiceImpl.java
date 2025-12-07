@@ -4,6 +4,7 @@ import com.stackmasters.adoptaanimales.dto.RegistroAdoptanteDTO;
 import com.stackmasters.adoptaanimales.exception.DatosInvalidosException;
 import com.stackmasters.adoptaanimales.exception.EmailYaUsadoException;
 import com.stackmasters.adoptaanimales.model.Adoptante;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.service.AdoptanteService;
 
@@ -38,17 +39,16 @@ public class AdoptanteServiceImpl implements AdoptanteService {
         nuevo.setDireccion(dto.getDireccion());
         
         //  Insertar en BD
-        boolean insertado = repo.insertAdoptante(nuevo);
+        RespuestaBD insertado = repo.insertAdoptante(nuevo);
 
-        if (!insertado) {
+        if (!insertado.isOk()) {
             throw new DatosInvalidosException("No se pudo registrar el adoptante.");
         }
-
+        System.out.println(insertado.getId());
         return nuevo;
     }
     
     // Obtener adoptante por id
-    
     @Override
     public Adoptante obtenerPorId(int id) {
         return repo.findById(id);

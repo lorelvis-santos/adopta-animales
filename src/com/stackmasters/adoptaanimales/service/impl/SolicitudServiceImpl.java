@@ -12,6 +12,8 @@ import com.stackmasters.adoptaanimales.model.*;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import com.stackmasters.adoptaanimales.repository.*;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -53,6 +55,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         
          // Verificar que la mascota exista
         Mascota mascota = mascotaRepo.findById(mascotaId);
+       
         if (mascota == null) {
             throw new MascotaNoDisponibleException("La mascota indicada no existe.");
         }
@@ -84,15 +87,24 @@ public class SolicitudServiceImpl implements SolicitudService {
         nueva.setFechaSolicitud(LocalDate.now());
         nueva.setFechaRespuesta(null);
         nueva.setMotivoRechazo(null);
-        nueva.setAdoptanteId(0);
+        nueva.setAdoptanteId(1);   // temporal para pruebas
         nueva.setMascotaId(mascotaId);
 
-        solicitudRepo.insertSolicitud(nueva);
-        return nueva;
+        // insert usando RespuestaBD (para obtener el ID generado)
+        RespuestaBD respuesta = solicitudRepo.insertSolicitud(nueva);
+
+    if (!respuesta.isOk()) {
+        throw new DatosInvalidosException("No se pudo crear la solicitud.");
     }
 
-   
-    // obtener las solicitudes por el id
+    // Asignar el ID generado por la BD al objeto
+    nueva.setIdSolicitud(respuesta.getId());
+
+    return nueva;
+
+    }
+
+    // Obtener las solicitudes por el id
         @Override
         public SolicitudAdopcion obtener(int solicitudId) {
             return solicitudRepo.findById(solicitudId);
@@ -157,11 +169,21 @@ public class SolicitudServiceImpl implements SolicitudService {
         nueva.setSolicitudId(solicitudId);
         nueva.setAlbergueId(dto.getAlbergueId());
 
-        citaRepo.insertCita(nueva);
+        // Insert usando RespuestaBD para obtener el ID
+        RespuestaBD respuesta = citaRepo.insertCita(nueva);
+
+        if (!respuesta.isOk()) {
+            throw new DatosInvalidosException("No se pudo crear la cita.");
+        }
+
+        // Asignar el ID generado por la BD
+        nueva.setIdCita(respuesta.getId());
+
         return nueva;
+
     }
 
-    // btener cita que este asociada a una solicitud
+    // Obtener cita que este asociada a una solicitud
     @Override
     public Cita obtenerCita(int solicitudId) {
         List<Cita> citas = citaRepo.findAll();
@@ -192,10 +214,78 @@ public class SolicitudServiceImpl implements SolicitudService {
     // Listar las solicitudes 
     @Override
     public List<SolicitudAdopcion> listar(FiltroSolicitudDTO filtro) {
-        return solicitudRepo.findAll();
+        // Obtener todas las solicitudes desde la BD
+        List<SolicitudAdopcion> todas = solicitudRepo.findAll();
+
+    // Si no hay filtro, devolver todas
+    if (filtro == null) {
+        return todas;
     }
+
+    List<SolicitudAdopcion> filtradas = new java.util.ArrayList<>();
+
+    for (SolicitudAdopcion s : todas) {
+
+        // Filtro por texto (nombre de mascota o adoptante)
+        if (filtro.getTexto() != null && !filtro.getTexto().isBlank()) {
+            String txt = filtro.getTexto().toLowerCase();
+
+            // Obtener nombre de mascota
+            Mascota m = mascotaRepo.findById(s.getMascotaId());
+            String nombreMascota = (m != null) ? m.getNombre().toLowerCase() : "";
+            
+            // Obtener nombre completo del adoptante
+            Adoptante a = adoptanteRepo.findById(s.getAdoptanteId());
+            String nombreAdoptante = "";
+            if (a != null) {
+                nombreAdoptante = (a.getNombre() + " " + a.getApellido()).toLowerCase();
+            }
+
+            // Si texto NO está en ninguno → NO pasa el filtro
+            if (!nombreMascota.contains(txt) && !nombreAdoptante.contains(txt)) {
+                continue;
+            }
+        } 
+
+        // Filtro por estado de la solicitud
+        if (filtro.getEstadoSolicitud() != null &&
+            s.getEstado() != filtro.getEstadoSolicitud()) {
+            continue;
+        }
+
+        // Filtro por ID de mascota/publicación
+        if (filtro.getMascotaId() != 0 &&
+            s.getMascotaId() != filtro.getMascotaId()) {
+            continue;
+        }
+        
+        // Filtro por rango de fechas (fechaSolicitud)
+        if (filtro.getFechaDesde() != null &&
+            s.getFechaSolicitud() != null &&
+            s.getFechaSolicitud().isBefore(filtro.getFechaDesde())) {
+            continue;
+        }
+
+        if (filtro.getFechaHasta() != null &&
+            s.getFechaSolicitud() != null &&
+            s.getFechaSolicitud().isAfter(filtro.getFechaHasta())) {
+            continue;
+        }
+
+        // Filtro por estado de cita (solo si existe cita)
+        if (filtro.getEstadoCita() != null) {
+            Cita cita = obtenerCita(s.getIdSolicitud());
+
+            // Si no tiene cita → no pasa el filtro
+            if (cita == null || cita.getEstadoCita() != filtro.getEstadoCita()) {
+                continue;
+            }
+        }
+
+        // Si pasa todos los filtros, lo agregamos
+        filtradas.add(s);
+    }
+
+    return filtradas;
 }
-
-
-
-
+    }
