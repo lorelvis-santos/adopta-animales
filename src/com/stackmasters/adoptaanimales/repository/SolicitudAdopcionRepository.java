@@ -68,4 +68,9 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
                 idSolicitud
         );
     }
+    //Total mascotas por estado en el albergue
+    public int totalSolicitudPendiente(String estado){
+     String sql = "SELECT COUNT(*) FROM " + getTableName() + " WHERE estado = ? ";
+     return count(sql, estado);
+    } 
 }

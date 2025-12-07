@@ -143,4 +143,16 @@ public class MascotaRepository extends BaseRepository<Mascota>{
                     mascota.getAlbergueId(),
                     idMascota);
         }
+   
+    //Total de Mascotas
+    public int totalMascotas(){
+       String sql = "SELECT COUNT(*) FROM " + getTableName();
+        return count(sql);
+    }
+    
+    //Total mascotas por estado
+    public int totalMascotaPorEstado(String estado){
+     String sql = "SELECT COUNT(*) FROM " + getTableName() + " WHERE estado = ? ";
+     return count(sql, estado);
+    }
 }
