@@ -8,4 +8,11 @@ public class SolicitudNoAprobadaException extends Exception {
     public SolicitudNoAprobadaException() {
         super("No puedes programar una cita para una solicitud rechazada");
     }
+    
+    // Constructor para mensaje personalizado
+    public SolicitudNoAprobadaException(String mensaje) {
+        super(mensaje);
+    }
+
+    
 }

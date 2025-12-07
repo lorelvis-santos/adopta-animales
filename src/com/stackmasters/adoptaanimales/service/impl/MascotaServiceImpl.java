@@ -106,7 +106,6 @@ public class MascotaServiceImpl implements MascotaService {
         // 10. Guardar en BD usando el repositorio.
         // BaseRepository.insert(String sql, Object... params) devuelve boolean
         
-        // To do: DBA debe proporcionar un método para reducir la complejidad de este insert.
         boolean insertado = repo.insertMascota(m);
            
         if (!insertado) {
@@ -195,6 +194,7 @@ public class MascotaServiceImpl implements MascotaService {
     /**
      * Buscar mascotas según filtros en memoria.
      * Se obtienen todas de la BD y se filtran en Java.
+     * @param filtro
      */
     @Override
     public List<Mascota> buscar(FiltroMascotaDTO filtro) {
