@@ -3,6 +3,7 @@ package com.stackmasters.adoptaanimales.view.impl.swing;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -38,8 +39,11 @@ public class SquaredButton extends JButton {
     public SquaredButton() {
         setContentAreaFilled(false);
         setBorder(new EmptyBorder(5, 5, 5, 5));
-        setBackground(Color.WHITE);
+        setBackground(new Color(79, 172, 254));
+        setForeground(new Color(255, 255, 255, 255));
+        setFocusable(false);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
+        setFont(new Font("sansserif", 1, 14));
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {

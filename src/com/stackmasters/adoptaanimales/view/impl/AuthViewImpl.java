@@ -3,8 +3,10 @@ package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.model.auth.Rol;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
+import com.stackmasters.adoptaanimales.utils.LoadingHandler;
+import com.stackmasters.adoptaanimales.utils.Message;
 import com.stackmasters.adoptaanimales.view.AuthView;
-import com.stackmasters.adoptaanimales.view.impl.complement.Message;
+import com.stackmasters.adoptaanimales.view.impl.complement.Message.MessageType;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelCover;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelLoginAndRegistrer;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelLoading;
@@ -79,21 +81,24 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
     }
     
     @Override
-    public void setCargando(boolean valor){
-        carga.setVisible(valor);
-        logAndReg.getBtnLogin().setEnabled(!valor);
+    public void setCargando(boolean cargando){
+        if (cargando) {
+            LoadingHandler.show();
+        } else {
+            LoadingHandler.hide();
+        }
+        
+        logAndReg.getBtnLogin().setEnabled(!cargando);
     }
     
     @Override
     public void mostrarMensaje(String mensaje, boolean error) {
         if(error) {
-            com.stackmasters.adoptaanimales.utils.Message.ShowMessage(this, Message.MessageType.ERROR, mensaje);
+            Message.ShowMessage(this, MessageType.ERROR, mensaje);
         } else { 
-            com.stackmasters.adoptaanimales.utils.Message.ShowMessage(this, Message.MessageType.SUCCESS, mensaje);
+            Message.ShowMessage(this, MessageType.SUCCESS, mensaje);
         }
     }
-    
-    
     
     private void init(){
         layout = new MigLayout("fill, insets 0,");
@@ -113,74 +118,6 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
         
     }
     
-    // ===== Método =====
-    private void ShowMessage(Message.MessageType type, String text) {
-        // 1) Frenar y limpiar lo anterior
-        if (toastAnimator != null && toastAnimator.isRunning()) toastAnimator.stop();
-        if (hideTimer != null) hideTimer.stop();
-        if (toast != null && toast.getParent() == bg) bg.remove(toast);
-
-        // 2) Crear y agregar el único toast
-        toast = new Message();
-        toast.showMessage(type, text);              // setea icono + texto (Message arranca invisible) 
-        bg.add(toast, "pos 0.5al -30", 0);          // 'bg' usa MigLayout posicional 
-        toast.setVisible(true);
-        bg.revalidate();
-        bg.repaint();
-
-        // 3) Animación: sin 'isShow'; controlamos con 'toastPhase'
-        toastPhase = ToastPhase.ENTERING;
-
-        TimingTarget target = new TimingTargetAdapter() {
-            @Override public void timingEvent(float fraction) {
-            if (toast == null || toast.getParent() != bg) return;
-
-            // ENTRADA:    y = 40 * fraction      (de -30 a +10)
-            // SALIDA:     y = 40 * (1 - fraction) (de +10 a -30)
-            float y = (toastPhase == ToastPhase.ENTERING)
-                    ? 40 * fraction
-                    : 40 * (1f - fraction);
-
-            ((MigLayout) bg.getLayout())
-                .setComponentConstraints(toast, "pos 0.5al " + (int)(y - 30));
-
-            bg.revalidate();
-            bg.repaint();
-        }
-
-            @Override public void end() {
-                if (toast == null) return;
-
-                if (toastPhase == ToastPhase.ENTERING) {
-                    // Terminó la ENTRADA: esperar 2s y luego correr SALIDA
-                    hideTimer = new javax.swing.Timer(2000, e -> {
-                        if (toast != null && !toastAnimator.isRunning()) {
-                            toastPhase = ToastPhase.EXITING;
-                            toastAnimator.start();     // corre la salida
-                        }
-                    });
-                    hideTimer.setRepeats(false);
-                    hideTimer.start();
-
-                } else { // EXITING
-                    // Terminó la SALIDA: retirar y limpiar
-                    if (toast.getParent() == bg) bg.remove(toast);
-                    toast = null;
-                    bg.revalidate();
-                    bg.repaint();
-                }
-            }
-        };
-
-        toastAnimator = new org.jdesktop.animation.timing.Animator(300, target);
-        toastAnimator.setResolution(0);
-        toastAnimator.setAcceleration(0.5f);
-        toastAnimator.setDeceleration(0.5f);
-
-        // 4) Lanzar ENTRADA una sola vez
-        toastAnimator.start();
-    }
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -197,9 +134,6 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
         add(bg, BorderLayout.CENTER);
        
     }// </editor-fold>//GEN-END:initComponents
-
-    
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLayeredPane bg;

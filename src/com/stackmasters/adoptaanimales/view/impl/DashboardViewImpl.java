@@ -17,6 +17,7 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import com.stackmasters.adoptaanimales.view.DashboardView;
+import com.stackmasters.adoptaanimales.view.impl.mascota.MascotasCrearViewImpl;
 import java.util.Arrays;
 
 /**
@@ -34,6 +35,8 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     private Runnable onIrMascotas;
     private Runnable onIrSolicitudes;
     private Runnable onCerrarSesion;
+    
+    private DashboardRuta subRutaActual;
     
     public DashboardViewImpl() {
         //  Init google icon font
@@ -145,8 +148,14 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
             datosSubVista = parametros;
         }
         
+        // Solo renderizar la vista si es diferente a la actual
+        if (subRuta == subRutaActual) {
+            return;
+        }
+        
         // Llamamos a la nueva subruta.
         navegarSubRuta(subRuta, datosSubVista);
+        subRutaActual = subRuta;
     }
     
     // -------------------------------------------------------------
@@ -160,7 +169,10 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
                 vistaDestino = new DashboardInicioViewImpl();
                 break;
             case subRuta.MASCOTAS:
-                //vistaDestino = new DashboardMascotasViewImpl();
+                vistaDestino = new DashboardMascotasViewImpl();
+                break;
+            case subRuta.MASCOTAS_CREAR:
+                vistaDestino = new MascotasCrearViewImpl();
                 break;
             case subRuta.SOLICITUDES:
                 //vistaDestino = new DashboardSolicitudesViewImpl();

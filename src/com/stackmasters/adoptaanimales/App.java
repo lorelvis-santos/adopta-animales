@@ -7,6 +7,7 @@ import com.stackmasters.adoptaanimales.service.impl.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
+import com.stackmasters.adoptaanimales.utils.LoadingHandler;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardViewImpl;
 import java.awt.BorderLayout;
@@ -28,6 +29,8 @@ public class App extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         add(contenedor, BorderLayout.CENTER);
+        
+        LoadingHandler.init(this);
         
         // Registro de vistas
         var autenticacion =  new AuthViewImpl();

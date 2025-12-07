@@ -1,5 +1,6 @@
 package com.stackmasters.adoptaanimales.controller;
 
+import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.router.Router;
 import com.stackmasters.adoptaanimales.router.Ruta;
 import com.stackmasters.adoptaanimales.service.AuthService;
@@ -26,11 +27,11 @@ public class DashboardController {
     }
     
     private void mostrarInicio() {
-        System.out.println("Inicio");
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.INICIO);
     }
     
     private void mostrarMascotas() {
-        System.out.println("Mascotas");
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS);
     }
     
     private void mostrarSolicitudes() {
