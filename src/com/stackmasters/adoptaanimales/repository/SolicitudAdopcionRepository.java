@@ -1,5 +1,6 @@
 package com.stackmasters.adoptaanimales.repository;
 
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import java.sql.ResultSet;
@@ -28,7 +29,8 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
         solicitud.setIdSolicitud(datos.getInt("id_solicitud"));
         solicitud.setEstado(EstadoSolicitud.valueOf(datos.getString("estado")));
         solicitud.setFechaSolicitud(datos.getDate("fecha_solicitud").toLocalDate());
-        solicitud.setFechaRespuesta(datos.getDate("fecha_respuesta").toLocalDate());
+        java.sql.Date fechaRespuesta = datos.getDate("fecha_respuesta");
+        solicitud.setFechaRespuesta(fechaRespuesta != null ? fechaRespuesta.toLocalDate() : null);
         solicitud.setMotivoRechazo(datos.getString("motivo_rechazo"));
         solicitud.setAdoptanteId(datos.getInt("adoptante_id"));
         solicitud.setMascotaId(datos.getInt("mascota_id"));
@@ -37,9 +39,9 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     }
     
     //Insertar solicitud
-    public boolean insertSolicitud(SolicitudAdopcion solicitud){
+    public RespuestaBD insertSolicitud(SolicitudAdopcion solicitud){
         String sql = "INSERT INTO "+getTableName() +" (estado, fecha_solicitud, fecha_respuesta, motivo_rechazo,"
-                + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?,?)";
+                + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?)";
     
         return insert(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),

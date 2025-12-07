@@ -1,7 +1,9 @@
 package com.stackmasters.adoptaanimales.repository;
 
 import com.stackmasters.adoptaanimales.dbconnection.DatabaseConnection;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.sql.Connection;
+import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -117,11 +119,11 @@ public abstract class BaseRepository <T>{
     return lista;
     }
     
-    //Metodo para insertar datos
+   //Metodo para insertar datos
                                                     //Object... parametros indica los valores que van a reemplazar los ? del sql
-    public boolean insert(String sql, Object... parametros){
+    public RespuestaBD insert(String sql, Object... parametros){
         try(Connection conexion = getConnection();
-              PreparedStatement consulta = conexion.prepareStatement(sql )){
+              PreparedStatement consulta = conexion.prepareStatement(sql , Statement.RETURN_GENERATED_KEYS)){
         
             for(int i=0 ; i< parametros.length; i++){
                 //Aqui se va colocando cada parametro en cada  "?"
@@ -131,13 +133,29 @@ public abstract class BaseRepository <T>{
             //Se almacena el numero de filas afectadas
                                            // Se usa executeUpdate() para operaciones INSERT/UPDATE/DELETE
                                            //Este metodo modifica la base de datos, obteniendo como resultado el numero de filas afectadas
-            return consulta.executeUpdate()>0;
+                                           
+            int filasAfectadas = consulta.executeUpdate();
+            
+            if(filasAfectadas == 0){ 
+            return new RespuestaBD(false, -1);
+            }
+            
+            try(ResultSet resultadoConsulta = consulta.getGeneratedKeys()){
+                if(resultadoConsulta.next()){
+                    int id = resultadoConsulta.getInt(1);
+                    return new RespuestaBD(true, id);
+                
+                }else{
+                    return new RespuestaBD(false, -1);
+                
+                } 
+            }
              
         }catch(SQLException e){
         
             System.out.println("Error: "+ e.getMessage());
-        }
-        return false;
+            return new RespuestaBD(false, -1);
+        }       
     }
     
     //Metodo para actualizar

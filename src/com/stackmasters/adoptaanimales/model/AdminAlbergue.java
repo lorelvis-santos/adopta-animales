@@ -72,6 +72,4 @@ public class AdminAlbergue {
     public void setAlbergueId(int albergueId) {
         this.albergueId = albergueId;
     }
-    
-    
 }

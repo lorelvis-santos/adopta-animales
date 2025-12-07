@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.repository;
 
 import com.stackmasters.adoptaanimales.model.Cita;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 /**
@@ -46,7 +47,7 @@ public class CitaRepository extends BaseRepository<Cita> {
 }
 
     //Insertar cita
-    public boolean insertCita(Cita cita){
+    public RespuestaBD insertCita(Cita cita){
         String sql = "INSERT INTO "+getTableName()+ " (fecha_hora, estado, notas, solicitud_id, albergue_id) VALUES (?,?,?,?,?)";
         return insert(sql, cita.getFechaHora(),
                              cita.getEstadoCita().db(),
