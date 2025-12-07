@@ -23,4 +23,8 @@ public interface MascotaService {
     Mascota obtenerPorId(int mascotaId);
     
     List<Mascota> buscar(FiltroMascotaDTO filtro);
+    
+    int totalMascotas();
+    
+    int totalMascotasPorEstado(Mascota.EstadoMascota estado);
 }
