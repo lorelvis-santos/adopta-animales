@@ -223,4 +223,24 @@ public abstract class BaseRepository <T>{
             return ps.executeUpdate();
         }
     } 
+    
+    public int count(String sql, Object... parametros){
+        try(Connection conexion = getConnection();
+                PreparedStatement consulta = conexion.prepareStatement(sql)){
+  
+            for(int i = 0; i < parametros.length; i++){
+                consulta.setObject(i +1, parametros[i]);
+            }
+            
+            try(ResultSet resultadoConsulta = consulta.executeQuery()){
+                if(resultadoConsulta.next()){
+                    return resultadoConsulta.getInt(1);
+                }
+            }
+                
+            }catch(SQLException e){
+                System.out.println("Error: " + e.getMessage());
+            }
+        return 0;
+    }
 }

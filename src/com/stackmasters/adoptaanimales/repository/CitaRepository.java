@@ -4,6 +4,7 @@ import com.stackmasters.adoptaanimales.model.Cita;
 import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 /**
  *
  * @author Bianca Parra
@@ -66,5 +67,18 @@ public class CitaRepository extends BaseRepository<Cita> {
                              cita.getSolicitudId(),
                              cita.getAlbergueId(),
                              idCita);
+    }
+     
+     //Metodo para buscar citas por solicitud de adopcion
+     public Cita findBySolicitudId(int idSolicitud){
+        try {
+            String sql = "SELECT * FROM " + getTableName() + " WHERE solicitud_id = ?";
+            List<Cita> lista = executeSelect(sql, idSolicitud);
+            return lista.isEmpty() ? null : lista.get(0);
+            
+        } catch (SQLException e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
+        }
     }
 }
