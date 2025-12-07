@@ -13,8 +13,6 @@ import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import com.stackmasters.adoptaanimales.repository.*;
 import com.stackmasters.adoptaanimales.model.RespuestaBD;
-import com.stackmasters.adoptaanimales.model.RespuestaBD;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -154,13 +152,11 @@ public class SolicitudServiceImpl implements SolicitudService {
         }
 
         // Verificar si ya existe cita asociada
-        List<Cita> citas = citaRepo.findAll();
-        for (Cita c : citas) {
-            if (c.getSolicitudId() == solicitudId) {
-                throw new CitaYaExisteException("Esta solicitud ya tiene una cita programada.");
-            }
-        }
-
+        Cita citaExistente = citaRepo.findBySolicitudId(solicitudId);
+        
+        if (citaExistente != null) {
+        throw new CitaYaExisteException("Esta solicitud ya tiene una cita programada.");
+}
         // Crear la nueva cita
         Cita nueva = new Cita();
         nueva.setFechaHora(dto.getFechaHora());
@@ -186,13 +182,7 @@ public class SolicitudServiceImpl implements SolicitudService {
     // Obtener cita que este asociada a una solicitud
     @Override
     public Cita obtenerCita(int solicitudId) {
-        List<Cita> citas = citaRepo.findAll();
-        for (Cita c : citas) {
-            if (c.getSolicitudId() == solicitudId) {
-                return c;
-            }
-        }
-        return null;
+        return citaRepo.findBySolicitudId(solicitudId);
     }
 
     // Actualizar estado de la cita
@@ -276,7 +266,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         if (filtro.getEstadoCita() != null) {
             Cita cita = obtenerCita(s.getIdSolicitud());
 
-            // Si no tiene cita → no pasa el filtro
+            // Si no tiene cita no pasa el filtro
             if (cita == null || cita.getEstadoCita() != filtro.getEstadoCita()) {
                 continue;
             }
@@ -288,4 +278,15 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     return filtradas;
 }
+    
+    // Contar solicitudes por estado
+    public int totalSolicitudesPorEstado(EstadoSolicitud estado) {
+
+    if (estado == null) {
+        return 0;
+    }
+
+    return solicitudRepo.totalSolicitudPendiente(estado.db());
+}
+
     }

@@ -245,4 +245,15 @@ public class MascotaServiceImpl implements MascotaService {
 
         return filtradas;
     }
+    
+    // Contar mascotas por estado
+    public int totalMascotasPorEstado(EstadoMascota estado) {
+
+    if (estado == null) {
+        return 0;
+    }
+
+    return repo.totalMascotaPorEstado(estado.db());
+}
+
 }
