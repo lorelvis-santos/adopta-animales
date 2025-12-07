@@ -24,9 +24,9 @@ public class InicioViewTest extends JPanel implements InicioView, VistaNavegable
     }
 
     @Override
-    public void alMostrar(Object params) {
+    public void alMostrar(Object... params) {
         // Si se pasan parámetros, los puedes usar
-        if (params instanceof String msg) {
+        if (params.length > 0 && params[0] instanceof String msg) {
             lblMensaje.setText(msg);
         }
     }
