@@ -176,6 +176,20 @@ public class MascotaServiceImpl implements MascotaService {
 
         return actualizado;
     }
+    
+    /**
+     * Eliminar una mascota.
+     */
+    @Override
+    public boolean eliminar(int mascotaId) {
+
+        // 1. Validar ID
+        if (mascotaId <= 0) {
+            return false;
+        }
+
+        return repo.delete(mascotaId);
+    }
 
     /**
      * Obtener una mascota por ID.
@@ -248,12 +262,11 @@ public class MascotaServiceImpl implements MascotaService {
     
     // Contar mascotas por estado
     public int totalMascotasPorEstado(EstadoMascota estado) {
+        if (estado == null) {
+            return 0;
+        }
 
-    if (estado == null) {
-        return 0;
+        return repo.totalMascotaPorEstado(estado.db());
     }
-
-    return repo.totalMascotaPorEstado(estado.db());
-}
 
 }
