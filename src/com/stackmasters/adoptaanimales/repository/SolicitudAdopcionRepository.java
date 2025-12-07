@@ -31,9 +31,12 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
         solicitud.setFechaSolicitud(datos.getDate("fecha_solicitud").toLocalDate());
         java.sql.Date fechaRespuesta = datos.getDate("fecha_respuesta");
         solicitud.setFechaRespuesta(fechaRespuesta != null ? fechaRespuesta.toLocalDate() : null);
+        // aqui hay que hacer un cambio, para que maneje cuando la fecha e nula
+        java.sql.Date fr = datos.getDate("fecha_respuesta");
+        solicitud.setFechaRespuesta(fr != null ? fr.toLocalDate() : null);
         solicitud.setMotivoRechazo(datos.getString("motivo_rechazo"));
         solicitud.setAdoptanteId(datos.getInt("adoptante_id"));
-        solicitud.setMascotaId(datos.getInt("mascota_id"));
+        solicitud.setMascotaId(datos.getInt("mascota_id")); // cambie eso para que la prueba me funcione
 
         return solicitud;
     }
@@ -41,8 +44,7 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     //Insertar solicitud
     public RespuestaBD insertSolicitud(SolicitudAdopcion solicitud){
         String sql = "INSERT INTO "+getTableName() +" (estado, fecha_solicitud, fecha_respuesta, motivo_rechazo,"
-                + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?)";
-    
+                   + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?)"; 
         return insert(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),
                                solicitud.getFechaRespuesta(),
@@ -53,8 +55,8 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     
     //Actualizar solicitud
     public boolean updateSolicitud(SolicitudAdopcion solicitud, int idSolicitud){
-        String sql = "UPDATE "+getTableName() +" SET estado = ? , fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
-                + "adoptante_id = ?, mascota_id = ? WHERE " + getPk()+ " = ?";
+        String sql = "UPDATE "+getTableName() +" SET estado = ?, fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
+                + "adoptante_id = ?, mascota_id = ? WHERE " + getPk()+ " = ?"; // cambie adoptante_id por publicacion_id para la prue
     
         return update(sql, 
                 solicitud.getEstado().db(),

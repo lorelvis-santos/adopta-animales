@@ -19,7 +19,7 @@ public class SolicitudAdopcion {
     
     //Enum para el estado de la solicitud
     public enum EstadoSolicitud{
-        Pendiente("Estado"),
+        Pendiente("Pendiente"),
         Aprobada("Aprobada"),
         Rechazada("Rechazada"),
         Cancelada("Cancelada");

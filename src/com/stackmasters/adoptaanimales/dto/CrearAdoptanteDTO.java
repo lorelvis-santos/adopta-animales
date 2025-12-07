@@ -11,7 +11,7 @@ public class CrearAdoptanteDTO {
     private final String apellido;
     private final LocalDate fechaNacimiento;
     private final String telefono;
-    private final String correo;
+   // private final String correo;
     private final String direccion;
 
     public CrearAdoptanteDTO(String nombre, String apellido, LocalDate fechaNacimiento, String telefono, String correo, String direccion) {
@@ -19,7 +19,7 @@ public class CrearAdoptanteDTO {
         this.apellido = apellido;
         this.fechaNacimiento = fechaNacimiento;
         this.telefono = telefono;
-        this.correo = correo;
+       // this.correo = correo;
         this.direccion = direccion;
     }
 
@@ -39,11 +39,23 @@ public class CrearAdoptanteDTO {
         return telefono;
     }
 
-    public String getCorreo() {
-        return correo;
-    }
+    // public String getCorreo() {
+       // return correo;
+    // }
 
     public String getDireccion() {
         return direccion;
     } 
+
+    public void setApellido(String andújar) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void setTelefono(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void setNombre(String sky) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
