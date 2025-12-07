@@ -4,7 +4,7 @@ package com.stackmasters.adoptaanimales.view.impl;
 import com.stackmasters.adoptaanimales.model.auth.Rol;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import com.stackmasters.adoptaanimales.view.AuthView;
-import com.stackmasters.adoptaanimales.view.impl.complement.auth.Message;
+import com.stackmasters.adoptaanimales.view.impl.complement.Message;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelCover;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelLoginAndRegistrer;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelLoading;
@@ -85,9 +85,12 @@ public class AuthViewImpl extends javax.swing.JPanel implements AuthView {
     }
     
     @Override
-    public void mostrarMensaje(String mensaje, boolean error){
-        if(error){ShowMessage(Message.MessageType.ERROR, mensaje);}
-        else{ShowMessage(Message.MessageType.SUCCESS, mensaje);}
+    public void mostrarMensaje(String mensaje, boolean error) {
+        if(error) {
+            com.stackmasters.adoptaanimales.utils.Message.ShowMessage(this, Message.MessageType.ERROR, mensaje);
+        } else { 
+            com.stackmasters.adoptaanimales.utils.Message.ShowMessage(this, Message.MessageType.SUCCESS, mensaje);
+        }
     }
     
     

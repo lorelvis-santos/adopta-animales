@@ -7,14 +7,18 @@ import com.stackmasters.adoptaanimales.service.MascotaService;
 import com.stackmasters.adoptaanimales.service.SolicitudService;
 import com.stackmasters.adoptaanimales.service.impl.MascotaServiceImpl;
 import com.stackmasters.adoptaanimales.view.DashboardInicioView;
-import com.stackmasters.adoptaanimales.view.impl.dialog.Message;
+import com.stackmasters.adoptaanimales.view.impl.complement.Dialog;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelMascota;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
 import com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.ModelNoticeBoard;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
+import com.stackmasters.adoptaanimales.utils.Message;
+import com.stackmasters.adoptaanimales.view.impl.complement.Message.MessageType;
 import java.awt.Color;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
@@ -22,18 +26,30 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 public class DashboardInicioViewImpl extends javax.swing.JPanel implements DashboardInicioView {
     private MascotaService mascotaService;
     private SolicitudService solicitudService;
     
     public DashboardInicioViewImpl() {
-        initComponents();
+        initComponents();        
         table1.fixTable(jScrollPane1);
         setOpaque(false);
         
         mascotaService = new MascotaServiceImpl(new MascotaRepository());
         //solicitudService = new SolicitudServiceImpl(new SolicitudAdopcionRepository());
+    }
+    
+    // Implementación de VistaConAlertas
+    
+    @Override
+    public void mostrarMensaje(String mensaje, boolean error) {
+        if(error) {
+            Message.ShowMessage(this, MessageType.ERROR, mensaje);
+        } else { 
+            Message.ShowMessage(this, MessageType.SUCCESS, mensaje);
+        }
     }
     
     // Implementación de DashboardInicioView
@@ -63,32 +79,49 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         // Hay que reemplazar esto
         EventAction eventAction = new EventAction() {
             @Override
-            public void delete(ModelMascota student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
+            public void delete(ModelMascota item) {
+                if (table1.isEditing()) {
+                    // Cancelamos la edición. No usamos 'stop' porque no queremos guardar,
+                    // solo queremos que suelte el foco para poder borrar la fila en paz.
+                    table1.getCellEditor().cancelCellEditing();
+                }
+                
+                if (showMessage("¿Estás seguro de eliminar a " + item.getName() + "?")) {
+                    try {
+                        // Llamas a tu servicio real usando el ID que escondimos en el modelo
+                        boolean ok = mascotaService.eliminar(item.getId()); 
+
+                        if (ok) { 
+                            // IMPORTANTE: Recargar la tabla para que desaparezca la fila
+                            // Puedes llamar a alMostrar() de nuevo o quitar la fila del modelo de la tabla manualmente
+                            alMostrar(); 
+                            mostrarMensaje("Mascota eliminada correctamente", false);
+                            System.out.println("Mascota eliminada: " + item.getId());
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error borrando: " + e.getMessage());
+                    }
                 }
             }
 
             @Override
-            public void update(ModelMascota student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
+            public void update(ModelMascota mascota) {
+                showMessage("Update : " + mascota.getId());
             }
         };
         
+        DefaultTableModel model = (DefaultTableModel) table1.getModel();
+        model.setRowCount(0);
+        
         for (Mascota mascota : mascotas) {
             table1.addRow(new ModelMascota(
+                mascota.getIdMascota(),
                 new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), // Pendiente, mostrar imagenes dinamicas
                 mascota.getNombre(),
                 mascota.getSexo().db(), 
                 mascota.getRaza(),  
                 mascota.isEstaCastrado(),
-                3, // Pendiente, calcular edad de forma dinámica
+                calcularEdad(mascota.getFechaNacimiento()),
                 mascota.getPeso()
             ).toRowTable(eventAction));
         }
@@ -171,49 +204,6 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
     
     // ----------------------------------------------------------------------
 
-    private void initData() {
-        initCardData();
-        initNoticeBoard();
-        initTableData();
-    }
-
-    private void initTableData() {
-        EventAction eventAction = new EventAction() {
-            @Override
-            public void delete(ModelMascota student) {
-                if (showMessage("Delete Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-
-            @Override
-            public void update(ModelMascota student) {
-                if (showMessage("Update Student : " + student.getName())) {
-                    System.out.println("User click OK");
-                } else {
-                    System.out.println("User click Cancel");
-                }
-            }
-        };
-        
-        // Trabajar inserción de mascotas de forma dinámica.
-        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", "Macho", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
-        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", "Macho", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
-        table1.addRow(new ModelMascota(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), "Firulai", "Macho", "Pastor",  true,   3,   12.0).toRowTable(eventAction));
-    }
-
-    private void initCardData() {
-        Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PETS, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card1.setData(new ModelCard("Total de mascotas", 124, 50, icon1));
-        Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BOOK, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card2.setData(new ModelCard("Disponibles", 68, 30, icon2));
-        Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.NATURE_PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card3.setData(new ModelCard("Adoptados", 35, 10, icon3));
-        
-    }
-
     private void initNoticeBoard() {
         noticeBoard.addDate("04/10/2021");
         noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(94, 49, 238), "Hidemode", "Now", "Sets the hide mode for the component. If the hide mode has been specified in the This hide mode can be overridden by the component constraint."));
@@ -226,13 +216,21 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         noticeBoard.scrollToTop();
     }
     
+    // Pendiente dar soporte a meses, no solo años
+    private int calcularEdad(LocalDate fechaNacimiento) {
+        if (fechaNacimiento == null) {
+            throw new IllegalArgumentException("Fecha de nacimiento inválida");
+        }
+        
+        return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+    }
 
     private boolean showMessage(String message) {
         // 1. Buscamos dinámicamente quién es la ventana padre de este panel
         JFrame framePrincipal = (JFrame) SwingUtilities.getWindowAncestor(this);
 
         // 2. Pasamos ese frame al constructor del Mensaje
-        Message obj = new Message(framePrincipal, true);
+        Dialog obj = new Dialog(framePrincipal, true);
 
         // 3. Mostramos el mensaje (el resto sigue igual)
         obj.showMessage(message);

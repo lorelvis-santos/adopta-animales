@@ -7,7 +7,7 @@ import javax.swing.Icon;
 import java.text.DecimalFormat;
 
 public class ModelMascota {
-
+    private int id;
     private Icon icon;        // Foto de la mascota
     private String name;      // Nombre
     private String gender;    // Género
@@ -19,7 +19,8 @@ public class ModelMascota {
     public ModelMascota() {
     }
 
-    public ModelMascota(Icon icon, String name, String gender, String breed, boolean castrado, int edad, double peso) {
+    public ModelMascota(int id, Icon icon, String name, String gender, String breed, boolean castrado, int edad, double peso) {
+        this.id = id;
         this.icon = icon;
         this.name = name;
         this.gender = gender;
@@ -27,6 +28,14 @@ public class ModelMascota {
         this.castrado = castrado;
         this.edad = edad;
         this.peso = peso;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
     }
 
     // Getters y setters

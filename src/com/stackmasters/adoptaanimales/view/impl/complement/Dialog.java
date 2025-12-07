@@ -1,4 +1,4 @@
-package com.stackmasters.adoptaanimales.view.impl.dialog;
+package com.stackmasters.adoptaanimales.view.impl.complement;
 
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
@@ -7,7 +7,7 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
-public class Message extends javax.swing.JDialog {
+public class Dialog extends javax.swing.JDialog {
 
     public boolean isOk() {
         return ok;
@@ -21,7 +21,7 @@ public class Message extends javax.swing.JDialog {
     private final Animator animator;
     private boolean show = true;
 
-    public Message(java.awt.Frame parent, boolean modal) {
+    public Dialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         lbIcon.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.REPORT_PROBLEM, 60, new Color(254, 86, 96), new Color(113, 74, 67)));

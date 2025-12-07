@@ -11,7 +11,7 @@ import java.util.List;
  * Interfaz para el dashboard de inicio de la aplicación.
  * Contendrá las tarjetas de estadísticas, la tabla con solicitudes y las últimas actividades.
  */
-public interface DashboardInicioView extends VistaNavegable {
+public interface DashboardInicioView extends VistaNavegable, VistaConAlertas {
     /**
      * Muestra las estadísticas generales de la aplicación.
      * (total de mascotas, solicitudes pendientes, mascotas adoptadas)
