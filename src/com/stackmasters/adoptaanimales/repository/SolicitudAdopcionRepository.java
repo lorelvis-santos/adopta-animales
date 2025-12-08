@@ -5,6 +5,7 @@ import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -33,7 +34,14 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
         solicitud.setFechaRespuesta(fechaRespuesta != null ? fechaRespuesta.toLocalDate() : null);
         solicitud.setMotivoRechazo(datos.getString("motivo_rechazo"));
         solicitud.setAdoptanteId(datos.getInt("adoptante_id"));
+<<<<<<< Updated upstream
         solicitud.setMascotaId(datos.getInt("mascota_id"));
+=======
+        solicitud.setMascotaId(datos.getInt("mascota_id")); 
+        java.sql.Timestamp tsCita = datos.getTimestamp("fecha_cita");
+        // 2. Verificamos si es null para evitar NullPointerException al convertir
+        solicitud.setCita(tsCita != null ? tsCita.toLocalDateTime() : null);
+>>>>>>> Stashed changes
 
         return solicitud;
     }
@@ -41,20 +49,30 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     //Insertar solicitud
     public RespuestaBD insertSolicitud(SolicitudAdopcion solicitud){
         String sql = "INSERT INTO "+getTableName() +" (estado, fecha_solicitud, fecha_respuesta, motivo_rechazo,"
+<<<<<<< Updated upstream
                 + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?)";
     
+=======
+                   + "adoptante_id, mascota_id, fecha_cita) VALUES (?,?,?,?,?,?,?)"; 
+>>>>>>> Stashed changes
         return insert(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),
                                solicitud.getFechaRespuesta(),
                                solicitud.getMotivoRechazo(),
                                solicitud.getAdoptanteId(),
-                               solicitud.getMascotaId());
+                               solicitud.getMascotaId(),
+                               solicitud.getCita());
     }
     
     //Actualizar solicitud
     public boolean updateSolicitud(SolicitudAdopcion solicitud, int idSolicitud){
+<<<<<<< Updated upstream
         String sql = "UPDATE "+getTableName() +" SET estado = ? , fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
                 + "adoptante_id = ?, mascota_id = ? WHERE " + getPk()+ " = ?";
+=======
+        String sql = "UPDATE "+getTableName() +" SET estado = ?, fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
+                + "adoptante_id = ?, mascota_id = ?, fecha_cita = ? WHERE " + getPk()+ " = ?"; // cambie adoptante_id por publicacion_id para la prue
+>>>>>>> Stashed changes
     
         return update(sql, 
                 solicitud.getEstado().db(),
@@ -63,6 +81,7 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
                 solicitud.getMotivoRechazo(),
                 solicitud.getAdoptanteId(),
                 solicitud.getMascotaId(),
+                solicitud.getCita(),
                 idSolicitud
         );
     }
