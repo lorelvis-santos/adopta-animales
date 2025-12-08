@@ -8,6 +8,7 @@ import com.stackmasters.adoptaanimales.exception.*;
 import com.stackmasters.adoptaanimales.model.Cita;
 import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import com.stackmasters.adoptaanimales.dto.FiltroSolicitudDTO;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public interface SolicitudService {
      * @throws MascotaNoDisponibleException Si la mascota ya no está disponible para adoptar.
      * @throws YaExisteSolicitudActivaException Si ya existe una solicitud activa que impide continuar.
      */
-    SolicitudAdopcion crear(int mascotaId, CrearAdoptanteDTO adoptante) 
+    SolicitudAdopcion crear(int mascotaId, CrearAdoptanteDTO adoptante, LocalDateTime fechaCita) 
         throws DatosInvalidosException, MascotaNoDisponibleException, YaExisteSolicitudActivaException;
     
     /**
@@ -72,42 +73,12 @@ public interface SolicitudService {
         throws DatosInvalidosException;
     
     /**
-     * Programa la cita asociada a una solicitud aprobada.
-     * Cada solicitud solo puede tener una cita activa.
+     * Eliminar solicitud
      *
-     * Reglas principales:
-     * - La solicitud debe estar en estado APROBADA.
-     * - No puede existir una cita previa activa.
-     * - La fecha y hora deben ser válidas.
-     *
-     * @param solicitudId ID de la solicitud.
-     * @param dto Datos de la cita (fecha, hora y notas).
-     * @return La cita creada.
-     * @throws SolicitudNoAprobadaException Si la solicitud aún no fue aprobada.
-     * @throws CitaYaExisteException Si ya existe una cita asociada a la solicitud.
-     * @throws DatosInvalidosException Si los datos enviados no son válidos.
+     * @param solicitudId ID de la solicitud a actualizar.
+     * @return true si fue eliminada
      */
-    Cita programarCita(int solicitudId, CitaDTO dto)
-        throws SolicitudNoAprobadaException, CitaYaExisteException, DatosInvalidosException;
-    
-    /**
-     * Obtiene la cita asociada a una solicitud.
-     *
-     * @param solicitudId ID de la solicitud.
-     * @return La cita existente o null si aún no se ha programado.
-     */
-    Cita obtenerCita(int solicitudId);
-    
-    /**
-     * Actualiza el estado de la cita correspondiente a una solicitud.
-     * Estados típicos: Pendiente, Programada, Completada, Cancelada
-     *
-     * @param solicitudId ID de la solicitud.
-     * @param nuevoEstado Nuevo estado de la cita.
-     * @return true si el estado fue actualizado; false si no hubo cambios.
-     * @throws DatosInvalidosException Si la transición de estado es inválida.
-     */
-    boolean actualizarEstadoCita(int solicitudId, EstadoCita nuevoEstado)
+    boolean eliminar(int solicitudId)
         throws DatosInvalidosException;
     
     /**

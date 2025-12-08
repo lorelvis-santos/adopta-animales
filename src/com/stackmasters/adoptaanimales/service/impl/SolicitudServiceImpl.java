@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.stackmasters.adoptaanimales.service.impl;
 
 import com.stackmasters.adoptaanimales.service.SolicitudService;
@@ -11,9 +7,11 @@ import com.stackmasters.adoptaanimales.exception.MascotaNoDisponibleException;
 import com.stackmasters.adoptaanimales.model.*;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
+import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.repository.*;
 import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -26,24 +24,21 @@ public class SolicitudServiceImpl implements SolicitudService {
     private final MascotaRepository mascotaRepo;
     private final AdoptanteRepository adoptanteRepo;
     private final SolicitudAdopcionRepository solicitudRepo;
-    private final CitaRepository citaRepo;
 
     public SolicitudServiceImpl(
         MascotaRepository mascotaRepo,
         AdoptanteRepository adoptanteRepo,
-        SolicitudAdopcionRepository solicitudRepo,
-        CitaRepository citaRepo
+        SolicitudAdopcionRepository solicitudRepo
     ) {
         this.mascotaRepo = mascotaRepo;
         this.adoptanteRepo = adoptanteRepo;
         this.solicitudRepo = solicitudRepo;
-        this.citaRepo = citaRepo;
     }
     
     // Crear Solicitud
     
     @Override
-    public SolicitudAdopcion crear(int mascotaId, CrearAdoptanteDTO dto)
+    public SolicitudAdopcion crear(int mascotaId, CrearAdoptanteDTO dto, LocalDateTime fechaCita)
             throws DatosInvalidosException, MascotaNoDisponibleException, YaExisteSolicitudActivaException {
 
         // Validación básica del DTO
@@ -63,7 +58,7 @@ public class SolicitudServiceImpl implements SolicitudService {
             throw new MascotaNoDisponibleException("La mascota no está disponible para adopción.");
         }
         
-          // Validar que no exista una solicitud activa previa
+        // Validar que no exista una solicitud activa previa
         List<SolicitudAdopcion> solicitudes = solicitudRepo.findAll();
 
         for (SolicitudAdopcion s : solicitudes) {
@@ -78,6 +73,20 @@ public class SolicitudServiceImpl implements SolicitudService {
                 );
             }
         }
+        
+        // Creamos el adoptante
+        RespuestaBD respuestaAdoptante = adoptanteRepo.insertAdoptante(new Adoptante(
+            -1,
+            dto.getNombre(),
+            dto.getApellido(),
+            dto.getFechaNacimiento(),
+            dto.getTelefono(),
+            dto.getDireccion()
+        ));
+        
+        if (!respuestaAdoptante.isOk()) {
+            throw new DatosInvalidosException("No se pudo crear el adoptante");
+        }
 
         // Crear nueva solicitud
         SolicitudAdopcion nueva = new SolicitudAdopcion();
@@ -85,35 +94,39 @@ public class SolicitudServiceImpl implements SolicitudService {
         nueva.setFechaSolicitud(LocalDate.now());
         nueva.setFechaRespuesta(null);
         nueva.setMotivoRechazo(null);
-        nueva.setAdoptanteId(1);   // temporal para pruebas
+        nueva.setAdoptanteId(respuestaAdoptante.getId());
         nueva.setMascotaId(mascotaId);
+        nueva.setCita(fechaCita);
 
         // insert usando RespuestaBD (para obtener el ID generado)
         RespuestaBD respuesta = solicitudRepo.insertSolicitud(nueva);
 
-    if (!respuesta.isOk()) {
-        throw new DatosInvalidosException("No se pudo crear la solicitud.");
-    }
+        if (!respuesta.isOk()) {
+            throw new DatosInvalidosException("No se pudo crear la solicitud.");
+        }
 
-    // Asignar el ID generado por la BD al objeto
-    nueva.setIdSolicitud(respuesta.getId());
+        // Asignar el ID generado por la BD al objeto
+        nueva.setIdSolicitud(respuesta.getId());
+        
+        // Actualizamos el estado de la mascota
+        mascota.setEstado(EstadoMascota.EnProcesoDeAdopcion);
+        mascotaRepo.updateMascota(mascota, mascotaId);
 
-    return nueva;
-
+        return nueva;
     }
 
     // Obtener las solicitudes por el id
-        @Override
-        public SolicitudAdopcion obtener(int solicitudId) {
-            return solicitudRepo.findById(solicitudId);
-        }
+    @Override
+    public SolicitudAdopcion obtener(int solicitudId) {
+        return solicitudRepo.findById(solicitudId);
+    }
 
-        // Actualizar el estado de la solicitud
-        @Override
-        public boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo)
-                throws DatosInvalidosException {
+    // Actualizar el estado de la solicitud
+    @Override
+    public boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo)
+            throws DatosInvalidosException {
 
-        // Verificar existencia
+        //  Verificar existencia
         SolicitudAdopcion solicitud = solicitudRepo.findById(solicitudId);
         if (solicitud == null) {
             throw new DatosInvalidosException("La solicitud no existe.");
@@ -130,75 +143,47 @@ public class SolicitudServiceImpl implements SolicitudService {
         solicitud.setEstado(nuevoEstado);
         solicitud.setFechaRespuesta(LocalDate.now());
         solicitud.setMotivoRechazo(motivoRechazo);
+        
+        if (!solicitudRepo.updateSolicitud(solicitud, solicitudId)) {
+            throw new DatosInvalidosException("No se pudo eliminar la solicitud");
+        }
+        
+         // Verificar que la mascota exista
+        Mascota mascota = mascotaRepo.findById(solicitud.getMascotaId());
 
-        // Guardar cambios
-        return solicitudRepo.updateSolicitud(solicitud, solicitudId);
+        if (mascota != null) {
+            if (nuevoEstado == EstadoSolicitud.Rechazada || nuevoEstado == EstadoSolicitud.Cancelada) {
+                mascota.setEstado(EstadoMascota.EnAlbergue);
+            } else if (nuevoEstado == EstadoSolicitud.Aprobada) {
+                mascota.setEstado(EstadoMascota.Adoptada);
+            } else {
+                mascota.setEstado(EstadoMascota.EnProcesoDeAdopcion);
+            }
+            
+            mascotaRepo.updateMascota(mascota, solicitud.getMascotaId());
+        }
+        
+        return true;
     }
-
-    // Programar cita para una solicitud aprobada
+    
     @Override
-    public Cita programarCita(int solicitudId, CitaDTO dto)
-            throws SolicitudNoAprobadaException, CitaYaExisteException, DatosInvalidosException {
-
-        // Verificar solicitud
+    public boolean eliminar(int solicitudId) throws DatosInvalidosException {
+        //  Verificar existencia
         SolicitudAdopcion solicitud = solicitudRepo.findById(solicitudId);
+        
         if (solicitud == null) {
             throw new DatosInvalidosException("La solicitud no existe.");
         }
-
-        // Solo puede programarse una cita si la solicitud está aprobada
-        if (solicitud.getEstado() != EstadoSolicitud.Aprobada) {
-            throw new SolicitudNoAprobadaException("La solicitud aún no está aprobada.");
-        }
-
-        // Verificar si ya existe cita asociada
-        Cita citaExistente = citaRepo.findBySolicitudId(solicitudId);
         
-        if (citaExistente != null) {
-        throw new CitaYaExisteException("Esta solicitud ya tiene una cita programada.");
-}
-        // Crear la nueva cita
-        Cita nueva = new Cita();
-        nueva.setFechaHora(dto.getFechaHora());
-        nueva.setEstadoCita(dto.getEstado());
-        nueva.setNotas(dto.getNotas());
-        nueva.setSolicitudId(solicitudId);
-        nueva.setAlbergueId(dto.getAlbergueId());
-
-        // Insert usando RespuestaBD para obtener el ID
-        RespuestaBD respuesta = citaRepo.insertCita(nueva);
-
-        if (!respuesta.isOk()) {
-            throw new DatosInvalidosException("No se pudo crear la cita.");
+        // Verificar que la mascota exista
+        Mascota mascota = mascotaRepo.findById(solicitud.getMascotaId());
+       
+        if (mascota != null) {
+            mascota.setEstado(EstadoMascota.EnAlbergue);
+            mascotaRepo.updateMascota(mascota, solicitud.getMascotaId());
         }
-
-        // Asignar el ID generado por la BD
-        nueva.setIdCita(respuesta.getId());
-
-        return nueva;
-
-    }
-
-    // Obtener cita que este asociada a una solicitud
-    @Override
-    public Cita obtenerCita(int solicitudId) {
-        return citaRepo.findBySolicitudId(solicitudId);
-    }
-
-    // Actualizar estado de la cita
-    @Override
-    public boolean actualizarEstadoCita(int solicitudId, EstadoCita nuevoEstado)
-            throws DatosInvalidosException {
-
-        Cita cita = obtenerCita(solicitudId);
-
-        if (cita == null) {
-            throw new DatosInvalidosException("No existe una cita para esta solicitud.");
-        }
-
-        cita.setEstadoCita(nuevoEstado);
-
-        return citaRepo.updateCita(cita, cita.getIdCita());
+        
+        return solicitudRepo.delete(solicitudId);
     }
 
     // Listar las solicitudes 
@@ -260,16 +245,6 @@ public class SolicitudServiceImpl implements SolicitudService {
             s.getFechaSolicitud() != null &&
             s.getFechaSolicitud().isAfter(filtro.getFechaHasta())) {
             continue;
-        }
-
-        // Filtro por estado de cita (solo si existe cita)
-        if (filtro.getEstadoCita() != null) {
-            Cita cita = obtenerCita(s.getIdSolicitud());
-
-            // Si no tiene cita no pasa el filtro
-            if (cita == null || cita.getEstadoCita() != filtro.getEstadoCita()) {
-                continue;
-            }
         }
 
         // Si pasa todos los filtros, lo agregamos
