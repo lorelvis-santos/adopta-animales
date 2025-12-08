@@ -3,6 +3,7 @@ package com.stackmasters.adoptaanimales.view;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -16,7 +17,7 @@ public interface DashboardInicioView extends VistaNavegable, VistaConAlertas {
      * Muestra las estadísticas generales de la aplicación.
      * (total de mascotas, solicitudes pendientes, mascotas adoptadas)
      */
-    void mostrarEstadisticas(int totalMascotas, int solicitudesPendientes, int mascotasAdoptadas);
+    void mostrarEstadisticas(int totalMascotas, int totalSolicitudes, int solicitudesPendientes, int mascotasAdoptadas);
     
     /**
      * Carga la tabla de animales en el dashboard.
@@ -41,4 +42,11 @@ public interface DashboardInicioView extends VistaNavegable, VistaConAlertas {
      * @param cargando True si está cargando, false si no
      */
     void setCargando(boolean cargando);
+    
+    /**
+     * Método para agregar la accion al evento de hacer click en editar.
+     * 
+     * @param accion Callback a ejecutar
+     */
+    void onEditar(Consumer<Integer> accion);
 }
