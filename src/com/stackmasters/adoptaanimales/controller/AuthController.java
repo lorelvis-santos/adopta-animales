@@ -3,6 +3,7 @@ package com.stackmasters.adoptaanimales.controller;
 import com.stackmasters.adoptaanimales.view.AuthView;
 import com.stackmasters.adoptaanimales.router.Router;
 import com.stackmasters.adoptaanimales.dto.LoginDTO;
+import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.service.AuthService;
 import com.stackmasters.adoptaanimales.router.Ruta;
 import javax.swing.SwingWorker;
@@ -34,8 +35,10 @@ public class AuthController {
                         vista.mostrarMensaje(error.getMessage(),true);
                         return; 
                     }
-                    vista.mostrarMensaje("Autenticacion exitosa",false);
-                router.navegar(Ruta.PRINCIPAL, "Bienvenido, esto es una prueba");
+                    
+                    vista.limpiarCampos();
+                    
+                    router.navegar(Ruta.PRINCIPAL, DashboardRuta.INICIO);
                 }
             }.execute();
         });

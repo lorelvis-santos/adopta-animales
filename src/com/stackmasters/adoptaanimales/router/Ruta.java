@@ -6,6 +6,5 @@ package com.stackmasters.adoptaanimales.router;
  */
 public enum Ruta {
     AUTENTICACION,
-    PRINCIPAL,
-    CATALOGO
+    PRINCIPAL
 }

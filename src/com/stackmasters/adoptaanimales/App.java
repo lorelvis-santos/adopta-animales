@@ -6,8 +6,18 @@ import com.stackmasters.adoptaanimales.controller.*;
 import com.stackmasters.adoptaanimales.service.impl.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
+import com.stackmasters.adoptaanimales.repository.CitaRepository;
+import com.stackmasters.adoptaanimales.repository.MascotaRepository;
+import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
+import com.stackmasters.adoptaanimales.utils.LoadingHandler;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardInicioViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardMascotasViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardSolicitudesViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.MascotasFormViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.SolicitudesFormViewImpl;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.*;
@@ -23,19 +33,42 @@ public class App extends JFrame {
     public App() {
         setTitle("Adopta Animales");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1000, 700);
+        setSize(1440, 820);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         add(contenedor, BorderLayout.CENTER);
         
+        LoadingHandler.init(this);
+        
         // Registro de vistas
         var autenticacion =  new AuthViewImpl();
-        var inicio = new InicioViewTest();
+        var dashboard = new DashboardViewImpl();
         
         router.registrar(Ruta.AUTENTICACION, autenticacion);
-        router.registrar(Ruta.PRINCIPAL, inicio);
+        router.registrar(Ruta.PRINCIPAL, dashboard);
         
-        // Aquí creas el controlador
+        // Registro de subvistas
+        
+        var solicitudesForm = new SolicitudesFormViewImpl();
+        var dashboardSolicitudes = new DashboardSolicitudesViewImpl();
+        var mascotasForm = new MascotasFormViewImpl();
+        var dashboardMascotas = new DashboardMascotasViewImpl();
+        var dashboardInicio = new DashboardInicioViewImpl();
+        
+        dashboard.registrarSubVista(DashboardRuta.INICIO, dashboardInicio);
+        dashboard.registrarSubVista(DashboardRuta.MASCOTAS, dashboardMascotas);
+        dashboard.registrarSubVista(DashboardRuta.MASCOTAS_CREAR, mascotasForm);
+        dashboard.registrarSubVista(DashboardRuta.MASCOTAS_EDITAR, mascotasForm);
+        dashboard.registrarSubVista(DashboardRuta.SOLICITUDES, dashboardSolicitudes);
+        dashboard.registrarSubVista(DashboardRuta.SOLICITUDES_CREAR, solicitudesForm);
+        dashboard.registrarSubVista(DashboardRuta.SOLICITUDES_EDITAR, solicitudesForm);
+        
+        // Añadimos funcionalidad a los botones de editar en Inicio
+        dashboardInicio.onEditar(id -> {
+            router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS_EDITAR, id);
+        });
+        
+        // Aquí se crean los controladores
         new AuthController(
             autenticacion,
             new AuthServiceImpl(
@@ -46,7 +79,37 @@ public class App extends JFrame {
             router
         );
         
-        router.navegar(Ruta.AUTENTICACION, null);
+        new DashboardController(
+            dashboard,
+            new AuthServiceImpl(
+                new AdoptanteRepository(),
+                new AdminAlbergueRepository(),
+                new BCryptPasswordHasher()
+            ),  // servicio auth
+            router
+        );
+        
+        new MascotaController(
+            dashboardMascotas,
+            mascotasForm,
+            new MascotaServiceImpl(
+                new MascotaRepository()
+            ),
+            router
+        );
+        
+        new SolicitudesController(
+            dashboardSolicitudes,
+            solicitudesForm,
+            new SolicitudServiceImpl(
+                new MascotaRepository(),
+                new AdoptanteRepository(),
+                new SolicitudAdopcionRepository()
+            ),
+            router
+        );
+        
+        router.navegar(Ruta.AUTENTICACION, new Object[0]);
     }
     
     public Router getRouter() { return router; }

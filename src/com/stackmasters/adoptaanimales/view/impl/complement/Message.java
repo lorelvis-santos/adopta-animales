@@ -1,5 +1,5 @@
 
-package com.stackmasters.adoptaanimales.view.impl.complement.auth;
+package com.stackmasters.adoptaanimales.view.impl.complement;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -57,7 +57,7 @@ public class Message extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(eMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(eMessage, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
