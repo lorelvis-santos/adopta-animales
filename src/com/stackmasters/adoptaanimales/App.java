@@ -6,10 +6,14 @@ import com.stackmasters.adoptaanimales.controller.*;
 import com.stackmasters.adoptaanimales.service.impl.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
+import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
 import com.stackmasters.adoptaanimales.utils.LoadingHandler;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardInicioViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardMascotasViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.MascotasFormViewImpl;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.*;
@@ -39,6 +43,22 @@ public class App extends JFrame {
         router.registrar(Ruta.AUTENTICACION, autenticacion);
         router.registrar(Ruta.PRINCIPAL, dashboard);
         
+        // Registro de subvistas
+        
+        var mascotasForm = new MascotasFormViewImpl();
+        var dashboardMascotas = new DashboardMascotasViewImpl();
+        var dashboardInicio = new DashboardInicioViewImpl();
+        
+        dashboard.registrarSubVista(DashboardRuta.INICIO, dashboardInicio);
+        dashboard.registrarSubVista(DashboardRuta.MASCOTAS, dashboardMascotas);
+        dashboard.registrarSubVista(DashboardRuta.MASCOTAS_CREAR, mascotasForm);
+        dashboard.registrarSubVista(DashboardRuta.MASCOTAS_EDITAR, mascotasForm);
+        
+        // Añadimos funcionalidad a los botones de editar en Inicio
+        dashboardInicio.onEditar(id -> {
+            router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS_EDITAR, id);
+        });
+        
         // Aquí se crean los controladores
         new AuthController(
             autenticacion,
@@ -57,6 +77,15 @@ public class App extends JFrame {
                 new AdminAlbergueRepository(),
                 new BCryptPasswordHasher()
             ),  // servicio auth
+            router
+        );
+        
+        new MascotaController(
+            dashboardMascotas,
+            mascotasForm,
+            new MascotaServiceImpl(
+                new MascotaRepository()
+            ),
             router
         );
         
