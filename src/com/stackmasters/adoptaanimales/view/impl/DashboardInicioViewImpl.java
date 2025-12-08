@@ -124,9 +124,9 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
             }
 
             @Override
-            public void update(ModelMascota mascota) {
+            public void update(ModelMascota item) {
                 if (onEditar != null) {
-                    onEditar.accept(mascota.getId());
+                    onEditar.accept(item.getId());
                 }            
             }
 
