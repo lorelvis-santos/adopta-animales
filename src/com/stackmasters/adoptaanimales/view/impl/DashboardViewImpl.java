@@ -17,8 +17,9 @@ import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 import com.stackmasters.adoptaanimales.view.DashboardView;
-import com.stackmasters.adoptaanimales.view.impl.mascota.MascotasCrearViewImpl;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -36,6 +37,7 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     private Runnable onIrSolicitudes;
     private Runnable onCerrarSesion;
     
+    private final Map<DashboardRuta, VistaNavegable> subVistasRegistradas = new HashMap<>();
     private DashboardRuta subRutaActual;
     
     public DashboardViewImpl() {
@@ -160,34 +162,24 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     
     // -------------------------------------------------------------
     
+    public void registrarSubVista(DashboardRuta ruta, VistaNavegable vista) {
+        subVistasRegistradas.put(ruta, vista);
+    }
+    
     private void navegarSubRuta(DashboardRuta subRuta, Object[] datos) {
-        VistaNavegable vistaDestino = null;
+        VistaNavegable vistaDestino = subVistasRegistradas.get(subRuta);
         
-        // Determinamos la vista destino mediante switch.
-        switch (subRuta) {
-            case subRuta.INICIO: 
-                vistaDestino = new DashboardInicioViewImpl();
-                break;
-            case subRuta.MASCOTAS:
-                vistaDestino = new DashboardMascotasViewImpl();
-                break;
-            case subRuta.MASCOTAS_CREAR:
-                vistaDestino = new MascotasCrearViewImpl();
-                break;
-            case subRuta.SOLICITUDES:
-                vistaDestino = new DashboardSolicitudesViewImpl();
-                break;
-            default:
-                System.out.println("Subruta desconocida: " + subRuta);
-                vistaDestino = new DashboardInicioViewImpl(); // fallback.
-                break;
+        if (vistaDestino == null) {
+            System.out.println("Subruta no registrada o nula: " + subRuta);
+            // Fallback a inicio si existe
+            vistaDestino = subVistasRegistradas.get(DashboardRuta.INICIO);
         }
-        
+
         if (vistaDestino != null) {
-            // Pasamos los datos a la sub-vista.
+            // 4. Pasamos los datos.
             vistaDestino.alMostrar(datos);
             
-            // Mostramos la vista.
+            // Renderizamos
             if (vistaDestino instanceof Component) {
                 main.showForm((Component) vistaDestino);
             }

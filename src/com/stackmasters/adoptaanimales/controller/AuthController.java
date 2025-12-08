@@ -3,6 +3,7 @@ package com.stackmasters.adoptaanimales.controller;
 import com.stackmasters.adoptaanimales.view.AuthView;
 import com.stackmasters.adoptaanimales.router.Router;
 import com.stackmasters.adoptaanimales.dto.LoginDTO;
+import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.service.AuthService;
 import com.stackmasters.adoptaanimales.router.Ruta;
 import javax.swing.SwingWorker;
@@ -37,7 +38,7 @@ public class AuthController {
                     
                     vista.limpiarCampos();
                     
-                    router.navegar(Ruta.PRINCIPAL, new Object[0]);
+                    router.navegar(Ruta.PRINCIPAL, DashboardRuta.INICIO);
                 }
             }.execute();
         });
