@@ -17,6 +17,7 @@ package com.stackmasters.adoptaanimales.model.auth;
 public class Sesion {
     private final Rol rol;
     private final int id; // id_adoptante / id_admin / id_veterinaria
+    private final int albergueId;
     private String nombre; // para mostrar en UI
     
     /**
@@ -26,10 +27,11 @@ public class Sesion {
      * @param id Identificador específico del usuario autenticado.
      * @param nombre Nombre a mostrar en la interfaz.
      */
-    public Sesion(Rol rol, int id, String nombre) {
+    public Sesion(Rol rol, int id, String nombre, int albergueId) {
         this.rol = rol;
         this.id = id;
         this.nombre = nombre;
+        this.albergueId = albergueId;
     }
     
     /**
@@ -48,6 +50,15 @@ public class Sesion {
      */
     public int getId() {
         return id; 
+    }
+    
+    /**
+     * Devuelve el identificador específico del albergue del usuario autenticado.
+     *
+     * @return ID según su tabla correspondiente.
+     */
+    public int getAlbergueId() {
+        return albergueId; 
     }
     
     /**

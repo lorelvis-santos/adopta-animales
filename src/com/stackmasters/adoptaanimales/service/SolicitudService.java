@@ -120,4 +120,19 @@ public interface SolicitudService {
      * @return Lista de solicitudes que coinciden con el filtro.
      */
     List<SolicitudAdopcion> listar(FiltroSolicitudDTO filtro);
+    
+    /**
+     * Obtiene la cantidad de solicitudes
+     * 
+     * @return Cantidad entera de solicitudes
+     */
+    int totalSolicitudes();
+    
+    /**
+     * Obtiene la cantidad de solicitudes por estado.
+     * 
+     * @param estado Estado de la solicitud
+     * @return Cantidad entera de solicitudes en el estado consultado
+     */
+    int totalSolicitudesPorEstado(EstadoSolicitud estado);
 }

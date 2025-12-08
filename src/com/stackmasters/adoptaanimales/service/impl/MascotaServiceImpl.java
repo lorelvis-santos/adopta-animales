@@ -8,6 +8,7 @@ import com.stackmasters.adoptaanimales.dto.ActualizarMascotaDTO;
 import com.stackmasters.adoptaanimales.dto.FiltroMascotaDTO;
 import com.stackmasters.adoptaanimales.exception.DatosInvalidosException;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
+import com.stackmasters.adoptaanimales.model.RespuestaBD;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
@@ -103,19 +104,17 @@ public class MascotaServiceImpl implements MascotaService {
         // Estado inicial: la mascota está en el albergue
         m.setEstado(EstadoMascota.EnAlbergue);
 
-        // 10. Guardar en BD usando el repositorio.
-        // BaseRepository.insert(String sql, Object... params) devuelve boolean
-        
-        boolean insertado = repo.insertMascota(m);
+        // Insertar la mascota en la base de datos
+        RespuestaBD insertado = repo.insertMascota(m);
            
-        if (!insertado) {
-            // Si insert devuelve false, algo falló al guardar
+        // Verificar si el registro fue exitoso
+        if (!insertado.isOk()) {
             throw new DatosInvalidosException("No se pudo guardar la mascota en la base de datos.");
         }
-
-        // Nota: aquí no estamos trayendo el ID generado desde la BD.
-        // Si en el futuro necesitan el ID, se podría diseñar una clase para respuestas de la base de datos.
-        // Por ahora, devolvemos el objeto m, que representa la mascota creada.
+        // Asignar el ID generado por la BD al objeto en memoria
+        m.setIdMascota(insertado.getId());
+        
+       // Devolver la mascota ya creada con su ID real
         return m;
     }
 
@@ -176,6 +175,20 @@ public class MascotaServiceImpl implements MascotaService {
         );
 
         return actualizado;
+    }
+    
+    /**
+     * Eliminar una mascota.
+     */
+    @Override
+    public boolean eliminar(int mascotaId) {
+
+        // 1. Validar ID
+        if (mascotaId <= 0) {
+            return false;
+        }
+
+        return repo.delete(mascotaId);
     }
 
     /**
@@ -246,4 +259,18 @@ public class MascotaServiceImpl implements MascotaService {
 
         return filtradas;
     }
+    
+    public int totalMascotas() {
+        return repo.totalMascotas();
+    }
+    
+    // Contar mascotas por estado
+    public int totalMascotasPorEstado(EstadoMascota estado) {
+        if (estado == null) {
+            return 0;
+        }
+
+        return repo.totalMascotaPorEstado(estado.db());
+    }
+
 }

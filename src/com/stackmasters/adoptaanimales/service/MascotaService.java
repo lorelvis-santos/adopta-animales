@@ -16,9 +16,15 @@ public interface MascotaService {
     
     boolean actualizar(int mascotaId, ActualizarMascotaDTO dto) throws DatosInvalidosException;
     
+    boolean eliminar(int mascotaId);
+    
     boolean marcarAdoptada(int mascotaId);
     
     Mascota obtenerPorId(int mascotaId);
     
     List<Mascota> buscar(FiltroMascotaDTO filtro);
+    
+    int totalMascotas();
+    
+    int totalMascotasPorEstado(Mascota.EstadoMascota estado);
 }
