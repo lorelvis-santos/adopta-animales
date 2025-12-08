@@ -1,4 +1,4 @@
-    package com.stackmasters.adoptaanimales.model;
+package com.stackmasters.adoptaanimales.model;
 
 import java.time.LocalDate;
 

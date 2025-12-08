@@ -2,6 +2,7 @@ package com.stackmasters.adoptaanimales.controller;
 
 import com.stackmasters.adoptaanimales.dto.ActualizarMascotaDTO;
 import com.stackmasters.adoptaanimales.dto.CrearMascotaDTO;
+import com.stackmasters.adoptaanimales.dto.FiltroMascotaDTO;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.router.Router;
@@ -10,6 +11,7 @@ import com.stackmasters.adoptaanimales.service.MascotaService;
 import com.stackmasters.adoptaanimales.service.impl.GestorSesion;
 import com.stackmasters.adoptaanimales.view.DashboardMascotasView;
 import com.stackmasters.adoptaanimales.view.MascotasFormView;
+import java.util.List;
 import javax.swing.SwingWorker;
 
 /**
@@ -30,6 +32,7 @@ public class MascotaController {
         
         this.dashboard.onCrear(this::onCrear);
         this.dashboard.onEditar(this::onEditar);
+        this.dashboard.onBuscar(this::onBuscar);
         
         this.vista.onAccionPrincipal(this::procesarGuardado);
         this.vista.onCancelar(this::regresarALista);
@@ -41,6 +44,43 @@ public class MascotaController {
     
     public void onEditar(Integer id) {
         router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS_EDITAR, id);
+    }
+    
+    public void onBuscar() {
+        // Hacer un dto con los parametros de busqueda
+        FiltroMascotaDTO filtro = new FiltroMascotaDTO(dashboard.getBusqueda(), dashboard.getEspecie(), null, null, dashboard.getEstadoMascota());
+        
+        // Hacer la busqueda con SwingWorker y manejo de errores
+        vista.setCargando(true);
+        
+        new SwingWorker<Void, Void>() {
+            private List<Mascota> mascotas;
+            
+            @Override
+            protected Void doInBackground() throws Exception {
+                mascotas = servicio.buscar(filtro);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // 1. Quitamos la carga
+                vista.setCargando(false);
+
+                try {
+                    // 2. Verificamos si hubo errores usando get()
+                    get(); // Si hubo una excepción en doInBackground, se relanza aquí envuelta en ExecutionException
+
+                    dashboard.cargarTablaMascotas(mascotas);
+                } catch (Exception e) {
+                    // 4. ERROR (Capturamos la excepción real del servicio)
+                    // e.getCause() nos da la excepción original (ej: SQLException o "Error de conexión")
+                    String errorMsg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+                    dashboard.mostrarMensaje("Error: " + errorMsg, true);
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
     }
     
     private void procesarGuardado() {

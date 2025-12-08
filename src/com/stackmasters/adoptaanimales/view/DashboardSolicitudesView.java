@@ -1,8 +1,7 @@
 package com.stackmasters.adoptaanimales.view;
 
 import com.stackmasters.adoptaanimales.model.Mascota;
-import com.stackmasters.adoptaanimales.model.Mascota.Especie;
-import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -11,12 +10,12 @@ import java.util.function.Consumer;
  *
  * @author Lorelvis Santos
  */
-public interface DashboardMascotasView extends VistaNavegable, VistaConAlertas {
+public interface DashboardSolicitudesView extends VistaNavegable, VistaConAlertas {
     /**
      * Muestra las estadísticas generales de las mascotas.
-     * (total de mascotas, mascotas en albergue y adoptadas)
+     * (total de solicitudes pendientes, aprobadas y rechazadas/canceladas)
      */
-    void mostrarEstadisticas(int totalMascotas, int totalMascotasEnAlbergue, int totalMascotasAdoptadas);
+    public void mostrarEstadisticas(int totalSolicitudes, int solicitudesPendientes, int solicitudesAprobadas, int solicitudesRechazadasYCanceladas);
     
     /**
      * Carga la tabla de animales en el dashboard.
@@ -24,7 +23,7 @@ public interface DashboardMascotasView extends VistaNavegable, VistaConAlertas {
      * 
      * @param mascotas Lista de mascotas a mostrar en la tabla
      */
-    void cargarTablaMascotas(List<Mascota> mascotas);
+    void cargarTablaSolicitudes(List<SolicitudAdopcion> solicitudes);
     
     /**
      * Método para mostrar un spinner de carga en el UI.
@@ -33,7 +32,7 @@ public interface DashboardMascotasView extends VistaNavegable, VistaConAlertas {
      */
     void setCargando(boolean cargando);
     
-    /**
+   /**
      * Método para agregar la accion al evento de hacer click en crear.
      * 
      * @param accion Callback a ejecutar
@@ -54,17 +53,4 @@ public interface DashboardMascotasView extends VistaNavegable, VistaConAlertas {
      * @param error True si el mensaje es un error, false si es información.
      */
     void mostrarMensaje(String mensaje, boolean error);
-    
-    /**
-     * Método para buscar mascotas en base a filtros (Especie, Estado)
-     * 
-     * @param accion Callback a ejecutar
-     */
-    void onBuscar(Runnable accion);
-    
-    String getBusqueda();
-    
-    EstadoMascota getEstadoMascota();
-    
-    Especie getEspecie();
 }

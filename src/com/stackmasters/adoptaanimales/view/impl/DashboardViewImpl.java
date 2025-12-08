@@ -4,7 +4,6 @@ import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Header;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Menu;
-import com.stackmasters.adoptaanimales.view.impl.DashboardInicioViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.MainForm;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;

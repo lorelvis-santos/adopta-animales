@@ -1,15 +1,13 @@
 package com.stackmasters.adoptaanimales.view.impl.swing.table;
 
-import com.stackmasters.adoptaanimales.view.impl.model.ModelMascota;
+public class ModelAction<T> {
 
-public class ModelAction {
-
-    public ModelMascota getStudent() {
-        return student;
+    public T getItem() {
+        return item;
     }
 
-    public void setStudent(ModelMascota student) {
-        this.student = student;
+    public void setItem(T item) {
+        this.item = item;
     }
 
     public EventAction getEvent() {
@@ -20,14 +18,14 @@ public class ModelAction {
         this.event = event;
     }
 
-    public ModelAction(ModelMascota student, EventAction event) {
-        this.student = student;
+    public ModelAction (T item, EventAction event) {
+        this.item = item;
         this.event = event;
     }
 
     public ModelAction() {
     }
 
-    private ModelMascota student;
+    private T item;
     private EventAction event;
 }

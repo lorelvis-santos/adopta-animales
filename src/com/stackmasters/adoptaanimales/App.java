@@ -6,14 +6,18 @@ import com.stackmasters.adoptaanimales.controller.*;
 import com.stackmasters.adoptaanimales.service.impl.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
+import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
+import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
 import com.stackmasters.adoptaanimales.utils.LoadingHandler;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardInicioViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardMascotasViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.DashboardSolicitudesViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.MascotasFormViewImpl;
+import com.stackmasters.adoptaanimales.view.impl.SolicitudesFormViewImpl;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import javax.swing.*;
@@ -45,6 +49,8 @@ public class App extends JFrame {
         
         // Registro de subvistas
         
+        var solicitudesForm = new SolicitudesFormViewImpl();
+        var dashboardSolicitudes = new DashboardSolicitudesViewImpl();
         var mascotasForm = new MascotasFormViewImpl();
         var dashboardMascotas = new DashboardMascotasViewImpl();
         var dashboardInicio = new DashboardInicioViewImpl();
@@ -53,6 +59,9 @@ public class App extends JFrame {
         dashboard.registrarSubVista(DashboardRuta.MASCOTAS, dashboardMascotas);
         dashboard.registrarSubVista(DashboardRuta.MASCOTAS_CREAR, mascotasForm);
         dashboard.registrarSubVista(DashboardRuta.MASCOTAS_EDITAR, mascotasForm);
+        dashboard.registrarSubVista(DashboardRuta.SOLICITUDES, dashboardSolicitudes);
+        dashboard.registrarSubVista(DashboardRuta.SOLICITUDES_CREAR, solicitudesForm);
+        dashboard.registrarSubVista(DashboardRuta.SOLICITUDES_EDITAR, solicitudesForm);
         
         // Añadimos funcionalidad a los botones de editar en Inicio
         dashboardInicio.onEditar(id -> {
@@ -85,6 +94,17 @@ public class App extends JFrame {
             mascotasForm,
             new MascotaServiceImpl(
                 new MascotaRepository()
+            ),
+            router
+        );
+        
+        new SolicitudesController(
+            dashboardSolicitudes,
+            solicitudesForm,
+            new SolicitudServiceImpl(
+                new MascotaRepository(),
+                new AdoptanteRepository(),
+                new SolicitudAdopcionRepository()
             ),
             router
         );

@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.model.Mascota.Especie;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
@@ -17,13 +18,19 @@ import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
@@ -31,6 +38,7 @@ import javax.swing.table.DefaultTableModel;
 public class DashboardMascotasViewImpl extends javax.swing.JPanel implements DashboardMascotasView {
     private MascotaService mascotaService;
     private Runnable onCrear;
+    private Runnable onBuscar;
     private Consumer<Integer> onEditar;
     
     public DashboardMascotasViewImpl() {
@@ -41,9 +49,83 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
         mascotaService = new MascotaServiceImpl(new MascotaRepository());
         
         btnCrearMascota.addActionListener(e -> { if (onCrear != null) { onCrear.run(); } });
+        btnBuscar.addActionListener(e -> { if (onBuscar != null) { onBuscar.run(); } });
+        cmbEspecie.addActionListener(e -> { if (onBuscar != null) { onBuscar.run(); } });
+        cmbEstado.addActionListener(e -> { if (onBuscar != null) { onBuscar.run(); } });
+        
+        // ----------------------------------------------------------------------------------
+        // 1. CONFIGURACIÓN DE ESPECIE (Con opción "Todas")
+        // ----------------------------------------------------------------------------------
+        DefaultComboBoxModel<Especie> modelEspecie = new DefaultComboBoxModel<>();
+        modelEspecie.addElement(null); // <--- ESTO ES LA OPCIÓN "TODOS" (null)
+        for (Especie e : Especie.values()) {
+            modelEspecie.addElement(e);
+        }
+        cmbEspecie.setModel(modelEspecie);
+
+        cmbEspecie.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value == null) {
+                    setText("Todas las especies"); // Texto para el null
+                    setFont(getFont().deriveFont(Font.BOLD)); // Opcional: negrita
+                } else if (value instanceof Especie) {
+                    setText(((Especie) value).db());
+                }
+                return this;
+            }
+        });
+
+        // ----------------------------------------------------------------------------------
+        // 2. CONFIGURACIÓN DE ESTADO (Con opción "Todos")
+        // ----------------------------------------------------------------------------------
+        DefaultComboBoxModel<EstadoMascota> modelEstado = new DefaultComboBoxModel<>();
+        modelEstado.addElement(null); // <--- ESTO ES LA OPCIÓN "TODOS" (null)
+        for (EstadoMascota e : EstadoMascota.values()) {
+            modelEstado.addElement(e);
+        }
+        cmbEstado.setModel(modelEstado);
+
+        cmbEstado.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value == null) {
+                    setText("Todos los estados"); // Texto para el null
+                    setFont(getFont().deriveFont(Font.BOLD));
+                    setForeground(Color.BLACK);
+                } else if (value instanceof EstadoMascota) {
+                    EstadoMascota estado = (EstadoMascota) value;
+                    setText(estado.db());
+
+                    if (estado == EstadoMascota.Adoptada) {
+                        setForeground(new Color(0, 150, 0));
+                    } else if (estado == EstadoMascota.EnProcesoDeAdopcion) {
+                        setForeground(new Color(255, 140, 0));
+                    } else {
+                        setForeground(Color.BLACK);
+                    }
+                }
+                return this;
+            }
+        });
     }
     
     // Implementación de VistaConAlertas
+    
+    @Override
+    public void mostrarMensaje(String mensaje, boolean error) {
+        if(error) {
+            Message.ShowMessage(this, MessageType.ERROR, mensaje);
+        } else { 
+            Message.ShowMessage(this, MessageType.SUCCESS, mensaje);
+        }
+    }
+    
+    // Implementación de DashboardMascotasView
     
     @Override
     public void onCrear(Runnable accion) {
@@ -56,15 +138,24 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     }
     
     @Override
-    public void mostrarMensaje(String mensaje, boolean error) {
-        if(error) {
-            Message.ShowMessage(this, MessageType.ERROR, mensaje);
-        } else { 
-            Message.ShowMessage(this, MessageType.SUCCESS, mensaje);
-        }
+    public void onBuscar(Runnable accion) {
+        this.onBuscar = accion;
     }
     
-    // Implementación de DashboardMascotasView
+    @Override
+    public String getBusqueda() {
+        return txtBusqueda.getText();
+    }
+    
+    @Override
+    public EstadoMascota getEstadoMascota() {
+        return (EstadoMascota)cmbEstado.getSelectedItem();
+    }
+    
+    @Override
+    public Especie getEspecie() {
+        return (Especie)cmbEspecie.getSelectedItem();
+    }
     
     /**
      * Muestra las estadísticas generales de la aplicación.
@@ -89,7 +180,7 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     @Override
     public void cargarTablaMascotas(List<Mascota> mascotas) {
         // Hay que reemplazar esto
-        EventAction eventAction = new EventAction() {
+        EventAction <ModelMascota> eventAction = new EventAction <ModelMascota> () {
             @Override
             public void delete(ModelMascota item) {
                 if (table1.isEditing()) {
@@ -117,27 +208,33 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
             }
 
             @Override
-            public void update(ModelMascota mascota) {
+            public void update(ModelMascota item) {
                 if (onEditar != null) {
-                    onEditar.accept(mascota.getId());
+                    onEditar.accept(item.getId());
                 }
             }
+
+           
         };
         
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         model.setRowCount(0);
         
         for (Mascota mascota : mascotas) {
-            table1.addRow(new ModelMascota(
-                mascota.getIdMascota(),
-                new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), // Pendiente, mostrar imagenes dinamicas
-                mascota.getNombre(),
-                mascota.getSexo().db(), 
-                mascota.getRaza(),  
-                mascota.isEstaCastrado(),
-                calcularEdad(mascota.getFechaNacimiento()),
-                mascota.getPeso()
-            ).toRowTable(eventAction));
+
+            model.addRow(
+                new ModelMascota(
+                    mascota.getIdMascota(),
+                    new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
+                    mascota.getNombre(),
+                    mascota.getSexo().db(),
+                    mascota.getRaza(),
+                    mascota.isEstaCastrado(),
+                    calcularEdad(mascota.getFechaNacimiento()),
+                    mascota.getPeso(),
+                    mascota.getEstado().db()
+                ).toRowTable(eventAction)
+            );
         }
     }
     
@@ -206,8 +303,12 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     }
     
     
-    private int calcularPorciento(int cifraTotal, int valor) {
-        return Math.round(valor/cifraTotal*100);
+    private int calcularPorciento(double cifraTotal, double valor) {
+        if (cifraTotal == 0) {
+            return 0;
+        }
+        
+        return (int)Math.round(valor/cifraTotal*100);
     }
 
     private boolean showMessage(String message) {
@@ -236,6 +337,10 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
         jScrollPane1 = new javax.swing.JScrollPane();
         table1 = new com.stackmasters.adoptaanimales.view.impl.swing.table.Table();
         jLabel6 = new javax.swing.JLabel();
+        btnBuscar = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
+        cmbEspecie = new javax.swing.JComboBox<>();
+        cmbEstado = new javax.swing.JComboBox<>();
+        txtBusqueda = new javax.swing.JTextField();
         btnCrearMascota = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
 
         card1.setBackground(new java.awt.Color(79, 172, 254));
@@ -269,11 +374,11 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
 
             },
             new String [] {
-                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", ""
+                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", "Estado", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -310,6 +415,27 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
 
         jLabel6.setOpaque(true);
 
+        btnBuscar.setToolTipText("Buscar");
+        btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+
+        cmbEspecie.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        cmbEspecie.setToolTipText("Especie");
+        cmbEspecie.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEspecieActionPerformed(evt);
+            }
+        });
+
+        cmbEstado.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        cmbEstado.setToolTipText("Estado");
+        cmbEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEstadoActionPerformed(evt);
+            }
+        });
+
+        txtBusqueda.setToolTipText("Busca por nombre o raza");
+
         btnCrearMascota.setText("Nueva mascota");
         btnCrearMascota.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
 
@@ -319,23 +445,31 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCrearMascota, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 903, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(6, 6, 6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCrearMascota, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cmbEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(12, 12, 12))))
+                                .addComponent(txtBusqueda, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -352,8 +486,15 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
                     .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addComponent(btnCrearMascota, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cmbEstado)
+                    .addComponent(btnCrearMascota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cmbEspecie))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
@@ -365,16 +506,28 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEspecieActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbEspecieActionPerformed
+
+    private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbEstadoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton btnBuscar;
     private com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton btnCrearMascota;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card1;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card2;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card3;
+    private javax.swing.JComboBox<Especie> cmbEspecie;
+    private javax.swing.JComboBox<EstadoMascota> cmbEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private com.stackmasters.adoptaanimales.view.impl.swing.table.Table table1;
+    private javax.swing.JTextField txtBusqueda;
     // End of variables declaration//GEN-END:variables
 }
