@@ -1,31 +1,38 @@
 package com.stackmasters.adoptaanimales.controller;
 
-import com.stackmasters.adoptaanimales.dto.ActualizarMascotaDTO;
-import com.stackmasters.adoptaanimales.dto.CrearMascotaDTO;
+import com.stackmasters.adoptaanimales.dto.ActualizarSolicitudDTO;
+import com.stackmasters.adoptaanimales.dto.CrearAdoptanteDTO;
 import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.router.Router;
 import com.stackmasters.adoptaanimales.router.Ruta;
-import com.stackmasters.adoptaanimales.service.MascotaService;
-import com.stackmasters.adoptaanimales.service.impl.GestorSesion;
-import com.stackmasters.adoptaanimales.view.DashboardMascotasView;
-import com.stackmasters.adoptaanimales.view.MascotasFormView;
+import com.stackmasters.adoptaanimales.service.SolicitudService;
+import com.stackmasters.adoptaanimales.view.DashboardSolicitudesView;
+import com.stackmasters.adoptaanimales.view.SolicitudesFormView;
+import java.time.LocalDateTime;
 import javax.swing.SwingWorker;
 
 /**
  *
  * @author Lorelvis Santos
  */
-public class MascotaController {
-    private final DashboardMascotasView dashboard;
-    private final MascotasFormView vista;
-    private final MascotaService servicio;
+public class SolicitudesController {
+    private final DashboardSolicitudesView dashboard;
+    private final SolicitudesFormView vista;
+    private final SolicitudService solicitudService;
     private final Router router;
     
-    public MascotaController(DashboardMascotasView dashboard, MascotasFormView vista, MascotaService servicio, Router router) {
+    // Nota: Eliminé MascotaService de aquí porque ahora la Vista lo maneja internamente
+    // para llenar su propio ComboBox, como vimos en el paso anterior.
+    
+    public SolicitudesController(DashboardSolicitudesView dashboard, 
+                                 SolicitudesFormView vista, 
+                                 SolicitudService solicitudService,
+                                 Router router) {
         this.dashboard = dashboard;
         this.vista = vista;
-        this.servicio = servicio;
+        this.solicitudService = solicitudService;
         this.router = router;
         
         this.dashboard.onCrear(this::onCrear);
@@ -33,83 +40,87 @@ public class MascotaController {
         
         this.vista.onAccionPrincipal(this::procesarGuardado);
         this.vista.onCancelar(this::regresarALista);
+        
+        // Conectamos la petición de datos de la vista con el controlador
+        this.vista.onCargarSolicitud(this::cargarDatosParaEditar);
     }
     
     public void onCrear() {
-        router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS_CREAR);
+        // 1. Navegar a la vista
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.SOLICITUDES_CREAR);
+        // La vista se encarga de limpiarse y cargar mascotas en su método 'alMostrar'
     }
     
     public void onEditar(Integer id) {
-        router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS_EDITAR, id);
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.SOLICITUDES_EDITAR, id);
     }
     
     private void procesarGuardado() {
-        // 1. VALIDACIÓN Y PREPARACIÓN DE DATOS (En el Hilo Principal/EDT)
-        // Es mejor obtener los DTOs aquí para que si hay error de validación (campos vacíos),
-        // salte antes de bloquear la pantalla o crear hilos.
+        // 1. DETECTAR MODO
+        Integer idSolicitud = vista.getIdSolicitud();
+        boolean esCreacion = (idSolicitud == null);
 
-        CrearMascotaDTO crearDto = null;
-        ActualizarMascotaDTO actualizarDto = null;
+        // Variables para captura de datos
+        Mascota mascota = null;
+        CrearAdoptanteDTO adoptanteDto = null;
+        LocalDateTime fechaCita = null;
+        ActualizarSolicitudDTO actualizarDto = null;
 
+        // 2. EXTRACCIÓN Y VALIDACIÓN (UI Thread)
         try {
-            if (vista.getIdMascota() == null) {
-                // Caso Crear: Obtenemos el ID del usuario actual
-                int albergueId = GestorSesion.obtener().getAlbergueId(); 
-                crearDto = vista.getCrearMascotaDTO(albergueId); // Esto puede lanzar excepción si faltan datos
+            if (esCreacion) {
+                // --- CREACIÓN ---
+                mascota = vista.getMascotaSeleccionada();
+                if (mascota == null) throw new IllegalArgumentException("Seleccione una mascota.");
+                
+                adoptanteDto = vista.getDatosAdoptante(); 
+                fechaCita = vista.getFechaHoraCita();
+                
             } else {
-                // Caso Editar
-                actualizarDto = vista.getActualizarMascotaDTO();
+                // --- EDICIÓN ---
+                // Aquí obtenemos el DTO completo (Estado, Cita, etc.)
+                actualizarDto = vista.getActualizarSolicitudDTO();
             }
         } catch (Exception e) {
-            // Si falló la validación (ej: fecha mal formada, campo vacío), mostramos error y NO seguimos.
             vista.mostrarMensaje(e.getMessage(), true);
             return;
         }
 
-        // Variables finales para pasarlas al Worker
-        final CrearMascotaDTO dtoParaCrear = crearDto;
-        final ActualizarMascotaDTO dtoParaActualizar = actualizarDto;
-        final boolean esCreacion = (vista.getIdMascota() == null);
+        // Variables finales para el Worker
+        final boolean modoCrear = esCreacion;
+        final Integer idFinal = idSolicitud;
+        
+        final Mascota mFinal = mascota;
+        final CrearAdoptanteDTO aFinal = adoptanteDto;
+        final LocalDateTime fFinal = fechaCita;
+        final ActualizarSolicitudDTO uFinal = actualizarDto;
 
-        // 2. ACTIVAR CARGA VISUAL (En la Vista)
+        // 3. PROCESO EN SEGUNDO PLANO
         vista.setCargando(true);
 
-        // 3. INICIAR EL SWINGWORKER
         new SwingWorker<Void, Void>() {
-
             @Override
             protected Void doInBackground() throws Exception {
-                // --- HILO SECUNDARIO (Backgroud) ---
-                // Aquí SOLO llamamos al servicio. No tocamos la UI.
-
-                if (esCreacion) {
-                    servicio.crear(dtoParaCrear);
+                if (modoCrear) {
+                    // CREAR
+                    solicitudService.crear(mFinal.getIdMascota(), aFinal, fFinal);
                 } else {
-                    servicio.actualizar(vista.getIdMascota(), dtoParaActualizar);
+                    // ACTUALIZAR
+                    // Usamos el método 'actualizarDatos' que definimos en el paso anterior en el servicio
+                    solicitudService.actualizarEstado(idFinal, uFinal.getEstado(), "No implementado");
                 }
                 return null;
             }
 
             @Override
             protected void done() {
-                // --- HILO PRINCIPAL (EDT) ---
-                // Se ejecuta automáticamente al terminar doInBackground
-
-                // 1. Quitamos la carga
                 vista.setCargando(false);
-
                 try {
-                    // 2. Verificamos si hubo errores usando get()
-                    get(); // Si hubo una excepción en doInBackground, se relanza aquí envuelta en ExecutionException
-
-                    // 3. ÉXITO
-                    String mensaje = esCreacion ? "Mascota creada con éxito" : "Mascota actualizada con éxito";
-                    vista.mostrarMensaje(mensaje, false);
+                    get(); // Verificar errores
+                    String msg = modoCrear ? "Solicitud creada con éxito." : "Solicitud actualizada con éxito.";
+                    vista.mostrarMensaje(msg, false);
                     regresarALista();
-
                 } catch (Exception e) {
-                    // 4. ERROR (Capturamos la excepción real del servicio)
-                    // e.getCause() nos da la excepción original (ej: SQLException o "Error de conexión")
                     String errorMsg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
                     vista.mostrarMensaje("Error: " + errorMsg, true);
                     e.printStackTrace();
@@ -118,7 +129,35 @@ public class MascotaController {
         }.execute();
     }
     
+    private void cargarDatosParaEditar(Integer id) {
+        vista.setCargando(true);
+        
+        new SwingWorker<SolicitudAdopcion, Void>() {
+            @Override
+            protected SolicitudAdopcion doInBackground() throws Exception {
+                return solicitudService.obtener(id); 
+            }
+
+            @Override
+            protected void done() {
+                vista.setCargando(false);
+                try {
+                    SolicitudAdopcion solicitud = get();
+                    if (solicitud != null) {
+                        vista.setSolicitudParaEditar(solicitud);
+                    } else {
+                        vista.mostrarMensaje("No se encontró la solicitud.", true);
+                        regresarALista();
+                    }
+                } catch (Exception e) {
+                    vista.mostrarMensaje("Error cargando solicitud: " + e.getMessage(), true);
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+    
     private void regresarALista() {
-        router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS);
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.SOLICITUDES);
     }
 }
