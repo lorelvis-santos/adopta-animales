@@ -46,16 +46,6 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     // Implementación de VistaConAlertas
     
     @Override
-    public void onCrear(Runnable accion) {
-        this.onCrear = accion;
-    }
-    
-    @Override
-    public void onEditar(Consumer<Integer> accion) {
-        this.onEditar = accion;
-    }
-    
-    @Override
     public void mostrarMensaje(String mensaje, boolean error) {
         if(error) {
             Message.ShowMessage(this, MessageType.ERROR, mensaje);
@@ -65,6 +55,16 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     }
     
     // Implementación de DashboardMascotasView
+    
+    @Override
+    public void onCrear(Runnable accion) {
+        this.onCrear = accion;
+    }
+    
+    @Override
+    public void onEditar(Consumer<Integer> accion) {
+        this.onEditar = accion;
+    }
     
     /**
      * Muestra las estadísticas generales de la aplicación.
@@ -89,7 +89,7 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     @Override
     public void cargarTablaMascotas(List<Mascota> mascotas) {
         // Hay que reemplazar esto
-        EventAction <ModelMascota> evenAction = new EventAction <ModelMascota> () {
+        EventAction <ModelMascota> eventAction = new EventAction <ModelMascota> () {
             @Override
             public void delete(ModelMascota item) {
                 if (table1.isEditing()) {
@@ -131,18 +131,19 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
         
         for (Mascota mascota : mascotas) {
 
-         model.addRow(
-             new ModelMascota(
-                 mascota.getIdMascota(),
-                 new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
-                 mascota.getNombre(),
-                 mascota.getSexo().db(),
-                 mascota.getRaza(),
-                 mascota.isEstaCastrado(),
-                 calcularEdad(mascota.getFechaNacimiento()),
-                 mascota.getPeso()
-             ).toRowTable(evenAction) 
-         );
+            model.addRow(
+                new ModelMascota(
+                    mascota.getIdMascota(),
+                    new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
+                    mascota.getNombre(),
+                    mascota.getSexo().db(),
+                    mascota.getRaza(),
+                    mascota.isEstaCastrado(),
+                    calcularEdad(mascota.getFechaNacimiento()),
+                    mascota.getPeso(),
+                    mascota.getEstado().db()
+                ).toRowTable(eventAction)
+            );
         }
     }
     
@@ -211,8 +212,12 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     }
     
     
-    private int calcularPorciento(int cifraTotal, int valor) {
-        return Math.round(valor/cifraTotal*100);
+    private int calcularPorciento(double cifraTotal, double valor) {
+        if (cifraTotal == 0) {
+            return 0;
+        }
+        
+        return (int)Math.round(valor/cifraTotal*100);
     }
 
     private boolean showMessage(String message) {
@@ -274,11 +279,11 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
 
             },
             new String [] {
-                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", ""
+                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", "Estado", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {

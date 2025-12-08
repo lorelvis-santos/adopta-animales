@@ -1,5 +1,6 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
+import com.stackmasters.adoptaanimales.model.Adoptante;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
@@ -7,8 +8,10 @@ import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
+import com.stackmasters.adoptaanimales.service.AdoptanteService;
 import com.stackmasters.adoptaanimales.service.MascotaService;
 import com.stackmasters.adoptaanimales.service.SolicitudService;
+import com.stackmasters.adoptaanimales.service.impl.AdoptanteServiceImpl;
 import com.stackmasters.adoptaanimales.service.impl.MascotaServiceImpl;
 import com.stackmasters.adoptaanimales.service.impl.SolicitudServiceImpl;
 import com.stackmasters.adoptaanimales.utils.LoadingHandler;
@@ -27,6 +30,7 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -36,24 +40,24 @@ import javax.swing.table.DefaultTableModel;
 
 public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements DashboardSolicitudesView {
     private SolicitudService solicitudService;
-    private Runnable onFormularioCrear;
+    private MascotaService mascotaService;
+    private AdoptanteService adoptanteService;
+    private Runnable onCrear;
+    private Consumer<Integer> onEditar;
     
     public DashboardSolicitudesViewImpl() {
         initComponents();        
         table2.fixTable(jScrollPane1);
         setOpaque(false);
         
-        solicitudService = new SolicitudServiceImpl( new MascotaRepository(),  new AdoptanteRepository(), new SolicitudAdopcionRepository(),  new CitaRepository());
+        solicitudService = new SolicitudServiceImpl( new MascotaRepository(),  new AdoptanteRepository(), new SolicitudAdopcionRepository());
+        adoptanteService = new AdoptanteServiceImpl(new AdoptanteRepository());
+        mascotaService = new MascotaServiceImpl(new MascotaRepository());
         
-        btnCrearMascota.addActionListener(e -> { if (onFormularioCrear != null) { onFormularioCrear.run(); } });
+        btnCrear.addActionListener(e -> { if (onCrear != null) { onCrear.run(); } });
     }
     
     // Implementación de VistaConAlertas
-    
-    @Override
-    public void onFormularioCrear(Runnable accion) {
-        this.onFormularioCrear = accion;
-    }
     
     @Override
     public void mostrarMensaje(String mensaje, boolean error) {
@@ -66,18 +70,28 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
     
     // Implementación de DashboardMascotasView
     
+    @Override
+    public void onCrear(Runnable accion) {
+        this.onCrear = accion;
+    }
+    
+    @Override
+    public void onEditar(Consumer<Integer> accion) {
+        this.onEditar = accion;
+    }
+    
     /**
      * Muestra las estadísticas generales de la aplicación.
      * (total de mascotas, solicitudes pendientes, mascotas adoptadas)
      */
     @Override
-    public void mostrarEstadisticas(int totalSolicitudes, int totalSolicitudesPendientes, int SolicitudesResueltas) {
+    public void mostrarEstadisticas(int totalSolicitudes, int solicitudesPendientes, int solicitudesAprobadas, int solicitudesRechazadasYCanceladas) {
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PETS, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card1.setData(new ModelCard("Solicitudes", totalSolicitudes, 100, icon1));
+        card1.setData(new ModelCard("Solicitudes pendientes", solicitudesPendientes, calcularPorciento(totalSolicitudes, solicitudesPendientes), icon1));
         Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BOOK, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card2.setData(new ModelCard("Solicitudes pendientes",totalSolicitudesPendientes, calcularPorciento(totalSolicitudes, totalSolicitudesPendientes), icon2));
+        card2.setData(new ModelCard("Solicitudes aprobadas",solicitudesAprobadas, calcularPorciento(totalSolicitudes, solicitudesAprobadas), icon2));
         Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.NATURE_PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card3.setData(new ModelCard("Solicitudes", SolicitudesResueltas, calcularPorciento(totalSolicitudes, totalSolicitudesPendientes), icon3));
+        card3.setData(new ModelCard("Solicitudes rechazadas/canceladas", solicitudesRechazadasYCanceladas, calcularPorciento(totalSolicitudes, solicitudesRechazadasYCanceladas), icon3));
     }
     
     /**
@@ -93,32 +107,32 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
             @Override
             public void delete(ModelSolicitudes item) {
                 if (table2.isEditing()) {
-                    // Cancelamos la edición. No usamos 'stop' porque no queremos guardar,
-                    // solo queremos que suelte el foco para poder borrar la fila en paz.
                     table2.getCellEditor().cancelCellEditing();
                 }
                 
-//                if (showMessage("¿Estás seguro de eliminar a " + item.getName() + "?")) {
-//                    try {
-//                        // Llamas a tu servicio real usando el ID que escondimos en el modelo
-//                        boolean ok = solicitudService.eliminar(item.getId()); 
-//
-//                        if (ok) { 
-//                            // IMPORTANTE: Recargar la tabla para que desaparezca la fila
-//                            // Puedes llamar a alMostrar() de nuevo o quitar la fila del modelo de la tabla manualmente
-//                            alMostrar(); 
-//                            mostrarMensaje("Solicitud eliminada correctamente", false);
-//                            System.out.println("Solicitud eliminada: " + item.getId());
-//                        }
-//                    } catch (Exception e) {
-//                        System.err.println("Error borrando: " + e.getMessage());
-//                    }
-//                }
+                if (showMessage("¿Estás seguro de eliminar la solicitud de adopcion?")) {
+                    try {
+                        // Llamas a tu servicio real usando el ID que escondimos en el modelo
+                        boolean ok = solicitudService.eliminar(item.getId()); 
+
+                        if (ok) { 
+                            // IMPORTANTE: Recargar la tabla para que desaparezca la fila
+                            // Puedes llamar a alMostrar() de nuevo o quitar la fila del modelo de la tabla manualmente
+                            alMostrar(); 
+                            mostrarMensaje("Solicitud eliminada correctamente", false);
+                            System.out.println("Solicitud eliminada: " + item.getId());
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Error borrando: " + e.getMessage());
+                    }
+                }
             }
 
             @Override
             public void update(ModelSolicitudes item) {
-                showMessage("Update : " + item.getId());
+                if (onEditar != null) {
+                    onEditar.accept(item.getId());
+                }           
             }
         };
         
@@ -126,25 +140,20 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         model.setRowCount(0);
         
         for (SolicitudAdopcion solicitud : solicitudes) {
+            Mascota mascota = mascotaService.obtenerPorId(solicitud.getMascotaId());
+            Adoptante adoptante = adoptanteService.obtenerPorId(solicitud.getAdoptanteId());
 
             // Estado string (el enum trae .db() )
             String estadoString = solicitud.getEstado().db();
 
-            // Convertir LocalDate -> int YYYYMMDD
-            int fechaEntero = (solicitud.getFechaSolicitud() != null)
-                ? solicitud.getFechaSolicitud().getYear() * 10000
-                + solicitud.getFechaSolicitud().getMonthValue() * 100
-                + solicitud.getFechaSolicitud().getDayOfMonth()
-                : 0;
-
             ModelSolicitudes ms = new ModelSolicitudes(
-            solicitud.getIdSolicitud(),                                  // id
+                solicitud.getIdSolicitud(),                                  // id
                 new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
-                "Mascota #" + solicitud.getMascotaId(),                      // name (placeholder)
-                "Adoptante #" + solicitud.getAdoptanteId(),                  // adoptante (placeholder)
+                mascota.getNombre() + " (" + mascota.getEspecie().db() + ": " + mascota.getRaza() + ")",                      // name (placeholder)
+                adoptante.getNombre() + " " + adoptante.getApellido(),                  // adoptante (placeholder)
                 estadoString,                                                // estado string
-                fechaEntero,                                                 // fecha int
-                0.0                                                          // cita NO existe en el modelo
+                solicitud.getFechaSolicitud().toString(),                                                 // fecha int
+                solicitud.getCita().toString()                                                       // cita NO existe en el modelo
             );
 
     model.addRow(ms.toRowTable(eventAction));
@@ -171,15 +180,17 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         
         new SwingWorker<Void, Void>() {
             private Exception error;
-            private int totalSolicitudes, totalSolicitudesPendientes, totalSolicitudesResueltas;
+            private int totalSolicitudes, totalSolicitudesPendientes, totalSolicitudesAprobadas, totalSolicitudesRechazadas, totalSolicitudesCanceladas;
             private List<SolicitudAdopcion> solicitud;
 
             @Override protected Void doInBackground() {
                 try { 
                     // Obtener datos para las tarjetas
-                    totalSolicitudes = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Aprobada);
+                    totalSolicitudes = solicitudService.totalSolicitudes();
                     totalSolicitudesPendientes = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Pendiente);
-                    totalSolicitudesResueltas = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Pendiente);
+                    totalSolicitudesAprobadas = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Aprobada);
+                    totalSolicitudesRechazadas = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Rechazada);
+                    totalSolicitudesCanceladas = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Cancelada);
                     
                     // Obtener lista de mascotas
                     solicitud = solicitudService.listar(null);
@@ -198,7 +209,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
                     return; 
                 } 
                 
-                mostrarEstadisticas(totalSolicitudes, totalSolicitudesPendientes, totalSolicitudesResueltas);
+                mostrarEstadisticas(totalSolicitudes, totalSolicitudesPendientes, totalSolicitudesAprobadas, (totalSolicitudesRechazadas + totalSolicitudesCanceladas));
                 cargarTablaSolicitudes(solicitud);
             }
         }.execute();
@@ -216,8 +227,12 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
     }
     
     
-    private int calcularPorciento(int cifraTotal, int valor) {
-        return Math.round(valor*cifraTotal);
+    private int calcularPorciento(double cifraTotal, double valor) {
+        if (cifraTotal == 0) {
+            return 0;
+        }
+        
+        return (int)Math.round(valor/cifraTotal*100);
     }
 
     private boolean showMessage(String message) {
@@ -246,7 +261,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         jScrollPane1 = new javax.swing.JScrollPane();
         table2 = new com.stackmasters.adoptaanimales.view.impl.swing.table.Table();
         jLabel6 = new javax.swing.JLabel();
-        btnCrearMascota = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
+        btnCrear = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
 
         card1.setBackground(new java.awt.Color(79, 172, 254));
         card1.setForeground(new java.awt.Color(255, 255, 255));
@@ -254,7 +269,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Mascotas");
+        jLabel1.setText("Solicitudes");
 
         card2.setBackground(new java.awt.Color(255, 154, 158));
         card2.setForeground(new java.awt.Color(255, 255, 255));
@@ -279,7 +294,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
 
             },
             new String [] {
-                " Mascota", "Adoptante", "Fecha solicitud", "Estado solicitud", "Cita", ""
+                "Mascota", "Adoptante", "Estado solicitud", "Fecha solicitud", "Cita programada", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -320,8 +335,8 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
 
         jLabel6.setOpaque(true);
 
-        btnCrearMascota.setText("Nueva Solicitud");
-        btnCrearMascota.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnCrear.setText("Nueva solicitud");
+        btnCrear.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -331,7 +346,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCrearMascota, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 903, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -363,7 +378,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
                     .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(24, 24, 24)
-                .addComponent(btnCrearMascota, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addComponent(btnCrear, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
@@ -376,7 +391,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton btnCrearMascota;
+    private com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton btnCrear;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card1;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card2;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card3;

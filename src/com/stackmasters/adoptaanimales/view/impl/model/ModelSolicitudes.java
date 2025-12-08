@@ -1,10 +1,13 @@
 package com.stackmasters.adoptaanimales.view.impl.model;
 
+import com.stackmasters.adoptaanimales.utils.FechaUtils;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.ModelAction;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.ModelProfile;
 import javax.swing.Icon;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ModelSolicitudes {
     private int id;
@@ -12,13 +15,13 @@ public class ModelSolicitudes {
     private String name;      
     private String adoptante; 
     private String estado;   
-    private int fecha;        
-    private double cita;      
+    private String fecha;        
+    private String cita;      
 
     public ModelSolicitudes() {
     }
 
-    public ModelSolicitudes(int id, Icon icon, String name, String adoptante, String estado, int fecha, double cita) {
+    public ModelSolicitudes(int id, Icon icon, String name, String adoptante, String estado, String fecha, String cita) {
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -70,19 +73,19 @@ public class ModelSolicitudes {
         this.estado = estado;
     }
 
-    public int getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(int fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
-    public double getCita() {
+    public String getCita() {
         return cita;
     }
 
-    public void setCita(double cita) {
+    public void setCita(String cita) {
         this.cita = cita;
     }
 
@@ -92,8 +95,8 @@ public class ModelSolicitudes {
             new ModelProfile(icon, name),     // Foto + Nombre
             adoptante,
             estado,
-            " "+" "+" "+" "+" "+" "+" "+fecha,
-            cita,
+            " "+" "+" "+" "+" "+" "+" "+LocalDate.parse(fecha),
+            FechaUtils.formatearCorto(LocalDateTime.parse(cita), "No agendada"),
             new ModelAction<ModelSolicitudes>(this, action)      // Column acciones
         };
     }

@@ -49,8 +49,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         solicitudService = new SolicitudServiceImpl(
             new MascotaRepository(),
             new AdoptanteRepository(),
-            new SolicitudAdopcionRepository(),
-            new CitaRepository()
+            new SolicitudAdopcionRepository()
         );
     }
     
@@ -147,7 +146,8 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
                  mascota.getRaza(),
                  mascota.isEstaCastrado(),
                  calcularEdad(mascota.getFechaNacimiento()),
-                 mascota.getPeso()
+                 mascota.getPeso(),
+                 mascota.getEstado().db()
              ).toRowTable(evenAction) 
          );
         }
@@ -244,13 +244,10 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         return Period.between(fechaNacimiento, LocalDate.now()).getYears();
     }
     
-    private int calcularPorciento(int cifraTotal, int valor) {
-        System.out.println(cifraTotal + " " + valor);
+    private int calcularPorciento(double cifraTotal, double valor) {
         if (cifraTotal == 0) {
             return 0;
         }
-        
-        System.out.println(Math.round(valor/cifraTotal*100));
         
         return (int)Math.round(valor/cifraTotal*100);
     }
@@ -362,11 +359,11 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
 
             },
             new String [] {
-                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", ""
+                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", "Estado", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false, true, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -376,6 +373,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         jScrollPane1.setViewportView(table1);
         if (table1.getColumnModel().getColumnCount() > 0) {
             table1.getColumnModel().getColumn(0).setPreferredWidth(150);
+            table1.getColumnModel().getColumn(6).setResizable(false);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);

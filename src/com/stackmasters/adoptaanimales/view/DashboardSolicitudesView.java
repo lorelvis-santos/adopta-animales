@@ -4,6 +4,7 @@ import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -12,9 +13,9 @@ import java.util.List;
 public interface DashboardSolicitudesView extends VistaNavegable, VistaConAlertas {
     /**
      * Muestra las estadísticas generales de las mascotas.
-     * (total de mascotas, mascotas en albergue y adoptadas)
+     * (total de solicitudes pendientes, aprobadas y rechazadas/canceladas)
      */
-    void mostrarEstadisticas(int totalSolicitudes, int totalSolicitudesPendientes, int SolicitudesResueltas);
+    public void mostrarEstadisticas(int totalSolicitudes, int solicitudesPendientes, int solicitudesAprobadas, int solicitudesRechazadasYCanceladas);
     
     /**
      * Carga la tabla de animales en el dashboard.
@@ -31,12 +32,19 @@ public interface DashboardSolicitudesView extends VistaNavegable, VistaConAlerta
      */
     void setCargando(boolean cargando);
     
-    /**
-     * Método para agregar la accion al evento de abrir el formularioCrear.
+   /**
+     * Método para agregar la accion al evento de hacer click en crear.
      * 
      * @param accion Callback a ejecutar
      */
-    void onFormularioCrear(Runnable accion);
+    void onCrear(Runnable accion);
+    
+    /**
+     * Método para agregar la accion al evento de hacer click en editar.
+     * 
+     * @param accion Callback a ejecutar
+     */
+    void onEditar(Consumer<Integer> accion);
     
     /**
      * Método para mostrar un mensaje con información o error.

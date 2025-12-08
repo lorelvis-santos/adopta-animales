@@ -15,11 +15,12 @@ public class ModelMascota {
     private boolean castrado; // Castrado o no
     private int edad;         // Edad
     private double peso;      // Peso
+    private String estado;
 
     public ModelMascota() {
     }
 
-    public ModelMascota(int id, Icon icon, String name, String gender, String breed, boolean castrado, int edad, double peso) {
+    public ModelMascota(int id, Icon icon, String name, String gender, String breed, boolean castrado, int edad, double peso, String estado) {
         this.id = id;
         this.icon = icon;
         this.name = name;
@@ -28,6 +29,7 @@ public class ModelMascota {
         this.castrado = castrado;
         this.edad = edad;
         this.peso = peso;
+        this.estado = estado;
     }
     
     public int getId() {
@@ -94,6 +96,14 @@ public class ModelMascota {
     public void setPeso(double peso) {
         this.peso = peso;
     }
+    
+    public String getEstado() {
+        return estado;
+    }
+    
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
 
     // Lo que se enviará como fila a la tabla
     public Object[] toRowTable(EventAction event) {
@@ -104,6 +114,7 @@ public class ModelMascota {
             castrado ? "      "+"Sí" :  "      "+"No",
             " "+" "+" "+" "+" "+" "+" "+edad + " años",
             peso + " kg",
+            estado,
             new ModelAction<ModelMascota>(this, event)      // Column acciones
         };
     }
