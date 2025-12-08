@@ -5,6 +5,7 @@ import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -36,7 +37,10 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
         solicitud.setFechaRespuesta(fr != null ? fr.toLocalDate() : null);
         solicitud.setMotivoRechazo(datos.getString("motivo_rechazo"));
         solicitud.setAdoptanteId(datos.getInt("adoptante_id"));
-        solicitud.setMascotaId(datos.getInt("mascota_id")); // cambie eso para que la prueba me funcione
+        solicitud.setMascotaId(datos.getInt("mascota_id")); 
+        java.sql.Timestamp tsCita = datos.getTimestamp("fecha_cita");
+        // 2. Verificamos si es null para evitar NullPointerException al convertir
+        solicitud.setCita(tsCita != null ? tsCita.toLocalDateTime() : null);
 
         return solicitud;
     }
@@ -44,19 +48,20 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
     //Insertar solicitud
     public RespuestaBD insertSolicitud(SolicitudAdopcion solicitud){
         String sql = "INSERT INTO "+getTableName() +" (estado, fecha_solicitud, fecha_respuesta, motivo_rechazo,"
-                   + "adoptante_id, mascota_id) VALUES (?,?,?,?,?,?)"; 
+                   + "adoptante_id, mascota_id, fecha_cita) VALUES (?,?,?,?,?,?,?)"; 
         return insert(sql, solicitud.getEstado().db(),
                                solicitud.getFechaSolicitud(),
                                solicitud.getFechaRespuesta(),
                                solicitud.getMotivoRechazo(),
                                solicitud.getAdoptanteId(),
-                               solicitud.getMascotaId());
+                               solicitud.getMascotaId(),
+                               solicitud.getCita());
     }
     
     //Actualizar solicitud
     public boolean updateSolicitud(SolicitudAdopcion solicitud, int idSolicitud){
         String sql = "UPDATE "+getTableName() +" SET estado = ?, fecha_solicitud = ?, fecha_respuesta = ?, motivo_rechazo = ?,"
-                + "adoptante_id = ?, mascota_id = ? WHERE " + getPk()+ " = ?"; // cambie adoptante_id por publicacion_id para la prue
+                + "adoptante_id = ?, mascota_id = ?, fecha_cita = ? WHERE " + getPk()+ " = ?"; // cambie adoptante_id por publicacion_id para la prue
     
         return update(sql, 
                 solicitud.getEstado().db(),
@@ -65,6 +70,7 @@ public class SolicitudAdopcionRepository extends BaseRepository<SolicitudAdopcio
                 solicitud.getMotivoRechazo(),
                 solicitud.getAdoptanteId(),
                 solicitud.getMascotaId(),
+                solicitud.getCita(),
                 idSolicitud
         );
     }

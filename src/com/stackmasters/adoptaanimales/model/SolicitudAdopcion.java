@@ -1,6 +1,7 @@
 package com.stackmasters.adoptaanimales.model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 /**
@@ -16,6 +17,7 @@ public class SolicitudAdopcion {
     private int adoptanteId;
     private EstadoSolicitud estado;
     private int mascotaId;
+    private LocalDateTime cita;
     
     //Enum para el estado de la solicitud
     public enum EstadoSolicitud{
@@ -38,7 +40,7 @@ public class SolicitudAdopcion {
     public SolicitudAdopcion() {
     }
 
-    public SolicitudAdopcion(int idSolicitud, LocalDate fechaSolicitud, LocalDate fechaRespuesta, String motivoRechazo, int adoptanteId, EstadoSolicitud estado, int mascotaId) {
+    public SolicitudAdopcion(int idSolicitud, LocalDate fechaSolicitud, LocalDate fechaRespuesta, String motivoRechazo, int adoptanteId, EstadoSolicitud estado, int mascotaId, LocalDateTime cita) {
         this.idSolicitud = idSolicitud;
         this.fechaSolicitud = fechaSolicitud;
         this.fechaRespuesta = fechaRespuesta;
@@ -46,9 +48,8 @@ public class SolicitudAdopcion {
         this.adoptanteId = adoptanteId;
         this.estado = estado;
         this.mascotaId = mascotaId;
+        this.cita = cita;
     }
-
-   
 
     public int getIdSolicitud() {
         return idSolicitud;
@@ -106,4 +107,11 @@ public class SolicitudAdopcion {
         this.mascotaId = mascotaId;
     }
     
+    public LocalDateTime getCita() {
+        return cita;
+    }
+    
+    public void setCita(LocalDateTime cita) {
+        this.cita = cita;
+    }
 }
