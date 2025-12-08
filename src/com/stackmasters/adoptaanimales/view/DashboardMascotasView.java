@@ -3,6 +3,7 @@ package com.stackmasters.adoptaanimales.view;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  *
@@ -31,11 +32,18 @@ public interface DashboardMascotasView extends VistaNavegable, VistaConAlertas {
     void setCargando(boolean cargando);
     
     /**
-     * Método para agregar la accion al evento de abrir el formularioCrear.
+     * Método para agregar la accion al evento de hacer click en crear.
      * 
      * @param accion Callback a ejecutar
      */
-    void onFormularioCrear(Runnable accion);
+    void onCrear(Runnable accion);
+    
+    /**
+     * Método para agregar la accion al evento de hacer click en editar.
+     * 
+     * @param accion Callback a ejecutar
+     */
+    void onEditar(Consumer<Integer> accion);
     
     /**
      * Método para mostrar un mensaje con información o error.

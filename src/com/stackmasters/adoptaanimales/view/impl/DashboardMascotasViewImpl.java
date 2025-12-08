@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -29,7 +30,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class DashboardMascotasViewImpl extends javax.swing.JPanel implements DashboardMascotasView {
     private MascotaService mascotaService;
-    private Runnable onFormularioCrear;
+    private Runnable onCrear;
+    private Consumer<Integer> onEditar;
     
     public DashboardMascotasViewImpl() {
         initComponents();        
@@ -38,14 +40,19 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
         
         mascotaService = new MascotaServiceImpl(new MascotaRepository());
         
-        btnCrearMascota.addActionListener(e -> { if (onFormularioCrear != null) { onFormularioCrear.run(); } });
+        btnCrearMascota.addActionListener(e -> { if (onCrear != null) { onCrear.run(); } });
     }
     
     // Implementación de VistaConAlertas
     
     @Override
-    public void onFormularioCrear(Runnable accion) {
-        this.onFormularioCrear = accion;
+    public void onCrear(Runnable accion) {
+        this.onCrear = accion;
+    }
+    
+    @Override
+    public void onEditar(Consumer<Integer> accion) {
+        this.onEditar = accion;
     }
     
     @Override
@@ -111,7 +118,9 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
 
             @Override
             public void update(ModelMascota mascota) {
-                showMessage("Update : " + mascota.getId());
+                if (onEditar != null) {
+                    onEditar.accept(mascota.getId());
+                }
             }
         };
         
@@ -198,7 +207,7 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     
     
     private int calcularPorciento(int cifraTotal, int valor) {
-        return Math.round(valor*cifraTotal);
+        return Math.round(valor/cifraTotal*100);
     }
 
     private boolean showMessage(String message) {
