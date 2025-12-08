@@ -175,7 +175,7 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
                 vistaDestino = new MascotasCrearViewImpl();
                 break;
             case subRuta.SOLICITUDES:
-                //vistaDestino = new DashboardSolicitudesViewImpl();
+                vistaDestino = new DashboardSolicitudesViewImpl();
                 break;
             default:
                 System.out.println("Subruta desconocida: " + subRuta);

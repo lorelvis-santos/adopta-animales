@@ -1,20 +1,26 @@
-package com.stackmasters.adoptaanimales.view.impl.mascota;
+package com.stackmasters.adoptaanimales.view.impl;
 
-import com.stackmasters.adoptaanimales.view.impl.*;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
+import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
+import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
+import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
 import com.stackmasters.adoptaanimales.service.MascotaService;
+import com.stackmasters.adoptaanimales.service.SolicitudService;
 import com.stackmasters.adoptaanimales.service.impl.MascotaServiceImpl;
+import com.stackmasters.adoptaanimales.service.impl.SolicitudServiceImpl;
 import com.stackmasters.adoptaanimales.utils.LoadingHandler;
 import com.stackmasters.adoptaanimales.view.impl.complement.Dialog;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelMascota;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import com.stackmasters.adoptaanimales.utils.Message;
 import com.stackmasters.adoptaanimales.view.DashboardMascotasView;
+import com.stackmasters.adoptaanimales.view.DashboardSolicitudesView;
 import com.stackmasters.adoptaanimales.view.impl.complement.Message.MessageType;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
+import com.stackmasters.adoptaanimales.view.impl.model.ModelSolicitudes;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
 import java.awt.Color;
@@ -28,16 +34,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 
-public class MascotasCrearViewImpl extends javax.swing.JPanel implements DashboardMascotasView {
-    private MascotaService mascotaService;
+public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements DashboardSolicitudesView {
+    private SolicitudService solicitudService;
     private Runnable onFormularioCrear;
     
-    public MascotasCrearViewImpl() {
+    public DashboardSolicitudesViewImpl() {
         initComponents();        
-        table1.fixTable(jScrollPane1);
+        table2.fixTable(jScrollPane1);
         setOpaque(false);
         
-        mascotaService = new MascotaServiceImpl(new MascotaRepository());
+        solicitudService = new SolicitudServiceImpl( new MascotaRepository(),  new AdoptanteRepository(), new SolicitudAdopcionRepository(),  new CitaRepository());
         
         btnCrearMascota.addActionListener(e -> { if (onFormularioCrear != null) { onFormularioCrear.run(); } });
     }
@@ -65,13 +71,13 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
      * (total de mascotas, solicitudes pendientes, mascotas adoptadas)
      */
     @Override
-    public void mostrarEstadisticas(int totalMascotas, int totalMascotasEnAlbergue, int totalMascotasAdoptadas) {
+    public void mostrarEstadisticas(int totalSolicitudes, int totalSolicitudesPendientes, int SolicitudesResueltas) {
         Icon icon1 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.PETS, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card1.setData(new ModelCard("Total de mascotas", totalMascotas, 100, icon1));
+        card1.setData(new ModelCard("Solicitudes", totalSolicitudes, 100, icon1));
         Icon icon2 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BOOK, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card2.setData(new ModelCard("Mascotas en albergue", totalMascotasEnAlbergue, calcularPorciento(totalMascotas, totalMascotasEnAlbergue), icon2));
+        card2.setData(new ModelCard("Solicitudes pendientes",totalSolicitudesPendientes, calcularPorciento(totalSolicitudes, totalSolicitudesPendientes), icon2));
         Icon icon3 = IconFontSwing.buildIcon(GoogleMaterialDesignIcons.NATURE_PEOPLE, 60, new Color(255, 255, 255, 100), new Color(255, 255, 255, 15));
-        card3.setData(new ModelCard("Mascotas adoptadas", totalMascotasAdoptadas, calcularPorciento(totalMascotas, totalMascotasAdoptadas), icon3));
+        card3.setData(new ModelCard("Solicitudes", SolicitudesResueltas, calcularPorciento(totalSolicitudes, totalSolicitudesPendientes), icon3));
     }
     
     /**
@@ -81,56 +87,68 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
      * @param mascotas Lista de mascotas a mostrar en la tabla
      */
     @Override
-    public void cargarTablaMascotas(List<Mascota> mascotas) {
+    public void cargarTablaSolicitudes(List<SolicitudAdopcion> solicitudes) {
         // Hay que reemplazar esto
-        EventAction eventAction = new EventAction<ModelMascota>() {
+        EventAction <ModelSolicitudes> eventAction = new EventAction<ModelSolicitudes>() {
             @Override
-            public void delete(ModelMascota item) {
-                if (table1.isEditing()) {
+            public void delete(ModelSolicitudes item) {
+                if (table2.isEditing()) {
                     // Cancelamos la edición. No usamos 'stop' porque no queremos guardar,
                     // solo queremos que suelte el foco para poder borrar la fila en paz.
-                    table1.getCellEditor().cancelCellEditing();
+                    table2.getCellEditor().cancelCellEditing();
                 }
                 
-                if (showMessage("¿Estás seguro de eliminar a " + item.getName() + "?")) {
-                    try {
-                        // Llamas a tu servicio real usando el ID que escondimos en el modelo
-                        boolean ok = mascotaService.eliminar(item.getId()); 
-
-                        if (ok) { 
-                            // IMPORTANTE: Recargar la tabla para que desaparezca la fila
-                            // Puedes llamar a alMostrar() de nuevo o quitar la fila del modelo de la tabla manualmente
-                            alMostrar(); 
-                            mostrarMensaje("Mascota eliminada correctamente", false);
-                            System.out.println("Mascota eliminada: " + item.getId());
-                        }
-                    } catch (Exception e) {
-                        System.err.println("Error borrando: " + e.getMessage());
-                    }
-                }
+//                if (showMessage("¿Estás seguro de eliminar a " + item.getName() + "?")) {
+//                    try {
+//                        // Llamas a tu servicio real usando el ID que escondimos en el modelo
+//                        boolean ok = solicitudService.eliminar(item.getId()); 
+//
+//                        if (ok) { 
+//                            // IMPORTANTE: Recargar la tabla para que desaparezca la fila
+//                            // Puedes llamar a alMostrar() de nuevo o quitar la fila del modelo de la tabla manualmente
+//                            alMostrar(); 
+//                            mostrarMensaje("Solicitud eliminada correctamente", false);
+//                            System.out.println("Solicitud eliminada: " + item.getId());
+//                        }
+//                    } catch (Exception e) {
+//                        System.err.println("Error borrando: " + e.getMessage());
+//                    }
+//                }
             }
 
             @Override
-            public void update(ModelMascota item) {
+            public void update(ModelSolicitudes item) {
                 showMessage("Update : " + item.getId());
             }
         };
         
-        DefaultTableModel model = (DefaultTableModel) table1.getModel();
+        DefaultTableModel model = (DefaultTableModel) table2.getModel();
         model.setRowCount(0);
         
-        for (Mascota mascota : mascotas) {
-            table1.addRow(new ModelMascota(
-                mascota.getIdMascota(),
-                new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), // Pendiente, mostrar imagenes dinamicas
-                mascota.getNombre(),
-                mascota.getSexo().db(), 
-                mascota.getRaza(),  
-                mascota.isEstaCastrado(),
-                calcularEdad(mascota.getFechaNacimiento()),
-                mascota.getPeso()
-            ).toRowTable(eventAction));
-        }
+        for (SolicitudAdopcion solicitud : solicitudes) {
+
+            // Estado string (el enum trae .db() )
+            String estadoString = solicitud.getEstado().db();
+
+            // Convertir LocalDate -> int YYYYMMDD
+            int fechaEntero = (solicitud.getFechaSolicitud() != null)
+                ? solicitud.getFechaSolicitud().getYear() * 10000
+                + solicitud.getFechaSolicitud().getMonthValue() * 100
+                + solicitud.getFechaSolicitud().getDayOfMonth()
+                : 0;
+
+            ModelSolicitudes ms = new ModelSolicitudes(
+            solicitud.getIdSolicitud(),                                  // id
+                new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
+                "Mascota #" + solicitud.getMascotaId(),                      // name (placeholder)
+                "Adoptante #" + solicitud.getAdoptanteId(),                  // adoptante (placeholder)
+                estadoString,                                                // estado string
+                fechaEntero,                                                 // fecha int
+                0.0                                                          // cita NO existe en el modelo
+            );
+
+    model.addRow(ms.toRowTable(eventAction));
+}
     }
     
     /**
@@ -153,18 +171,18 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
         
         new SwingWorker<Void, Void>() {
             private Exception error;
-            private int totalMascotas, totalMascotasEnAlbergue, totalMascotasAdoptadas;
-            private List<Mascota> mascotas;
+            private int totalSolicitudes, totalSolicitudesPendientes, totalSolicitudesResueltas;
+            private List<SolicitudAdopcion> solicitud;
 
             @Override protected Void doInBackground() {
                 try { 
                     // Obtener datos para las tarjetas
-                    totalMascotas = mascotaService.totalMascotas();
-                    totalMascotasEnAlbergue = mascotaService.totalMascotasPorEstado(EstadoMascota.EnAlbergue);
-                    totalMascotasAdoptadas = mascotaService.totalMascotasPorEstado(EstadoMascota.Adoptada);
+                    totalSolicitudes = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Aprobada);
+                    totalSolicitudesPendientes = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Pendiente);
+                    totalSolicitudesResueltas = solicitudService.totalSolicitudesPorEstado(SolicitudAdopcion.EstadoSolicitud.Pendiente);
                     
                     // Obtener lista de mascotas
-                    mascotas = mascotaService.buscar(null);
+                    solicitud = solicitudService.listar(null);
                 } catch (Exception e) {
                     error = e; 
                 }
@@ -180,8 +198,8 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
                     return; 
                 } 
                 
-                mostrarEstadisticas(totalMascotas, totalMascotasEnAlbergue, totalMascotasAdoptadas);
-                cargarTablaMascotas(mascotas);
+                mostrarEstadisticas(totalSolicitudes, totalSolicitudesPendientes, totalSolicitudesResueltas);
+                cargarTablaSolicitudes(solicitud);
             }
         }.execute();
     }
@@ -226,7 +244,7 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        table1 = new com.stackmasters.adoptaanimales.view.impl.swing.table.Table();
+        table2 = new com.stackmasters.adoptaanimales.view.impl.swing.table.Table();
         jLabel6 = new javax.swing.JLabel();
         btnCrearMascota = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
 
@@ -236,7 +254,7 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Mascotas - Nueva mascota");
+        jLabel1.setText("Mascotas");
 
         card2.setBackground(new java.awt.Color(255, 154, 158));
         card2.setForeground(new java.awt.Color(255, 255, 255));
@@ -249,32 +267,32 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
 
         jLabel5.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel5.setText("Mascotas");
+        jLabel5.setText(" Solicitudes");
         jLabel5.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.setOpaque(false);
 
-        table1.setBackground(new java.awt.Color(255, 255, 255));
-        table1.setModel(new javax.swing.table.DefaultTableModel(
+        table2.setBackground(new java.awt.Color(255, 255, 255));
+        table2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Nombre", "Genero", "Raza", "Castrado", "Edad", "Peso", ""
+                " Mascota", "Adoptante", "Fecha solicitud", "Estado solicitud", "Cita", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+                false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(table1);
-        if (table1.getColumnModel().getColumnCount() > 0) {
-            table1.getColumnModel().getColumn(0).setPreferredWidth(150);
+        jScrollPane1.setViewportView(table2);
+        if (table2.getColumnModel().getColumnCount() > 0) {
+            table2.getColumnModel().getColumn(0).setPreferredWidth(150);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -302,7 +320,7 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
 
         jLabel6.setOpaque(true);
 
-        btnCrearMascota.setText("Nueva mascota");
+        btnCrearMascota.setText("Nueva Solicitud");
         btnCrearMascota.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -367,6 +385,6 @@ public class MascotasCrearViewImpl extends javax.swing.JPanel implements Dashboa
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private com.stackmasters.adoptaanimales.view.impl.swing.table.Table table1;
+    private com.stackmasters.adoptaanimales.view.impl.swing.table.Table table2;
     // End of variables declaration//GEN-END:variables
 }

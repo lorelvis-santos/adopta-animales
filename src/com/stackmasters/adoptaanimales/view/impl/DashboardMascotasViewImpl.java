@@ -82,7 +82,7 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
     @Override
     public void cargarTablaMascotas(List<Mascota> mascotas) {
         // Hay que reemplazar esto
-        EventAction eventAction = new EventAction() {
+        EventAction <ModelMascota> evenAction = new EventAction <ModelMascota> () {
             @Override
             public void delete(ModelMascota item) {
                 if (table1.isEditing()) {
@@ -110,25 +110,30 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
             }
 
             @Override
-            public void update(ModelMascota mascota) {
-                showMessage("Update : " + mascota.getId());
+            public void update(ModelMascota item) {
+                showMessage("Update : " + item.getId());
             }
+
+           
         };
         
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         model.setRowCount(0);
         
         for (Mascota mascota : mascotas) {
-            table1.addRow(new ModelMascota(
-                mascota.getIdMascota(),
-                new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")), // Pendiente, mostrar imagenes dinamicas
-                mascota.getNombre(),
-                mascota.getSexo().db(), 
-                mascota.getRaza(),  
-                mascota.isEstaCastrado(),
-                calcularEdad(mascota.getFechaNacimiento()),
-                mascota.getPeso()
-            ).toRowTable(eventAction));
+
+         model.addRow(
+             new ModelMascota(
+                 mascota.getIdMascota(),
+                 new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
+                 mascota.getNombre(),
+                 mascota.getSexo().db(),
+                 mascota.getRaza(),
+                 mascota.isEstaCastrado(),
+                 calcularEdad(mascota.getFechaNacimiento()),
+                 mascota.getPeso()
+             ).toRowTable(evenAction) 
+         );
         }
     }
     

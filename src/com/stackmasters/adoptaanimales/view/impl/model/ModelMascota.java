@@ -104,7 +104,7 @@ public class ModelMascota {
             castrado ? "      "+"Sí" :  "      "+"No",
             " "+" "+" "+" "+" "+" "+" "+edad + " años",
             peso + " kg",
-            new ModelAction(this, event)      // Column acciones
+            new ModelAction<ModelMascota>(this, event)      // Column acciones
         };
     }
 }

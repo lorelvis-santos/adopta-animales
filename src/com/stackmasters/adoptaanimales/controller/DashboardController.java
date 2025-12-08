@@ -35,7 +35,7 @@ public class DashboardController {
     }
     
     private void mostrarSolicitudes() {
-        System.out.println("Solicitudes");
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.SOLICITUDES);
     }
     
     private void cerrarSesion() {
