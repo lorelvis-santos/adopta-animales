@@ -415,19 +415,26 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
 
         jLabel6.setOpaque(true);
 
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/lupa (2).png"))); // NOI18N
         btnBuscar.setToolTipText("Buscar");
         btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
 
-        cmbEspecie.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        cmbEspecie.setBackground(new java.awt.Color(204, 204, 204));
+        cmbEspecie.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        cmbEspecie.setForeground(new java.awt.Color(0, 0, 0));
         cmbEspecie.setToolTipText("Especie");
+        cmbEspecie.setFocusable(false);
         cmbEspecie.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbEspecieActionPerformed(evt);
             }
         });
 
-        cmbEstado.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
+        cmbEstado.setBackground(new java.awt.Color(204, 204, 204));
+        cmbEstado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        cmbEstado.setForeground(new java.awt.Color(0, 0, 0));
         cmbEstado.setToolTipText("Estado");
+        cmbEstado.setFocusable(false);
         cmbEstado.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbEstadoActionPerformed(evt);
