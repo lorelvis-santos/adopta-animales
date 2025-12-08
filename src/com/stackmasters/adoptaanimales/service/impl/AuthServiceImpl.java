@@ -111,7 +111,8 @@ public class AuthServiceImpl implements AuthService {
         Sesion sesion = new Sesion(
             Rol.ADMIN_ALBERGUE,
             admin.getIdAdmin(),
-            admin.getNombre() + " " + admin.getApellido()
+            admin.getNombre() + " " + admin.getApellido(),
+            admin.getAlbergueId()
         );
         
         GestorSesion.establecer(sesion);
@@ -122,27 +123,27 @@ public class AuthServiceImpl implements AuthService {
    @Override
     public void forzarCambioContraseña(String correo, String nuevaContraseña) throws DatosInvalidosException {
         // 1. Validar parámetros
-    if (correo == null || correo.isBlank()) {
-        throw new DatosInvalidosException("El correo es obligatorio");
-    }
-    
-    if (nuevaContraseña == null || nuevaContraseña.isBlank()) {
-        throw new DatosInvalidosException("La nueva contraseña es obligatoria");
-    }
-    
-    if (nuevaContraseña.length() < 8) {
-        throw new DatosInvalidosException("La contraseña debe tener mínimo 8 caracteres");
-    }
-    
-    // Buscar admin por correo
-    AdminAlbergue admin = buscarAdminSeguro(correo);
-    if (admin == null) {
-        throw new DatosInvalidosException("No existe un usuario admin con ese correo");
-    }
-    
-    // Hashear nueva contraseña
-    String nuevaHasheada = hasher.hash(nuevaContraseña);
-    
+        if (correo == null || correo.isBlank()) {
+            throw new DatosInvalidosException("El correo es obligatorio");
+        }
+
+        if (nuevaContraseña == null || nuevaContraseña.isBlank()) {
+            throw new DatosInvalidosException("La nueva contraseña es obligatoria");
+        }
+
+        if (nuevaContraseña.length() < 8) {
+            throw new DatosInvalidosException("La contraseña debe tener mínimo 8 caracteres");
+        }
+
+        // Buscar admin por correo
+        AdminAlbergue admin = buscarAdminSeguro(correo);
+        if (admin == null) {
+            throw new DatosInvalidosException("No existe un usuario admin con ese correo");
+        }
+
+        // Hashear nueva contraseña
+        String nuevaHasheada = hasher.hash(nuevaContraseña);
+
      // Actualizar en repositorio
         boolean actualizado = adminAlbergueRepo.actualizarContraseña(correo, nuevaHasheada);
         if (!actualizado) {
