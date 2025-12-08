@@ -279,6 +279,10 @@ public class SolicitudServiceImpl implements SolicitudService {
     return filtradas;
 }
     
+    public int totalSolicitudes() {
+        return solicitudRepo.totalSolicitudes();
+    }
+    
     // Contar solicitudes por estado
     public int totalSolicitudesPorEstado(EstadoSolicitud estado) {
         if (estado == null) {
