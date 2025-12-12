@@ -45,7 +45,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/com/stackmasters/adoptaanimales/view/impl/icon/pet.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Adopta"/>
+        <Property name="text" type="java.lang.String" value="Adopet"/>
         <Property name="iconTextGap" type="int" value="12"/>
       </Properties>
     </Component>

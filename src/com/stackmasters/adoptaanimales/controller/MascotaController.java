@@ -84,9 +84,7 @@ public class MascotaController {
     }
     
     private void procesarGuardado() {
-        // 1. VALIDACIÓN Y PREPARACIÓN DE DATOS (En el Hilo Principal/EDT)
-        // Es mejor obtener los DTOs aquí para que si hay error de validación (campos vacíos),
-        // salte antes de bloquear la pantalla o crear hilos.
+        // 1. VALIDACIÓN Y PREPARACIÓN DE DATOS
 
         CrearMascotaDTO crearDto = null;
         ActualizarMascotaDTO actualizarDto = null;
@@ -120,8 +118,6 @@ public class MascotaController {
             @Override
             protected Void doInBackground() throws Exception {
                 // --- HILO SECUNDARIO (Backgroud) ---
-                // Aquí SOLO llamamos al servicio. No tocamos la UI.
-
                 if (esCreacion) {
                     servicio.crear(dtoParaCrear);
                 } else {
