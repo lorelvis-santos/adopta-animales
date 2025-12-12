@@ -123,7 +123,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Actualizar el estado de la solicitud
     @Override
-    public boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo)
+    public boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo, LocalDateTime cita)
             throws DatosInvalidosException {
 
         //  Verificar existencia
@@ -143,6 +143,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         solicitud.setEstado(nuevoEstado);
         solicitud.setFechaRespuesta(LocalDate.now());
         solicitud.setMotivoRechazo(motivoRechazo);
+        solicitud.setCita(cita);
         
         if (!solicitudRepo.updateSolicitud(solicitud, solicitudId)) {
             throw new DatosInvalidosException("No se pudo eliminar la solicitud");

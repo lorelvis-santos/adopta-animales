@@ -31,6 +31,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
 import java.util.function.Consumer;
@@ -190,18 +191,24 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         for (SolicitudAdopcion solicitud : solicitudes) {
             Mascota mascota = mascotaService.obtenerPorId(solicitud.getMascotaId());
             Adoptante adoptante = adoptanteService.obtenerPorId(solicitud.getAdoptanteId());
+            
+            String url = mascota.getEspecie() == Mascota.Especie.Perro ? 
+                "/com/stackmasters/adoptaanimales/view/impl/icon/dog.png" : 
+                "/com/stackmasters/adoptaanimales/view/impl/icon/cat-black.png";
 
             // Estado string (el enum trae .db() )
             String estadoString = solicitud.getEstado().db();
+            LocalDateTime cita = solicitud.getCita();
+            String citaString = cita != null ? cita.toString() : null;
 
             ModelSolicitudes ms = new ModelSolicitudes(
                 solicitud.getIdSolicitud(),                                  // id
-                new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
+                new ImageIcon(getClass().getResource(url)),
                 mascota.getNombre() + " (" + mascota.getEspecie().db() + ": " + mascota.getRaza() + ")",                      // name (placeholder)
                 adoptante.getNombre() + " " + adoptante.getApellido(),                  // adoptante (placeholder)
                 estadoString,                                                // estado string
                 solicitud.getFechaSolicitud().toString(),                                                 // fecha int
-                solicitud.getCita().toString()                                                       // cita NO existe en el modelo
+                citaString                                                    // cita NO existe en el modelo
             );
 
     model.addRow(ms.toRowTable(eventAction));

@@ -145,7 +145,7 @@ public class SolicitudesController {
                     solicitudService.crear(mFinal.getIdMascota(), aFinal, fFinal);
                 } else {
                     // ACTUALIZAR
-                    solicitudService.actualizarEstado(idFinal, uFinal.getEstado(), "No implementado");
+                    solicitudService.actualizarEstado(idFinal, uFinal.getEstado(), "No implementado", uFinal.getFechaCita());
                 }
                 return null;
             }

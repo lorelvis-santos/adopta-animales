@@ -66,10 +66,11 @@ public interface SolicitudService {
      * @param solicitudId ID de la solicitud a actualizar.
      * @param nuevoEstado Estado destino.
      * @param motivoRechazo Mensaje opcional en caso de rechazo.
+     * @param cita Fecha y hora de la visita pautada
      * @return true si el estado fue actualizado; false si no hubo cambios.
      * @throws DatosInvalidosException Si la transición de estado no es válida.
      */
-    boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo)
+    boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo, LocalDateTime cita)
         throws DatosInvalidosException;
     
     /**
