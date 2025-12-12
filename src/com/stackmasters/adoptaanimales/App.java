@@ -1,16 +1,15 @@
 package com.stackmasters.adoptaanimales;
 
 import com.stackmasters.adoptaanimales.router.*;
-import com.stackmasters.adoptaanimales.view.test.*;
 import com.stackmasters.adoptaanimales.controller.*;
 import com.stackmasters.adoptaanimales.service.impl.*;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.AdminAlbergueRepository;
-import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
 import com.stackmasters.adoptaanimales.security.BCryptPasswordHasher;
 import com.stackmasters.adoptaanimales.utils.LoadingHandler;
+import com.stackmasters.adoptaanimales.view.impl.AcercaDeViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.AuthViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardInicioViewImpl;
 import com.stackmasters.adoptaanimales.view.impl.DashboardMascotasViewImpl;
@@ -33,7 +32,7 @@ public class App extends JFrame {
     public App() {
         setTitle("Adopta Animales");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1440, 820);
+        setSize(1440, 850);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         add(contenedor, BorderLayout.CENTER);
@@ -43,12 +42,12 @@ public class App extends JFrame {
         // Registro de vistas
         var autenticacion =  new AuthViewImpl();
         var dashboard = new DashboardViewImpl();
-        
         router.registrar(Ruta.AUTENTICACION, autenticacion);
         router.registrar(Ruta.PRINCIPAL, dashboard);
         
         // Registro de subvistas
         
+        var dashboardAcercaDe = new AcercaDeViewImpl();
         var solicitudesForm = new SolicitudesFormViewImpl();
         var dashboardSolicitudes = new DashboardSolicitudesViewImpl();
         var mascotasForm = new MascotasFormViewImpl();
@@ -62,6 +61,7 @@ public class App extends JFrame {
         dashboard.registrarSubVista(DashboardRuta.SOLICITUDES, dashboardSolicitudes);
         dashboard.registrarSubVista(DashboardRuta.SOLICITUDES_CREAR, solicitudesForm);
         dashboard.registrarSubVista(DashboardRuta.SOLICITUDES_EDITAR, solicitudesForm);
+        dashboard.registrarSubVista(DashboardRuta.ACERCA_DE, dashboardAcercaDe);
         
         // Añadimos funcionalidad a los botones de editar en Inicio
         dashboardInicio.onEditar(id -> {

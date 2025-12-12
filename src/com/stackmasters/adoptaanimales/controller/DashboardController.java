@@ -23,6 +23,7 @@ public class DashboardController {
         vista.onIrInicio(this::mostrarInicio);
         vista.onIrMascotas(this::mostrarMascotas);
         vista.onIrSolicitudes(this::mostrarSolicitudes);
+        vista.onIrAcercaDe(this::mostrarAcercaDe);
         vista.onCerrarSesion(this::cerrarSesion);
     }
     
@@ -32,6 +33,10 @@ public class DashboardController {
     
     private void mostrarMascotas() {
         router.navegar(Ruta.PRINCIPAL, DashboardRuta.MASCOTAS);
+    }
+    
+    private void mostrarAcercaDe() {
+        router.navegar(Ruta.PRINCIPAL, DashboardRuta.ACERCA_DE);
     }
     
     private void mostrarSolicitudes() {

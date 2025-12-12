@@ -34,6 +34,7 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     private Runnable onIrInicio;
     private Runnable onIrMascotas;
     private Runnable onIrSolicitudes;
+    private Runnable onIrAcercaDe;
     private Runnable onCerrarSesion;
     
     private final Map<DashboardRuta, VistaNavegable> subVistasRegistradas = new HashMap<>();
@@ -49,6 +50,7 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
         menu.getBtnInicio().addActionListener(e -> { if (onIrInicio != null) onIrInicio.run(); });
         menu.getBtnMascotas().addActionListener(e -> { if (onIrMascotas != null) onIrMascotas.run(); });
         menu.getBtnSolicitudes().addActionListener(e -> { if (onIrSolicitudes != null) onIrSolicitudes.run(); });
+        menu.getBtnAcercaDe().addActionListener(e -> { if (onIrAcercaDe != null) onIrAcercaDe.run(); });
         menu.getBtnCerrarSesion().addActionListener(e -> { if (onCerrarSesion != null) onCerrarSesion.run(); });
     }
 
@@ -115,6 +117,11 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     @Override
     public void onIrSolicitudes(Runnable accion) {
         this.onIrSolicitudes = accion;
+    }
+    
+    @Override
+    public void onIrAcercaDe(Runnable accion) {
+        this.onIrAcercaDe = accion;
     }
     
     @Override

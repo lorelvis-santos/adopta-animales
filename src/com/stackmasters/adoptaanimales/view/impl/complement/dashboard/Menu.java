@@ -40,6 +40,10 @@ public class Menu extends javax.swing.JPanel {
         return menuBtnSolicitudes;
     }
     
+    public MenuButton getBtnAcercaDe() {
+        return menuBtnAcercaDe;
+    }
+    
     public MenuButton getBtnCerrarSesion() {
         return menuBtnCerrarSesion;
     }
@@ -59,6 +63,7 @@ public class Menu extends javax.swing.JPanel {
         menuBtnCerrarSesion = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
         menuBtnMascotas = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
         menuBtnSolicitudes = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
+        menuBtnAcercaDe = new com.stackmasters.adoptaanimales.view.impl.swing.MenuButton();
 
         profile1.setForeground(new java.awt.Color(255, 255, 255));
 
@@ -91,6 +96,13 @@ public class Menu extends javax.swing.JPanel {
         menuBtnSolicitudes.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
         menuBtnSolicitudes.setIconTextGap(20);
 
+        menuBtnAcercaDe.setForeground(new java.awt.Color(255, 255, 255));
+        menuBtnAcercaDe.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/book.png"))); // NOI18N
+        menuBtnAcercaDe.setText("Acerca de");
+        menuBtnAcercaDe.setFocusable(false);
+        menuBtnAcercaDe.setFont(new java.awt.Font("Liberation Sans", 1, 16)); // NOI18N
+        menuBtnAcercaDe.setIconTextGap(20);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,6 +112,7 @@ public class Menu extends javax.swing.JPanel {
             .addComponent(menuBtnMascotas, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(menuBtnSolicitudes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(menuBtnCerrarSesion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(menuBtnAcercaDe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -112,8 +125,10 @@ public class Menu extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(menuBtnSolicitudes, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(menuBtnAcercaDe, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(menuBtnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(341, Short.MAX_VALUE))
+                .addContainerGap(294, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -128,6 +143,7 @@ public class Menu extends javax.swing.JPanel {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnAcercaDe;
     private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnCerrarSesion;
     private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnInicio;
     private com.stackmasters.adoptaanimales.view.impl.swing.MenuButton menuBtnMascotas;
