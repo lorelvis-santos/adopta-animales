@@ -316,8 +316,6 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         table2 = new com.stackmasters.adoptaanimales.view.impl.swing.table.Table();
         btnCrear = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         cmbEstado.setBackground(new java.awt.Color(204, 204, 204));
         cmbEstado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         cmbEstado.setForeground(new java.awt.Color(0, 0, 0));
@@ -328,34 +326,27 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
                 cmbEstadoActionPerformed(evt);
             }
         });
-        add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 180, 190, 48));
 
         txtBusqueda.setToolTipText("Busca por nombre o raza");
-        add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 180, 154, 48));
 
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/lupa (2).png"))); // NOI18N
         btnBuscar.setToolTipText("Buscar");
         btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 180, 36, 48));
 
         card1.setBackground(new java.awt.Color(79, 172, 254));
         card1.setForeground(new java.awt.Color(255, 255, 255));
         card1.setColorGradient(new java.awt.Color(0, 242, 254));
-        add(card1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 41, 322, -1));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Solicitudes");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, -1, -1));
 
         card2.setBackground(new java.awt.Color(255, 154, 158));
         card2.setForeground(new java.awt.Color(255, 255, 255));
         card2.setColorGradient(new java.awt.Color(254, 207, 239));
-        add(card2, new org.netbeans.lib.awtextra.AbsoluteConstraints(346, 41, 342, -1));
 
         card3.setBackground(new java.awt.Color(246, 211, 101));
         card3.setColorGradient(new java.awt.Color(253, 160, 133));
-        add(card3, new org.netbeans.lib.awtextra.AbsoluteConstraints(706, 41, 349, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -412,11 +403,57 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
                 .addGap(27, 27, 27))
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 242, 1049, 476));
-
         btnCrear.setText("Nueva solicitud");
         btnCrear.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        add(btnCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 182, 158, 42));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(1, 985, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(482, 482, 482)
+                        .addComponent(cmbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(14, 14, 14)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed

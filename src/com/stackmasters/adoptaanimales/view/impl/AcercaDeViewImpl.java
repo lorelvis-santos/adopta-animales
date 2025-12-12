@@ -64,10 +64,6 @@ public class AcercaDeViewImpl extends javax.swing.JPanel implements VistaNavegab
         jLabel18.setForeground(new java.awt.Color(0, 0, 0));
         jLabel18.setText("<html>Permite administrar solicitudes de adopción y organizar citas mediante funciones intuitivas.</html>");
 
-        jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel19.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel19.setText("modificación y gestión de registros.");
-
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(0, 0, 0));
         jLabel20.setText("Desarrollado por StackMasters.");
