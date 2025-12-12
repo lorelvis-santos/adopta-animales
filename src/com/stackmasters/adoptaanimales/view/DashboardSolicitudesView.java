@@ -2,6 +2,7 @@ package com.stackmasters.adoptaanimales.view;
 
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import java.util.List;
 import java.util.function.Consumer;
@@ -53,4 +54,15 @@ public interface DashboardSolicitudesView extends VistaNavegable, VistaConAlerta
      * @param error True si el mensaje es un error, false si es información.
      */
     void mostrarMensaje(String mensaje, boolean error);
+    
+    /**
+     * Método para buscar mascotas en base a filtros (Especie, Estado)
+     * 
+     * @param accion Callback a ejecutar
+     */
+    void onBuscar(Runnable accion);
+    
+    String getBusqueda();
+    
+    EstadoSolicitud getEstadoSolicitud();
 }

@@ -4,6 +4,7 @@ import com.stackmasters.adoptaanimales.model.Adoptante;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
@@ -27,13 +28,18 @@ import com.stackmasters.adoptaanimales.view.impl.model.ModelSolicitudes;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
 import java.util.function.Consumer;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
@@ -43,6 +49,7 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
     private MascotaService mascotaService;
     private AdoptanteService adoptanteService;
     private Runnable onCrear;
+    private Runnable onBuscar;
     private Consumer<Integer> onEditar;
     
     public DashboardSolicitudesViewImpl() {
@@ -55,6 +62,31 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         mascotaService = new MascotaServiceImpl(new MascotaRepository());
         
         btnCrear.addActionListener(e -> { if (onCrear != null) { onCrear.run(); } });
+        btnBuscar.addActionListener(e -> { if (onBuscar != null) { onBuscar.run(); } });
+        cmbEstado.addActionListener(e -> { if (onBuscar != null) { onBuscar.run(); } });
+        
+        DefaultComboBoxModel<EstadoSolicitud> model = new DefaultComboBoxModel<>();
+        model.addElement(null); // <--- ESTO ES LA OPCIÓN "TODOS" (null)
+        for (EstadoSolicitud e : EstadoSolicitud.values()) {
+            model.addElement(e);
+        }
+        
+        cmbEstado.setModel(model);
+
+        cmbEstado.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value == null) {
+                    setText("Todas los estados"); // Texto para el null
+                    setFont(getFont().deriveFont(Font.BOLD)); // Opcional: negrita
+                } else if (value instanceof EstadoSolicitud) {
+                    setText(((EstadoSolicitud) value).db());
+                }
+                return this;
+            }
+        });
     }
     
     // Implementación de VistaConAlertas
@@ -79,6 +111,22 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
     public void onEditar(Consumer<Integer> accion) {
         this.onEditar = accion;
     }
+    
+    @Override
+    public void onBuscar(Runnable accion) {
+        this.onBuscar = accion;
+    }
+    
+    @Override
+    public String getBusqueda() {
+        return txtBusqueda.getText();
+    }
+    
+    @Override
+    public EstadoSolicitud getEstadoSolicitud() {
+        return (EstadoSolicitud)cmbEstado.getSelectedItem();
+    }
+    
     
     /**
      * Muestra las estadísticas generales de la aplicación.
@@ -252,6 +300,9 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cmbEstado = new javax.swing.JComboBox();
+        txtBusqueda = new javax.swing.JTextField();
+        btnBuscar = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
         card1 = new com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card();
         jLabel1 = new javax.swing.JLabel();
         card2 = new com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card();
@@ -260,23 +311,48 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         table2 = new com.stackmasters.adoptaanimales.view.impl.swing.table.Table();
-        jLabel6 = new javax.swing.JLabel();
         btnCrear = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
+
+        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        cmbEstado.setBackground(new java.awt.Color(204, 204, 204));
+        cmbEstado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        cmbEstado.setForeground(new java.awt.Color(0, 0, 0));
+        cmbEstado.setToolTipText("Estado");
+        cmbEstado.setFocusable(false);
+        cmbEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEstadoActionPerformed(evt);
+            }
+        });
+        add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 180, 190, 48));
+
+        txtBusqueda.setToolTipText("Busca por nombre o raza");
+        add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 180, 154, 48));
+
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/lupa (2).png"))); // NOI18N
+        btnBuscar.setToolTipText("Buscar");
+        btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 180, 36, 48));
 
         card1.setBackground(new java.awt.Color(79, 172, 254));
         card1.setForeground(new java.awt.Color(255, 255, 255));
         card1.setColorGradient(new java.awt.Color(0, 242, 254));
+        add(card1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 41, 322, -1));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Solicitudes");
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, -1, -1));
 
         card2.setBackground(new java.awt.Color(255, 154, 158));
         card2.setForeground(new java.awt.Color(255, 255, 255));
         card2.setColorGradient(new java.awt.Color(254, 207, 239));
+        add(card2, new org.netbeans.lib.awtextra.AbsoluteConstraints(346, 41, 342, -1));
 
         card3.setBackground(new java.awt.Color(246, 211, 101));
         card3.setColorGradient(new java.awt.Color(253, 160, 133));
+        add(card3, new org.netbeans.lib.awtextra.AbsoluteConstraints(706, 41, 349, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -333,73 +409,29 @@ public class DashboardSolicitudesViewImpl extends javax.swing.JPanel implements 
                 .addGap(27, 27, 27))
         );
 
-        jLabel6.setOpaque(true);
+        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 242, 1049, 476));
 
         btnCrear.setText("Nueva solicitud");
         btnCrear.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 903, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                        .addGap(12, 12, 12))))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel6)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addComponent(btnCrear, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jLabel6)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
+        add(btnCrear, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 182, 158, 42));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEstadoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbEstadoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton btnBuscar;
     private com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton btnCrear;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card1;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card2;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card3;
+    private javax.swing.JComboBox cmbEstado;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private com.stackmasters.adoptaanimales.view.impl.swing.table.Table table2;
+    private javax.swing.JTextField txtBusqueda;
     // End of variables declaration//GEN-END:variables
 }
