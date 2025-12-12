@@ -2,6 +2,7 @@ package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
+import com.stackmasters.adoptaanimales.service.impl.GestorSesion;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Header;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Menu;
 import com.stackmasters.adoptaanimales.view.impl.MainForm;
@@ -34,6 +35,7 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     private Runnable onIrInicio;
     private Runnable onIrMascotas;
     private Runnable onIrSolicitudes;
+    private Runnable onIrAcercaDe;
     private Runnable onCerrarSesion;
     
     private final Map<DashboardRuta, VistaNavegable> subVistasRegistradas = new HashMap<>();
@@ -49,6 +51,7 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
         menu.getBtnInicio().addActionListener(e -> { if (onIrInicio != null) onIrInicio.run(); });
         menu.getBtnMascotas().addActionListener(e -> { if (onIrMascotas != null) onIrMascotas.run(); });
         menu.getBtnSolicitudes().addActionListener(e -> { if (onIrSolicitudes != null) onIrSolicitudes.run(); });
+        menu.getBtnAcercaDe().addActionListener(e -> { if (onIrAcercaDe != null) onIrAcercaDe.run(); });
         menu.getBtnCerrarSesion().addActionListener(e -> { if (onCerrarSesion != null) onCerrarSesion.run(); });
     }
 
@@ -118,12 +121,25 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     }
     
     @Override
+    public void onIrAcercaDe(Runnable accion) {
+        this.onIrAcercaDe = accion;
+    }
+    
+    @Override
     public void onCerrarSesion(Runnable accion) {
         this.onCerrarSesion = accion;
     }
     
     @Override
+    public void setNombreAdmin(String nombre) {
+        header.getLbUserName().setText(nombre);
+    }
+    
+    @Override
     public void alMostrar(Object... parametros) {
+        // Colocamos el usuario
+        setNombreAdmin(GestorSesion.obtener().getNombre());
+        
         // Validamos la entrada. Si no hay parametros, vamos a Inicio por defecto.
         if (parametros == null || parametros.length == 0) {
             navegarSubRuta(DashboardRuta.INICIO, new Object[0]);

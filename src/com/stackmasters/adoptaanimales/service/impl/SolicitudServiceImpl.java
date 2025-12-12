@@ -6,7 +6,6 @@ import com.stackmasters.adoptaanimales.exception.*;
 import com.stackmasters.adoptaanimales.exception.MascotaNoDisponibleException;
 import com.stackmasters.adoptaanimales.model.*;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
-import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.repository.*;
 import com.stackmasters.adoptaanimales.model.RespuestaBD;
@@ -123,7 +122,7 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     // Actualizar el estado de la solicitud
     @Override
-    public boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo)
+    public boolean actualizarEstado(int solicitudId, EstadoSolicitud nuevoEstado, String motivoRechazo, LocalDateTime cita)
             throws DatosInvalidosException {
 
         //  Verificar existencia
@@ -143,6 +142,7 @@ public class SolicitudServiceImpl implements SolicitudService {
         solicitud.setEstado(nuevoEstado);
         solicitud.setFechaRespuesta(LocalDate.now());
         solicitud.setMotivoRechazo(motivoRechazo);
+        solicitud.setCita(cita);
         
         if (!solicitudRepo.updateSolicitud(solicitud, solicitudId)) {
             throw new DatosInvalidosException("No se pudo eliminar la solicitud");
@@ -192,67 +192,67 @@ public class SolicitudServiceImpl implements SolicitudService {
         // Obtener todas las solicitudes desde la BD
         List<SolicitudAdopcion> todas = solicitudRepo.findAll();
 
-    // Si no hay filtro, devolver todas
-    if (filtro == null) {
-        return todas;
-    }
+        // Si no hay filtro, devolver todas
+        if (filtro == null) {
+            return todas;
+        }
 
-    List<SolicitudAdopcion> filtradas = new java.util.ArrayList<>();
+        List<SolicitudAdopcion> filtradas = new java.util.ArrayList<>();
 
-    for (SolicitudAdopcion s : todas) {
+        for (SolicitudAdopcion s : todas) {
 
-        // Filtro por texto (nombre de mascota o adoptante)
-        if (filtro.getTexto() != null && !filtro.getTexto().isBlank()) {
-            String txt = filtro.getTexto().toLowerCase();
+            // Filtro por texto (nombre de mascota o adoptante)
+            if (filtro.getTexto() != null && !filtro.getTexto().isBlank()) {
+                String txt = filtro.getTexto().toLowerCase();
 
-            // Obtener nombre de mascota
-            Mascota m = mascotaRepo.findById(s.getMascotaId());
-            String nombreMascota = (m != null) ? m.getNombre().toLowerCase() : "";
-            
-            // Obtener nombre completo del adoptante
-            Adoptante a = adoptanteRepo.findById(s.getAdoptanteId());
-            String nombreAdoptante = "";
-            if (a != null) {
-                nombreAdoptante = (a.getNombre() + " " + a.getApellido()).toLowerCase();
-            }
+                // Obtener nombre de mascota
+                Mascota m = mascotaRepo.findById(s.getMascotaId());
+                String nombreMascota = (m != null) ? m.getNombre().toLowerCase() : "";
 
-            // Si texto NO está en ninguno → NO pasa el filtro
-            if (!nombreMascota.contains(txt) && !nombreAdoptante.contains(txt)) {
+                // Obtener nombre completo del adoptante
+                Adoptante a = adoptanteRepo.findById(s.getAdoptanteId());
+                String nombreAdoptante = "";
+                if (a != null) {
+                    nombreAdoptante = (a.getNombre() + " " + a.getApellido()).toLowerCase();
+                }
+
+                // Si texto NO está en ninguno → NO pasa el filtro
+                if (!nombreMascota.contains(txt) && !nombreAdoptante.contains(txt)) {
+                    continue;
+                }
+            } 
+
+            // Filtro por estado de la solicitud
+            if (filtro.getEstadoSolicitud() != null &&
+                s.getEstado() != filtro.getEstadoSolicitud()) {
                 continue;
             }
-        } 
 
-        // Filtro por estado de la solicitud
-        if (filtro.getEstadoSolicitud() != null &&
-            s.getEstado() != filtro.getEstadoSolicitud()) {
-            continue;
+            // Filtro por ID de mascota/publicación
+            if (filtro.getMascotaId() != 0 &&
+                s.getMascotaId() != filtro.getMascotaId()) {
+                continue;
+            }
+
+            // Filtro por rango de fechas (fechaSolicitud)
+            if (filtro.getFechaDesde() != null &&
+                s.getFechaSolicitud() != null &&
+                s.getFechaSolicitud().isBefore(filtro.getFechaDesde())) {
+                continue;
+            }
+
+            if (filtro.getFechaHasta() != null &&
+                s.getFechaSolicitud() != null &&
+                s.getFechaSolicitud().isAfter(filtro.getFechaHasta())) {
+                continue;
+            }
+
+            // Si pasa todos los filtros, lo agregamos
+            filtradas.add(s);
         }
 
-        // Filtro por ID de mascota/publicación
-        if (filtro.getMascotaId() != 0 &&
-            s.getMascotaId() != filtro.getMascotaId()) {
-            continue;
-        }
-        
-        // Filtro por rango de fechas (fechaSolicitud)
-        if (filtro.getFechaDesde() != null &&
-            s.getFechaSolicitud() != null &&
-            s.getFechaSolicitud().isBefore(filtro.getFechaDesde())) {
-            continue;
-        }
-
-        if (filtro.getFechaHasta() != null &&
-            s.getFechaSolicitud() != null &&
-            s.getFechaSolicitud().isAfter(filtro.getFechaHasta())) {
-            continue;
-        }
-
-        // Si pasa todos los filtros, lo agregamos
-        filtradas.add(s);
+        return filtradas;
     }
-
-    return filtradas;
-}
     
     public int totalSolicitudes() {
         return solicitudRepo.totalSolicitudes();

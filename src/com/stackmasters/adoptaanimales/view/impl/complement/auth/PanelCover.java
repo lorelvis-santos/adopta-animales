@@ -51,7 +51,7 @@ public class PanelCover extends javax.swing.JPanel {
            icon.setIcon(iconImage);
            add(icon);
         
-           title=new JLabel("Bienvenido a Adoptar");
+           title=new JLabel("Bienvenido a Adopet");
            title.setFont(new Font("sansserif",1,30));
            title.setForeground(new Color(255,255,255,255));
            add(title);

@@ -36,6 +36,23 @@ public class SolicitudAdopcion {
         return db;
         }
     }
+    
+    public enum EstadoCita{
+        Programada("Programada"),
+        Completada("Completada"),
+        Cancelada("Cancelada"),
+        Pendiente("Pendiente");
+
+        private final String db;
+
+        EstadoCita(String db){
+            this.db = db;
+        }
+
+        public String db(){
+            return db;
+        }
+    }
 
     public SolicitudAdopcion() {
     }

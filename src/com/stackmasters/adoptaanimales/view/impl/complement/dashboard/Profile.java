@@ -16,7 +16,7 @@ public class Profile extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 20)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/pet.png"))); // NOI18N
-        jLabel1.setText("Adopta");
+        jLabel1.setText("Adopet");
         jLabel1.setIconTextGap(12);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);

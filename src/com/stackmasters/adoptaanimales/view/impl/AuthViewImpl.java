@@ -2,7 +2,6 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.model.auth.Rol;
-import com.stackmasters.adoptaanimales.router.VistaNavegable;
 import com.stackmasters.adoptaanimales.utils.LoadingHandler;
 import com.stackmasters.adoptaanimales.utils.Message;
 import com.stackmasters.adoptaanimales.view.AuthView;
@@ -11,15 +10,10 @@ import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelCover;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelLoginAndRegistrer;
 import com.stackmasters.adoptaanimales.view.impl.complement.auth.PanelLoading;
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import javax.swing.JLayeredPane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
-import org.jdesktop.animation.timing.TimingTarget;
-import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 /**
  *

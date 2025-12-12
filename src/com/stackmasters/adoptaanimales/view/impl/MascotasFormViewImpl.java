@@ -1,5 +1,7 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.stackmasters.adoptaanimales.dto.ActualizarMascotaDTO;
 import com.stackmasters.adoptaanimales.dto.CrearMascotaDTO;
 import com.stackmasters.adoptaanimales.model.Mascota;
@@ -24,7 +26,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -53,7 +54,7 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
     private JComboBox<Sexo> cmbSexo;
     private JComboBox<Tamaño> cmbTamano;
     private JTextField txtPeso;
-    private JTextField txtFechaNacimiento;
+    private DatePicker dateNacimiento;
     private JTextArea txtDescripcion;
     private JCheckBox chkVacunado;
     private JCheckBox chkCastrado;
@@ -146,7 +147,14 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
         cmbSexo = new JComboBox<>(new DefaultComboBoxModel<>(Sexo.values())); estilarCombo(cmbSexo);
         cmbTamano = new JComboBox<>(new DefaultComboBoxModel<>(Tamaño.values())); estilarCombo(cmbTamano);
         txtPeso = crearTextField();
-        txtFechaNacimiento = crearTextField(); txtFechaNacimiento.setToolTipText("yyyy-MM-dd");
+        
+        // 1. Configurar Fecha Nacimiento (DatePicker)
+        DatePickerSettings settingsNac = new DatePickerSettings();
+        settingsNac.setFormatForDatesCommonEra("yyyy-MM-dd"); // Formato visual
+        settingsNac.setAllowKeyboardEditing(false); // Obligar a usar el calendario
+        
+        dateNacimiento = new DatePicker(settingsNac);
+        estilarComponenteFecha(dateNacimiento);
         
         txtDescripcion = new JTextArea(4, 20);
         txtDescripcion.setLineWrap(true);
@@ -188,7 +196,7 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
         // Lo pondremos solo en la primera columna pero ocupando mitad de espacio para no estirarlo feo
         addStackedLabel(jPanel2, 0, row, "Fecha Nacimiento (yyyy-MM-dd)");
         gbc.gridx = 0; gbc.gridy = row + 1; gbc.weightx = 0.5; gbc.insets = new Insets(3, 0, 15, 20); // Margen derecho
-        jPanel2.add(txtFechaNacimiento, gbc);
+        jPanel2.add(dateNacimiento, gbc);
         row += 2;
 
         // Fila 5: Descripción
@@ -338,12 +346,15 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
                  if(!txtPeso.getText().isEmpty()) throw new IllegalArgumentException("El peso debe ser un número válido.");
             }
             
-            LocalDate fechaNac = null;
-            try {
-                if(!txtFechaNacimiento.getText().isEmpty())
-                    fechaNac = LocalDate.parse(txtFechaNacimiento.getText().trim(), dateFormatter);
-            } catch (DateTimeParseException e) {
-                 throw new IllegalArgumentException("La fecha debe tener el formato yyyy-MM-dd.");
+            LocalDate fechaNac = dateNacimiento.getDate();
+            
+            if (fechaNac == null) {
+                throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
+            }
+            
+            // Validar que no haya nacido en el futuro o hoy
+            if (fechaNac.isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException("La fecha de nacimiento tiene que ser válida.");
             }
 
             return new CrearMascotaDTO(nombre, especie, raza, sexo, tamano, peso, fechaNac, descripcion, vacunado, castrado, idAlbergue);
@@ -374,7 +385,7 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
         cmbSexo.setSelectedIndex(0);
         cmbTamano.setSelectedIndex(0);
         txtPeso.setText("");
-        txtFechaNacimiento.setText("");
+        dateNacimiento.clear();
         txtDescripcion.setText("");
         chkVacunado.setSelected(false);
         chkCastrado.setSelected(false);
@@ -392,7 +403,7 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
         txtPeso.setText(String.valueOf(mascota.getPeso()));
         
         if(mascota.getFechaNacimiento() != null) {
-             txtFechaNacimiento.setText(mascota.getFechaNacimiento().format(dateFormatter));
+            dateNacimiento.setDate(mascota.getFechaNacimiento()); 
         }
 
         txtDescripcion.setText(mascota.getDescripcion());
@@ -409,7 +420,7 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
             btnAccionPrincipal.setText("Guardar Cambios");
             cmbEspecie.setEnabled(false);
             cmbSexo.setEnabled(false);
-            txtFechaNacimiento.setEditable(false);
+            dateNacimiento.setEnabled(false);
             lblEstado.setVisible(true);
             cmbEstado.setVisible(true);
         } else {
@@ -418,7 +429,7 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
             limpiarFormulario();
             cmbEspecie.setEnabled(true);
             cmbSexo.setEnabled(true);
-            txtFechaNacimiento.setEditable(true);
+            dateNacimiento.setEnabled(true);
             lblEstado.setVisible(false);
             cmbEstado.setVisible(false);
         }
@@ -454,6 +465,12 @@ public class MascotasFormViewImpl extends javax.swing.JPanel implements Mascotas
         idMascota = id;
         setModoEdicion(true);
         setDatosFormulario(mascota);
+    }
+    
+    private void estilarComponenteFecha(JComponent picker) {
+        picker.setPreferredSize(new Dimension(0, 35));
+        picker.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        picker.setBackground(Color.WHITE);
     }
 
     @SuppressWarnings("unchecked")

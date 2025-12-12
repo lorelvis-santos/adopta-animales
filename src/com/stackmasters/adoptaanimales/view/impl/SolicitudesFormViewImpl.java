@@ -1,5 +1,9 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DateTimePicker;
+import com.github.lgooddatepicker.components.TimePickerSettings;
 import com.stackmasters.adoptaanimales.dto.ActualizarSolicitudDTO;
 import com.stackmasters.adoptaanimales.dto.CrearAdoptanteDTO;
 import com.stackmasters.adoptaanimales.dto.FiltroMascotaDTO;
@@ -7,7 +11,7 @@ import com.stackmasters.adoptaanimales.model.Adoptante;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
-import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud; // <--- IMPORTANTE: Importar el Enum
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.service.AdoptanteService;
@@ -30,7 +34,6 @@ import java.awt.Insets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;
@@ -64,10 +67,10 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
     
     private JTextField txtNombre;
     private JTextField txtApellido;
-    private JTextField txtFechaNacimiento;
     private JTextField txtTelefono;
-    private JTextField txtFechaCita; 
     private JTextArea txtDireccion;
+    private DatePicker dateNacimiento;
+    private DateTimePicker dateTimeCita;
     private SquaredButton btnAccionPrincipal;
     private Consumer<Integer> onCargarSolicitud;
     private Integer idPendienteDeCarga = null;
@@ -216,9 +219,11 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
 
         // 4. Llenar fecha de cita
         if (solicitud.getCita() != null) {
-            txtFechaCita.setText(solicitud.getCita().format(dateTimeFormatter));
+            // Pasamos el LocalDateTime directo
+            dateTimeCita.setDateTimePermissive(solicitud.getCita()); 
         }
-        
+
+        setModoEdicion(true);
         Adoptante adoptante = adoptanteService.obtenerPorId(solicitud.getAdoptanteId());
 
         // 5. Llenar datos del Adoptante
@@ -229,7 +234,7 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
             txtDireccion.setText(adoptante.getDireccion());
             
             if (adoptante.getFechaNacimiento() != null) {
-                txtFechaNacimiento.setText(adoptante.getFechaNacimiento().format(dateFormatter));
+                dateNacimiento.setDate(adoptante.getFechaNacimiento()); 
             }
         }
         
@@ -271,14 +276,15 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
                 throw new IllegalArgumentException("Nombre, Apellido y Teléfono son obligatorios.");
             }
 
-            LocalDate fechaNac = null;
-            try {
-                if(!txtFechaNacimiento.getText().isEmpty())
-                    fechaNac = LocalDate.parse(txtFechaNacimiento.getText().trim(), dateFormatter);
-                else 
-                     throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
-            } catch (DateTimeParseException e) {
-                 throw new IllegalArgumentException("La fecha de nacimiento debe tener el formato yyyy-MM-dd.");
+            LocalDate fechaNac = dateNacimiento.getDate(); 
+        
+            if (fechaNac == null) {
+                throw new IllegalArgumentException("La fecha de nacimiento es obligatoria.");
+            }
+
+            // Validar que no haya nacido en el futuro o hoy
+            if (fechaNac.isAfter(LocalDate.now().minusYears(18))) {
+                 throw new IllegalArgumentException("El adoptante debe ser mayor de edad.");
             }
             
             return new CrearAdoptanteDTO(nombre, apellido, fechaNac, telefono, direccion);
@@ -290,15 +296,17 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
 
     @Override
     public LocalDateTime getFechaHoraCita() {
-        String texto = txtFechaCita.getText().trim();
-        if (texto.isEmpty()) {
+        LocalDateTime cita = dateTimeCita.getDateTimePermissive();
+        
+        if (cita == null) {
             throw new IllegalArgumentException("La fecha y hora de la cita son obligatorias.");
         }
-        try {
-            return LocalDateTime.parse(texto, dateTimeFormatter);
-        } catch (DateTimeParseException e) {
-            throw new IllegalArgumentException("La cita debe tener formato: yyyy-MM-dd HH:mm");
+        
+        if (cita.isBefore(LocalDateTime.now())) {
+             throw new IllegalArgumentException("La cita no puede ser en el pasado.");
         }
+        
+        return cita;
     }
 
     @Override
@@ -366,12 +374,25 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
         
         txtNombre = crearTextField();
         txtApellido = crearTextField();
-        txtFechaNacimiento = crearTextField(); txtFechaNacimiento.setToolTipText("yyyy-MM-dd");
         txtTelefono = crearTextField();
         
-        // Campo Cita
-        txtFechaCita = crearTextField();
-        txtFechaCita.setToolTipText("yyyy-MM-dd HH:mm");
+        // 1. Configurar Fecha Nacimiento (DatePicker)
+        DatePickerSettings settingsNac = new DatePickerSettings();
+        settingsNac.setFormatForDatesCommonEra("yyyy-MM-dd"); // Formato visual
+        settingsNac.setAllowKeyboardEditing(false); // Obligar a usar el calendario
+        
+        dateNacimiento = new DatePicker(settingsNac);
+        estilarComponenteFecha(dateNacimiento);
+
+        // 2. Configurar Cita (DateTimePicker - Fecha + Hora)
+        DatePickerSettings dateSettings = new DatePickerSettings();
+        dateSettings.setFormatForDatesCommonEra("yyyy-MM-dd");
+        
+        TimePickerSettings timeSettings = new TimePickerSettings();
+        timeSettings.setFormatForDisplayTime("HH:mm"); // Formato 24h
+        
+        dateTimeCita = new DateTimePicker(dateSettings, timeSettings);
+        estilarComponenteFecha(dateTimeCita);
         
         txtDireccion = new JTextArea(3, 20);
         txtDireccion.setLineWrap(true);
@@ -404,13 +425,11 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
         addSubtitle(jPanel2, row, "2. Datos del Solicitante", fontSubtitle);
         row++;
         row = addStackedDualField(jPanel2, row, "Nombre", txtNombre, "Apellido", txtApellido);
-        row = addStackedDualField(jPanel2, row, "Fecha Nacimiento (yyyy-MM-dd)", txtFechaNacimiento, "Teléfono", txtTelefono);
-        
+        row = addStackedDualField(jPanel2, row, "Fecha Nacimiento", dateNacimiento, "Teléfono", txtTelefono);        
         // 3. Cita y Estado (AHORA EN LA MISMA FILA)
         addSubtitle(jPanel2, row, "3. Detalles de la Solicitud", fontSubtitle);
         row++;
-        row = addStackedDualField(jPanel2, row, "Cita de Visita (yyyy-MM-dd HH:mm)", txtFechaCita, "Estado Actual", cmbEstado);
-
+        row = addStackedDualField(jPanel2, row, "Cita de Visita", dateTimeCita, "Estado Actual", cmbEstado);
         // 4. Dirección
         addStackedLabel(jPanel2, 0, row, "Dirección Completa");
         gbc.gridx = 0; gbc.gridy = row + 1; gbc.gridwidth = 2; 
@@ -426,6 +445,12 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
         gbc.anchor = GridBagConstraints.CENTER; 
         btnAccionPrincipal.setPreferredSize(new Dimension(300, 50)); 
         jPanel2.add(btnAccionPrincipal, gbc);
+    }
+    
+    private void estilarComponenteFecha(JComponent picker) {
+        picker.setPreferredSize(new Dimension(0, 35));
+        picker.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        picker.setBackground(Color.WHITE);
     }
 
     private void addSubtitle(JPanel p, int row, String text, Font font) {
@@ -512,15 +537,14 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
         txtNombre.setEnabled(habilitado);
         txtApellido.setEditable(habilitado);
         txtApellido.setEnabled(habilitado);
-        txtFechaNacimiento.setEditable(habilitado);
-        txtFechaNacimiento.setEnabled(habilitado);
+        dateNacimiento.setEnabled(habilitado);
         txtDireccion.setEditable(habilitado);
         txtDireccion.setEnabled(habilitado);
         txtTelefono.setEditable(habilitado);
         txtTelefono.setEnabled(habilitado);
 
         // 2. Datos Editables (Siempre habilitados)
-        txtFechaCita.setEditable(true); 
+        dateTimeCita.setEnabled(true);
         cmbEstado.setEnabled(true); // El estado se puede cambiar en edición
 
         if (activo) {
@@ -569,10 +593,10 @@ public class SolicitudesFormViewImpl extends javax.swing.JPanel implements Solic
     public void limpiarFormulario() {
         txtNombre.setText("");
         txtApellido.setText("");
-        txtFechaNacimiento.setText("");
+        dateNacimiento.clear();
         txtTelefono.setText("");
         txtDireccion.setText("");
-        txtFechaCita.setText("");
+        dateTimeCita.clear();
         
         if(cmbMascotas.getItemCount() > 0) cmbMascotas.setSelectedIndex(0);
         

@@ -1,10 +1,10 @@
 package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.model.Mascota;
+import com.stackmasters.adoptaanimales.model.Mascota.Especie;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
-import com.stackmasters.adoptaanimales.repository.CitaRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.repository.SolicitudAdopcionRepository;
 import com.stackmasters.adoptaanimales.service.MascotaService;
@@ -18,7 +18,6 @@ import com.stackmasters.adoptaanimales.view.impl.model.ModelCard;
 import com.stackmasters.adoptaanimales.view.impl.model.ModelMascota;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.GoogleMaterialDesignIcons;
 import com.stackmasters.adoptaanimales.view.impl.swing.icon.IconFontSwing;
-import com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.ModelNoticeBoard;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import com.stackmasters.adoptaanimales.utils.Message;
 import com.stackmasters.adoptaanimales.view.impl.complement.Message.MessageType;
@@ -135,21 +134,24 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         model.setRowCount(0);
         
-      for (Mascota mascota : mascotas) {
-
-         model.addRow(
-             new ModelMascota(
-                 mascota.getIdMascota(),
-                 new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")),
-                 mascota.getNombre(),
-                 mascota.getSexo().db(),
-                 mascota.getRaza(),
-                 mascota.isEstaCastrado(),
-                 calcularEdad(mascota.getFechaNacimiento()),
-                 mascota.getPeso(),
-                 mascota.getEstado().db()
-             ).toRowTable(evenAction) 
-         );
+        for (Mascota mascota : mascotas) {
+            String url = mascota.getEspecie() == Especie.Perro ? 
+                "/com/stackmasters/adoptaanimales/view/impl/icon/dog.png" : 
+                "/com/stackmasters/adoptaanimales/view/impl/icon/cat-black.png";
+         
+            model.addRow(
+                new ModelMascota(
+                    mascota.getIdMascota(),
+                    new ImageIcon(getClass().getResource(url)),
+                    mascota.getNombre(),
+                    mascota.getSexo().db(),
+                    mascota.getRaza(),
+                    mascota.isEstaCastrado(),
+                    calcularEdad(mascota.getFechaNacimiento()),
+                    mascota.getPeso(),
+                    mascota.getEstado().db()
+                ).toRowTable(evenAction) 
+            );
         }
     }
     
@@ -163,15 +165,6 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
     @Override
     public void mostrarActividadesRecientes(List<String> actividades) {
         // To do: implementar...
-        noticeBoard.addDate("04/10/2021");
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(94, 49, 238), "Hidemode", "Now", "Sets the hide mode for the component. If the hide mode has been specified in the This hide mode can be overridden by the component constraint."));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(218, 49, 238), "Tag", "2h ago", "Tags the component with metadata name that can be used by the layout engine. The tag can be used to explain for the layout manager what the components is showing, such as an OK or Cancel button."));
-        noticeBoard.addDate("03/10/2021");
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(32, 171, 43), "Further Reading", "12:30 PM", "There are more information to digest regarding MigLayout. The resources are all available at www.migcomponents.com"));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(50, 93, 215), "Span", "10:30 AM", "Spans the current cell (merges) over a number of cells. Practically this means that this cell and the count number of cells will be treated as one cell and the component can use the space that all these cells have."));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(27, 188, 204), "Skip ", "9:00 AM", "Skips a number of cells in the flow. This is used to jump over a number of cells before the next free cell is looked for. The skipping is done before this component is put in a cell and thus this cells is affected by it. \"count\" defaults to 1 if not specified."));
-        noticeBoard.addNoticeBoard(new ModelNoticeBoard(new Color(238, 46, 57), "Push", "7:15 AM", "Makes the row and/or column that the component is residing in grow with \"weight\". This can be used instead of having a \"grow\" keyword in the column/row constraints."));
-        noticeBoard.scrollToTop();
     }
     
     /**
@@ -273,11 +266,6 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
         jLabel1 = new javax.swing.JLabel();
         card2 = new com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card();
         card3 = new com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card();
-        jPanel1 = new javax.swing.JPanel();
-        noticeBoard = new com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.NoticeBoard();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -298,50 +286,6 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
 
         card3.setBackground(new java.awt.Color(246, 211, 101));
         card3.setColorGradient(new java.awt.Color(253, 160, 133));
-
-        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel2.setFont(new java.awt.Font("sansserif", 1, 15)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(76, 76, 76));
-        jLabel2.setText("Solicitudes recientes");
-        jLabel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
-
-        jLabel3.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(105, 105, 105));
-        jLabel3.setText("Simple Miglayout API Doc");
-        jLabel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 10, 1, 1));
-
-        jLabel4.setOpaque(true);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(noticeBoard, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(0, 257, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(15, 15, 15)
-                .addComponent(jLabel3)
-                .addGap(9, 9, 9)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(noticeBoard, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -386,7 +330,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 599, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -413,16 +357,13 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)))
                         .addGap(12, 12, 12))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -441,11 +382,7 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
                     .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
@@ -460,15 +397,10 @@ public class DashboardInicioViewImpl extends javax.swing.JPanel implements Dashb
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card2;
     private com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Card card3;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private com.stackmasters.adoptaanimales.view.impl.swing.noticeboard.NoticeBoard noticeBoard;
     private com.stackmasters.adoptaanimales.view.impl.swing.table.Table table1;
     // End of variables declaration//GEN-END:variables
 }

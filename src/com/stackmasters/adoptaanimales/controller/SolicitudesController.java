@@ -2,6 +2,7 @@ package com.stackmasters.adoptaanimales.controller;
 
 import com.stackmasters.adoptaanimales.dto.ActualizarSolicitudDTO;
 import com.stackmasters.adoptaanimales.dto.CrearAdoptanteDTO;
+import com.stackmasters.adoptaanimales.dto.FiltroSolicitudDTO;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
 import com.stackmasters.adoptaanimales.router.DashboardRuta;
@@ -11,6 +12,7 @@ import com.stackmasters.adoptaanimales.service.SolicitudService;
 import com.stackmasters.adoptaanimales.view.DashboardSolicitudesView;
 import com.stackmasters.adoptaanimales.view.SolicitudesFormView;
 import java.time.LocalDateTime;
+import java.util.List;
 import javax.swing.SwingWorker;
 
 /**
@@ -37,6 +39,7 @@ public class SolicitudesController {
         
         this.dashboard.onCrear(this::onCrear);
         this.dashboard.onEditar(this::onEditar);
+        this.dashboard.onBuscar(this::onBuscar);
         
         this.vista.onAccionPrincipal(this::procesarGuardado);
         this.vista.onCancelar(this::regresarALista);
@@ -53,6 +56,42 @@ public class SolicitudesController {
     
     public void onEditar(Integer id) {
         router.navegar(Ruta.PRINCIPAL, DashboardRuta.SOLICITUDES_EDITAR, id);
+    }
+    
+    public void onBuscar() {
+        // Hacer un dto con los parametros de busqueda
+        FiltroSolicitudDTO filtro = new FiltroSolicitudDTO(dashboard.getBusqueda(), dashboard.getEstadoSolicitud(), null, 0, null, null);
+        
+        // Hacer la busqueda con SwingWorker y manejo de errores
+        vista.setCargando(true);
+        
+        new SwingWorker<Void, Void>() {
+            private List<SolicitudAdopcion> solicitudes;
+            
+            @Override
+            protected Void doInBackground() throws Exception {
+                solicitudes = solicitudService.listar(filtro);
+                return null;
+            }
+
+            @Override
+            protected void done() {
+                // 1. Quitamos la carga
+                vista.setCargando(false);
+
+                try {
+                    // 2. Verificamos si hubo errores usando get()
+                    get(); // Si hubo una excepción en doInBackground, se relanza aquí envuelta en ExecutionException
+
+                    dashboard.cargarTablaSolicitudes(solicitudes);
+                } catch (Exception e) {
+                    // 4. ERROR (Capturamos la excepción real del servicio)
+                    String errorMsg = e.getCause() != null ? e.getCause().getMessage() : e.getMessage();
+                    dashboard.mostrarMensaje("Error: " + errorMsg, true);
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
     }
     
     private void procesarGuardado() {
@@ -106,8 +145,7 @@ public class SolicitudesController {
                     solicitudService.crear(mFinal.getIdMascota(), aFinal, fFinal);
                 } else {
                     // ACTUALIZAR
-                    // Usamos el método 'actualizarDatos' que definimos en el paso anterior en el servicio
-                    solicitudService.actualizarEstado(idFinal, uFinal.getEstado(), "No implementado");
+                    solicitudService.actualizarEstado(idFinal, uFinal.getEstado(), "No implementado", uFinal.getFechaCita());
                 }
                 return null;
             }
