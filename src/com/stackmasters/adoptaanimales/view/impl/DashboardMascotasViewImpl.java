@@ -344,26 +344,20 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
         txtBusqueda = new javax.swing.JTextField();
         btnCrearMascota = new com.stackmasters.adoptaanimales.view.impl.swing.SquaredButton();
 
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
         card1.setBackground(new java.awt.Color(79, 172, 254));
         card1.setForeground(new java.awt.Color(255, 255, 255));
         card1.setColorGradient(new java.awt.Color(0, 242, 254));
-        add(card1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 41, 322, -1));
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Mascotas");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1001, 6, -1, -1));
 
         card2.setBackground(new java.awt.Color(255, 154, 158));
         card2.setForeground(new java.awt.Color(255, 255, 255));
         card2.setColorGradient(new java.awt.Color(254, 207, 239));
-        add(card2, new org.netbeans.lib.awtextra.AbsoluteConstraints(346, 41, 342, -1));
 
         card3.setBackground(new java.awt.Color(246, 211, 101));
         card3.setColorGradient(new java.awt.Color(253, 160, 133));
-        add(card3, new org.netbeans.lib.awtextra.AbsoluteConstraints(702, 41, 360, -1));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -416,19 +410,15 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 448, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36))
         );
 
-        add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 242, 1056, 476));
-
         jLabel6.setOpaque(true);
-        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(534, 373, -1, -1));
 
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/lupa (2).png"))); // NOI18N
         btnBuscar.setToolTipText("Buscar");
         btnBuscar.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        add(btnBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1026, 176, 36, 48));
 
         cmbEspecie.setBackground(new java.awt.Color(204, 204, 204));
         cmbEspecie.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
@@ -440,7 +430,6 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
                 cmbEspecieActionPerformed(evt);
             }
         });
-        add(cmbEspecie, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 176, 202, 48));
 
         cmbEstado.setBackground(new java.awt.Color(204, 204, 204));
         cmbEstado.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
@@ -452,14 +441,73 @@ public class DashboardMascotasViewImpl extends javax.swing.JPanel implements Das
                 cmbEstadoActionPerformed(evt);
             }
         });
-        add(cmbEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(564, 176, 190, 48));
 
         txtBusqueda.setToolTipText("Busca por nombre");
-        add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(772, 176, 242, 48));
 
         btnCrearMascota.setText("Nueva mascota");
         btnCrearMascota.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
-        add(btnCrearMascota, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 176, 158, 48));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel1))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(528, 528, 528)
+                                .addComponent(jLabel6))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(14, 14, 14)
+                                .addComponent(card3, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnCrearMascota, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(180, 180, 180)
+                                .addComponent(cmbEspecie, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmbEstado, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(9, 9, 9))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(jLabel1)
+                .addGap(14, 14, 14)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(card1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(card2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(card3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnCrearMascota, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbEspecie, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(131, 131, 131)
+                        .addComponent(jLabel6))))
+        );
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmbEspecieActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEspecieActionPerformed
