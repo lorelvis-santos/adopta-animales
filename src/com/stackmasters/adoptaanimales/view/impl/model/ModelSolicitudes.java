@@ -5,7 +5,6 @@ import com.stackmasters.adoptaanimales.view.impl.swing.table.EventAction;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.ModelAction;
 import com.stackmasters.adoptaanimales.view.impl.swing.table.ModelProfile;
 import javax.swing.Icon;
-import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -96,7 +95,10 @@ public class ModelSolicitudes {
             adoptante,
             estado,
             " "+" "+" "+" "+" "+" "+" "+LocalDate.parse(fecha),
-            FechaUtils.formatearCorto(LocalDateTime.parse(cita), "No agendada"),
+            FechaUtils.formatearCorto(
+                (cita != null ? LocalDateTime.parse(cita) : null),
+                "No agendada"
+            ),
             new ModelAction<ModelSolicitudes>(this, action)      // Column acciones
         };
     }
