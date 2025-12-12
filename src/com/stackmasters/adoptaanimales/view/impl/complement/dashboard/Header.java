@@ -24,6 +24,10 @@ public class Header extends JPanel {
     public Header() {
         initComponents();
     }
+    
+    public JLabel getLbUserName() {
+        return lbUserName;
+    }
 
     public void addMenuEvent(ActionListener event) {
         cmdMenu.addActionListener(event);
@@ -43,7 +47,7 @@ public class Header extends JPanel {
         
         // Avatar
         pic = new ImageAvatar();
-        pic.setIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile1.jpg")));
+        pic.setIcon(new ImageIcon(getClass().getResource("/com/stackmasters/adoptaanimales/view/impl/icon/profile3.jpg")));
         
         // Labels
         lbUserName = new JLabel("Albergue");

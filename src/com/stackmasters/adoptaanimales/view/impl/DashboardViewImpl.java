@@ -2,6 +2,7 @@ package com.stackmasters.adoptaanimales.view.impl;
 
 import com.stackmasters.adoptaanimales.router.DashboardRuta;
 import com.stackmasters.adoptaanimales.router.VistaNavegable;
+import com.stackmasters.adoptaanimales.service.impl.GestorSesion;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Header;
 import com.stackmasters.adoptaanimales.view.impl.complement.dashboard.Menu;
 import com.stackmasters.adoptaanimales.view.impl.MainForm;
@@ -130,7 +131,15 @@ public class DashboardViewImpl extends JLayeredPane implements DashboardView {
     }
     
     @Override
+    public void setNombreAdmin(String nombre) {
+        header.getLbUserName().setText(nombre);
+    }
+    
+    @Override
     public void alMostrar(Object... parametros) {
+        // Colocamos el usuario
+        setNombreAdmin(GestorSesion.obtener().getNombre());
+        
         // Validamos la entrada. Si no hay parametros, vamos a Inicio por defecto.
         if (parametros == null || parametros.length == 0) {
             navegarSubRuta(DashboardRuta.INICIO, new Object[0]);

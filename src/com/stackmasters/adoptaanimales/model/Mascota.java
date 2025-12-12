@@ -7,7 +7,6 @@ import java.time.LocalDate;
  * @author Bianca Parra
  */
 public class Mascota {
-    
     private int idMascota;
     private String nombre;
     private LocalDate fechaNacimiento;
@@ -48,11 +47,11 @@ public class Mascota {
         private final String db;
         
         Sexo(String db){
-        this.db = db;
+            this.db = db;
         }
     
         public String db(){
-        return db;
+            return db;
         }
     }
      
@@ -64,11 +63,11 @@ public class Mascota {
         private final String db;
 
         Especie(String db){
-        this.db = db;
+            this.db = db;
         }
 
         public String db(){
-        return db;
+            return db;
         }
     }
 
@@ -86,7 +85,7 @@ public class Mascota {
    
         public String db(){
             return db;
-            }
+        }
     }
      
     //Constructor vacio
@@ -109,8 +108,6 @@ public class Mascota {
         this.condicionEspecial = condicionEspecial;
         this.albergueId = albergueId;
     }
-
-    
 
     public int getIdMascota() {
         return idMascota;
@@ -208,7 +205,7 @@ public class Mascota {
     }
     
     public void setEstado(EstadoMascota estadoMascota){
-        this.estado= estadoMascota;
+        this.estado = estadoMascota;
     }
     
     public String getCondicionEspecial() {

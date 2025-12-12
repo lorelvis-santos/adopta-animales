@@ -15,4 +15,5 @@ public interface DashboardView extends VistaNavegable {
     void onIrSolicitudes(Runnable accion);
     void onIrAcercaDe(Runnable accion);
     void onCerrarSesion(Runnable accion);
+    void setNombreAdmin(String nombre);
 }
