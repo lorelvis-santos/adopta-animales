@@ -1,7 +1,7 @@
 package com.stackmasters.adoptaanimales.dto;
 
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
-import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoCita;
 import java.time.LocalDate;
 
 /**

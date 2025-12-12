@@ -11,7 +11,7 @@ import com.stackmasters.adoptaanimales.model.Adoptante;
 import com.stackmasters.adoptaanimales.model.Mascota;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion;
-import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud; // <--- IMPORTANTE: Importar el Enum
+import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
 import com.stackmasters.adoptaanimales.repository.AdoptanteRepository;
 import com.stackmasters.adoptaanimales.repository.MascotaRepository;
 import com.stackmasters.adoptaanimales.service.AdoptanteService;
@@ -34,7 +34,6 @@ import java.awt.Insets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.function.Consumer;
 import javax.swing.BorderFactory;

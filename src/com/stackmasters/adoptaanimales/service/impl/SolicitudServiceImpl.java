@@ -6,7 +6,6 @@ import com.stackmasters.adoptaanimales.exception.*;
 import com.stackmasters.adoptaanimales.exception.MascotaNoDisponibleException;
 import com.stackmasters.adoptaanimales.model.*;
 import com.stackmasters.adoptaanimales.model.SolicitudAdopcion.EstadoSolicitud;
-import com.stackmasters.adoptaanimales.model.Cita.EstadoCita;
 import com.stackmasters.adoptaanimales.model.Mascota.EstadoMascota;
 import com.stackmasters.adoptaanimales.repository.*;
 import com.stackmasters.adoptaanimales.model.RespuestaBD;
